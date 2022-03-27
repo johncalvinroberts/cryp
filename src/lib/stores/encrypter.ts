@@ -1,5 +1,6 @@
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 import type { Files } from "filedrop-svelte";
+import { encrypt, hexEncode } from "../cryp";
 
 export enum State {
   INITIAL = "INITIAL",
@@ -35,6 +36,29 @@ export const handleFiles = (files: Files) => {
     // TODO: parse file and identify if should encrypt or decrypt
     return { ...prevState, files, state: State.SHOULD_ENCRYPT };
   });
+};
+
+export const handleEncrypt = async ({
+  password,
+  hint,
+}: {
+  password: string;
+  hint: string | undefined;
+}) => {
+  encrypter.update((prevState) => ({
+    ...prevState,
+    password,
+    hint,
+    state: State.PROCESSING,
+  }));
+  const { files } = get(encrypter);
+  const accepted = await Promise.all(
+    files.accepted.map((item) => item.arrayBuffer())
+  );
+  const fileStrings = accepted.map((item) => hexEncode(item));
+  const plaintext = JSON.stringify(fileStrings);
+  const ciphertext = await encrypt(password, plaintext);
+  console.log({ ciphertext });
 };
 
 export const reset = () => encrypter.update(() => initialState);
