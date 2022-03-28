@@ -1,5 +1,6 @@
 @import url(./fonts.css);
 @import url(./form.css);
+
 :root {
   --pink: #e83e8c;
   --yellow: #ffd24c;
@@ -9,16 +10,6 @@
   --error: #dc3545;
   --light: #f8f9fa;
   --dark: #282828;
-  --breakpoint-xs: 0;
-  --breakpoint-sm: 544px;
-  --breakpoint-md: 769px;
-  --breakpoint-lg: 992px;
-  --breakpoint-xl: 1440px;
-  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
 }
 *,
 :after,
@@ -50,26 +41,7 @@ body {
   text-align: left;
   background-color: var(--dark);
 }
-[tabindex="-1"]:focus:not(:focus-visible) {
-  outline: 0 !important;
-}
-hr {
-  box-sizing: content-box;
-  height: 0;
-  overflow: visible;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0;
-}
-p {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
+
 
 a {
   background-color: transparent;
@@ -78,101 +50,14 @@ a:hover {
   color: #000;
   text-decoration: underline;
 }
-a:not([href]):not([class]),
-a:not([href]):not([class]):hover {
-  color: inherit;
-  text-decoration: none;
-}
 
-img {
-  border-style: none;
-}
-img,
-svg {
-  vertical-align: middle;
-}
-svg {
-  overflow: hidden;
-}
-table {
-  border-collapse: collapse;
-}
 
-label {
-  display: inline-block;
-  margin-bottom: 0.5rem;
-}
 button {
   border-radius: 0;
 }
 button:focus:not(:focus-visible) {
   outline: 0;
 }
-button,
-input,
-optgroup,
-select,
-textarea {
-  margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-}
-button,
-input {
-  overflow: visible;
-}
-button,
-select {
-  text-transform: none;
-}
-[role="button"] {
-  cursor: pointer;
-}
-select {
-  word-wrap: normal;
-}
-[type="button"],
-[type="reset"],
-[type="submit"],
-button {
-  -webkit-appearance: button;
-}
-[type="button"]:not(:disabled),
-[type="reset"]:not(:disabled),
-[type="submit"]:not(:disabled),
-button:not(:disabled) {
-  cursor: pointer;
-}
-[type="button"]::-moz-focus-inner,
-[type="reset"]::-moz-focus-inner,
-[type="submit"]::-moz-focus-inner,
-button::-moz-focus-inner {
-  padding: 0;
-  border-style: none;
-}
-input[type="checkbox"],
-input[type="radio"] {
-  box-sizing: border-box;
-  padding: 0;
-}
-
-[type="number"]::-webkit-inner-spin-button,
-[type="number"]::-webkit-outer-spin-button {
-  height: auto;
-}
-[type="search"] {
-  outline-offset: -2px;
-  -webkit-appearance: none;
-}
-[type="search"]::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-::-webkit-file-upload-button {
-  font: inherit;
-  -webkit-appearance: button;
-}
-
 
 h1 {
   font-size: 3.125rem;
@@ -202,4 +87,11 @@ h6 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;  
+}
+
+.vertical-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }

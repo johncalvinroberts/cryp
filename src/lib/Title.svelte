@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { encrypter } from "./stores/encrypter";
+  import { encrypter, State } from "./stores/encrypter";
 </script>
 
-<div class:active={$encrypter.state !== "INITIAL"}>
+<div class:active={$encrypter.state !== State.INITIAL}>
   <h1>cryp.</h1>
   <small>Encrypt The Files You Send</small>
 </div>

@@ -1,3 +1,12 @@
+input {
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--dark);
+}
+
 .input-box {
   display: flex;
   justify-content: space-between;
@@ -10,20 +19,14 @@
   background-color: transparent;
   border: none;
   opacity: 0.5;
-  transition: opacity 0.5 ease;
+  transition: opacity 0.5s ease;
   position: absolute;
   right: 0;
 }
 .input-box button:hover {
   opacity: 1;
 }
-input {
-  background-color: transparent;
-  border: none;
-  width: 100%;
-  font-size: 0.9rem;
-  text-align: center;
-}
+
 input:focus {
   outline: none;
 }
@@ -59,4 +62,5 @@ form {
   opacity: 0.5;
   background-color: var(--light);
   color: var(--dark);
+  transition: all 0.2s ease;
 }

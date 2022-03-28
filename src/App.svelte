@@ -3,8 +3,8 @@
   import Encrypter from "./lib/Encrypter.svelte";
 </script>
 
-<main>
-  <div class="inner">
+<main class="vertical-center">
+  <div class="inner vertical-center">
     <Title />
     <Encrypter />
   </div>
@@ -14,16 +14,8 @@
   main {
     width: 100%;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
   }
   .inner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
     width: 100%;
   }
 </style>

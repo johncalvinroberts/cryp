@@ -49,7 +49,7 @@
   <form on:submit={handleSubmit} on:reset={reset}>
     <div class="input-box">
       <input
-        name="password"
+        name="secret"
         placeholder="Password"
         type={showPassword ? "text" : "password"}
         value={password}
@@ -59,6 +59,7 @@
       />
       <button
         type="button"
+        class="vertical-center"
         on:click={() => (showPassword = !showPassword)}
         title={showPassword ? "Hide" : "Show"}
       >

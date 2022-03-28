@@ -30,7 +30,7 @@ const getInitialKey = (password: string): Promise<CryptoKey> => {
     new TextEncoder().encode(password),
     KEY_ALGO,
     false,
-    ["deriveKey"]
+    ["deriveKey", "deriveBits"]
   );
 };
 
@@ -40,9 +40,9 @@ const getDerivedKey = (
 ): Promise<CryptoKey> => {
   const iterations = 100_000;
   return window.crypto.subtle.deriveKey(
-    { name: KEY_ALGO, iterations, salt, hash: "SHA-512" },
+    { name: "PBKDF2", iterations, salt, hash: "SHA-512" },
     baseKey,
-    ENCRYPT_ALGO,
+    { name: ENCRYPT_ALGO, length: 256 },
     false,
     ["encrypt", "decrypt"]
   );

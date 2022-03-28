@@ -17,7 +17,7 @@
   };
 </script>
 
-<div class="wrapper">
+<div class="wrapper vertical-center">
   <div class="inner">
     <svelte:component this={elements[$encrypter.state]} />
   </div>
@@ -26,10 +26,6 @@
 <style>
   .wrapper {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-items: center;
   }
   .inner {
     width: 100%;

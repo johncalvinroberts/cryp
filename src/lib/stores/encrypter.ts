@@ -18,6 +18,7 @@ type Encrypter = {
   state: State;
   password: string | undefined;
   hint: string | undefined;
+  error: Error | undefined;
 };
 
 const initialState = {
@@ -27,15 +28,17 @@ const initialState = {
   password: undefined,
   hint: undefined,
   state: State.INITIAL,
+  error: undefined,
 };
 
 export const encrypter = writable<Encrypter>(initialState);
 
+export const dispatch = (payload: Partial<Encrypter>) =>
+  encrypter.update((prevState) => ({ ...prevState, ...payload }));
+
 export const handleFiles = (files: Files) => {
-  encrypter.update((prevState) => {
-    // TODO: parse file and identify if should encrypt or decrypt
-    return { ...prevState, files, state: State.SHOULD_ENCRYPT };
-  });
+  // TODO: parse file and identify if should encrypt or decrypt
+  dispatch({ files, state: State.SHOULD_ENCRYPT });
 };
 
 export const handleEncrypt = async ({
@@ -45,20 +48,27 @@ export const handleEncrypt = async ({
   password: string;
   hint: string | undefined;
 }) => {
-  encrypter.update((prevState) => ({
-    ...prevState,
+  dispatch({
     password,
     hint,
     state: State.PROCESSING,
-  }));
-  const { files } = get(encrypter);
-  const accepted = await Promise.all(
-    files.accepted.map((item) => item.arrayBuffer())
-  );
-  const fileStrings = accepted.map((item) => hexEncode(item));
-  const plaintext = JSON.stringify(fileStrings);
-  const ciphertext = await encrypt(password, plaintext);
-  console.log({ ciphertext });
+  });
+  try {
+    const { files } = get(encrypter);
+    const accepted = await Promise.all(
+      files.accepted.map((item) => item.arrayBuffer())
+    );
+    const fileStrings = accepted.map((item) => hexEncode(item));
+    const plaintext = JSON.stringify(fileStrings);
+    const ciphertext = await encrypt(password, plaintext);
+    dispatch({ ciphertext, state: State.DONE });
+  } catch (error) {
+    console.error(error);
+    dispatch({
+      state: State.FAILURE,
+      error,
+    });
+  }
 };
 
 export const reset = () => encrypter.update(() => initialState);
