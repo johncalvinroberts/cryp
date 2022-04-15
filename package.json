@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "filedrop-svelte": "^0.1.1",
-    "filesize": "^8.0.7"
+    "filesize": "^8.0.7",
+    "streamsaver": "^2.0.6"
   }
 }

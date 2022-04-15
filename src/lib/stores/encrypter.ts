@@ -14,7 +14,7 @@ export enum State {
 type Encrypter = {
   isProcessing: boolean;
   files: Files | undefined;
-  ciphertext: unknown | undefined;
+  ciphertext: string | undefined;
   state: State;
   password: string | undefined;
   hint: string | undefined;

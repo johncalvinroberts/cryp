@@ -58,9 +58,19 @@ form {
   flex-grow: 1;
   font-size: 0.9rem;
 }
+
+.bottom-box button:hover {
+  animation: floating 20s ease-in-out infinite;
+}
+
 .bottom-box button:disabled {
   opacity: 0.5;
   background-color: var(--light);
   color: var(--dark);
   transition: all 0.2s ease;
+}
+
+.bottom-box button:disabled:hover {
+  box-shadow: none;
+  cursor: not-allowed;
 }
