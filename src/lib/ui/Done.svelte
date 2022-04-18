@@ -1,6 +1,7 @@
 <script lang="ts">
   import Check from "../icons/check.svelte";
   import { encrypter, reset } from "../stores/encrypter";
+  import { saveAs } from "file-saver";
   import { getEncryptedFilename, download } from "../utils";
 
   const type = $encrypter.decryptedFiles ? "decrypted" : "encrypted";
@@ -15,7 +16,7 @@
     try {
       const fileName = getEncryptedFilename($encrypter.filesToEncrypt);
       const file = new File([$encrypter.crypString], fileName);
-      download(file, fileName);
+      saveAs(file);
     } catch (error) {
       isFailToDownload = true;
       console.error(error);
@@ -26,7 +27,7 @@
     isFailToDownload = false;
     try {
       for (const file of $encrypter.decryptedFiles) {
-        download(file, file.name);
+        saveAs(file, file.name);
       }
     } catch (error) {
       isFailToDownload = true;
@@ -54,6 +55,9 @@
 </div>
 
 <style>
+  h3 {
+    text-align: center;
+  }
   .bottom-box {
     margin: 0 auto;
   }

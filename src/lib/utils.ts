@@ -25,15 +25,3 @@ export const parseCrypString = (crypString: string) => {
   const [, ciphertext, hint] = crypString.split(CRYP_DELIMITER);
   return { ciphertext, hint };
 };
-
-export const download = (blob: Blob, fileName: string) => {
-  const blobUrl = window.URL.createObjectURL(blob);
-  const el = document.createElement("a");
-  el.setAttribute("style", "display:none;");
-  el.download = fileName;
-  el.href = blobUrl;
-  document.body.appendChild(el);
-  el.click();
-  el.remove();
-  window.URL.revokeObjectURL(blobUrl);
-};
