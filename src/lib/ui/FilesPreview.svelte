@@ -3,7 +3,7 @@
   import { encrypter, reset, handleEncrypt } from "../stores/encrypter";
   import FileSize from "./FileSize.svelte";
   import Eye from "../icons/eye.svelte";
-  const files = $encrypter.files;
+  const files = $encrypter.filesToEncrypt;
   const totalFileBytes = files.accepted.reduce((memo, current) => {
     return memo + current.size;
   }, 0);

@@ -15,6 +15,7 @@
     [State.FAILURE]: Failure,
     [State.DONE]: Done,
   };
+  $: console.log($encrypter.state);
 </script>
 
 <div class="wrapper vertical-center">

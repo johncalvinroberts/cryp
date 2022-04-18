@@ -3,12 +3,31 @@
   import { encrypter, reset } from "../stores/encrypter";
   import { getEncryptedFilename, download } from "../utils";
 
+  const type = $encrypter.decryptedFiles ? "decrypted" : "encrypted";
+
   let isFailToDownload = false;
-  const handleDownload = () => {
+
+  const handleDownload = () =>
+    type === "encrypted" ? downloadEncrypted() : downloadDecrypted();
+
+  const downloadEncrypted = () => {
     isFailToDownload = false;
     try {
-      const fileName = getEncryptedFilename($encrypter.files);
-      download(fileName, $encrypter.crypString);
+      const fileName = getEncryptedFilename($encrypter.filesToEncrypt);
+      const file = new File([$encrypter.crypString], fileName);
+      download(file, fileName);
+    } catch (error) {
+      isFailToDownload = true;
+      console.error(error);
+    }
+  };
+
+  const downloadDecrypted = () => {
+    isFailToDownload = false;
+    try {
+      for (const file of $encrypter.decryptedFiles) {
+        download(file, file.name);
+      }
     } catch (error) {
       isFailToDownload = true;
       console.error(error);
@@ -21,7 +40,7 @@
     <span class="icon vertical-center">
       <Check width={40} />
     </span>
-    Successfully encrypted
+    Successfully {type}
   </h3>
   {#if isFailToDownload}
     <div class="error">Failed to Download File.</div>

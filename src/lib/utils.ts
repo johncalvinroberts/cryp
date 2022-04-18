@@ -1,5 +1,6 @@
 import type { Files } from "filedrop-svelte";
 import { CRYP_DELIMITER, CRYP_FILE_EXTENSION } from "./constants";
+
 const MAX_NAME_LENGTH = 100;
 
 export const getEncryptedFilename = (files: Files) => {
@@ -25,15 +26,14 @@ export const parseCrypString = (crypString: string) => {
   return { ciphertext, hint };
 };
 
-export const download = (filename: string, text: string) => {
-  const element = document.createElement("a");
-  element.setAttribute(
-    "href",
-    "data:text/plain;charset=utf-8," + encodeURIComponent(text)
-  );
-  element.setAttribute("download", filename);
-  element.style.display = "none";
-  document.body.appendChild(element);
-  element.click();
-  document.body.removeChild(element);
+export const download = (blob: Blob, fileName: string) => {
+  const blobUrl = window.URL.createObjectURL(blob);
+  const el = document.createElement("a");
+  el.setAttribute("style", "display:none;");
+  el.download = fileName;
+  el.href = blobUrl;
+  document.body.appendChild(el);
+  el.click();
+  el.remove();
+  window.URL.revokeObjectURL(blobUrl);
 };

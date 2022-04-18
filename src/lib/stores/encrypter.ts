@@ -13,26 +13,33 @@ export enum State {
   FAILURE = "FAILURE",
 }
 
+type HexEncodedFile = {
+  hex: string;
+  name: string;
+};
+
 type Encrypter = {
   isProcessing: boolean;
-  files: Files | undefined;
+  filesToEncrypt: Files | undefined;
   ciphertext: string | undefined;
   state: State;
   password: string | undefined;
   hint: string | undefined;
   error: Error | undefined;
   crypString: string | undefined;
+  decryptedFiles: File[] | undefined;
 };
 
 const initialState = {
   isProcessing: false,
-  files: undefined,
+  filesToEncrypt: undefined,
   ciphertext: undefined,
   password: undefined,
   hint: undefined,
   state: State.INITIAL,
   error: undefined,
   crypString: undefined,
+  decryptedFiles: undefined,
 };
 
 export const encrypter = writable<Encrypter>(initialState);
@@ -40,17 +47,16 @@ export const encrypter = writable<Encrypter>(initialState);
 export const dispatch = (payload: Partial<Encrypter>) =>
   encrypter.update((prevState) => ({ ...prevState, ...payload }));
 
-export const handleFiles = async (files: Files) => {
-  const isCrypFile = files?.accepted?.[0]?.name
+export const handleFiles = async (filesToEncrypt: Files) => {
+  const isCrypFile = filesToEncrypt?.accepted?.[0]?.name
     ?.trim()
     ?.endsWith(CRYP_FILE_EXTENSION);
   if (!isCrypFile) {
-    dispatch({ files, state: State.SHOULD_ENCRYPT });
+    dispatch({ filesToEncrypt, state: State.SHOULD_ENCRYPT });
   } else {
-    const arrayBuffer = await files?.accepted?.[0].arrayBuffer();
+    const arrayBuffer = await filesToEncrypt?.accepted?.[0].arrayBuffer();
     const crypString = new TextDecoder().decode(arrayBuffer);
     const { ciphertext, hint } = parseCrypString(crypString);
-    console.log({ ciphertext, hint });
     dispatch({ ciphertext, hint, crypString, state: State.SHOULD_DECRYPT });
   }
 };
@@ -68,13 +74,16 @@ export const handleEncrypt = async ({
     state: State.PROCESSING,
   });
   try {
-    const { files } = get(encrypter);
+    const { filesToEncrypt } = get(encrypter);
     const accepted = await Promise.all(
-      files.accepted.map((item) => item.arrayBuffer())
+      filesToEncrypt.accepted.map((item) => item.arrayBuffer())
     );
-    const fileStrings = accepted.map((item) => hexEncode(item));
+    const hexEncodedFiles: HexEncodedFile[] = accepted.map((item, index) => ({
+      hex: hexEncode(item),
+      name: filesToEncrypt?.accepted?.[index].name,
+    }));
     // the plaintext is a stringified JSON array of files
-    const plaintext = JSON.stringify(fileStrings);
+    const plaintext = JSON.stringify(hexEncodedFiles);
     // ciphertext is the encrypted array
     const ciphertext = await encrypt(password, plaintext);
     const { hint } = get(encrypter);
@@ -97,9 +106,12 @@ export const handleDecrypt = async (password: string) => {
   try {
     const { ciphertext } = get(encrypter);
     const plaintext = await decrypt(password, ciphertext);
-    const filesAsStrings: string[] = JSON.parse(plaintext);
-    const fileArrayBuffers = filesAsStrings.map((item) => hexDecode(item));
-    console.log(fileArrayBuffers);
+    const hexEncodedFiles: HexEncodedFile[] = JSON.parse(plaintext);
+    const decryptedFiles = hexEncodedFiles.map((item) => {
+      const blob = new Blob([hexDecode(item.hex)]);
+      return new File([blob], item.name);
+    });
+    dispatch({ decryptedFiles, state: State.DONE });
   } catch (error) {
     console.error(error);
     dispatch({
