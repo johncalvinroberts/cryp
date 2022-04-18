@@ -22,8 +22,8 @@
     "vite": "^2.8.0"
   },
   "dependencies": {
+    "file-saver": "^2.0.5",
     "filedrop-svelte": "^0.1.1",
-    "filesize": "^8.0.7",
-    "streamsaver": "^2.0.6"
+    "filesize": "^8.0.7"
   }
 }

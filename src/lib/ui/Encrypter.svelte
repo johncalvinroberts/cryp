@@ -1,8 +1,8 @@
 <script>
   import Dropzone from "./Dropzone.svelte";
-  import { encrypter, State } from "./stores/encrypter";
-  import FilesPreview from "./FilesPreview.svelte";
   import EncryptedPreview from "./EncryptedPreview.svelte";
+  import { encrypter, State } from "../stores/encrypter";
+  import FilesPreview from "./FilesPreview.svelte";
   import Done from "./Done.svelte";
   import Failure from "./Failure.svelte";
   import Processing from "./Processing.svelte";

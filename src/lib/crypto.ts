@@ -1,5 +1,4 @@
-const ENCRYPT_ALGO = "AES-GCM";
-const KEY_ALGO = "PBKDF2";
+import { ENCRYPT_ALGO, KEY_ALGO, CIPHERTEXT_DELIMITER } from "./constants";
 
 export const getRandomBytes = (size = 16): Uint8Array => {
   return window.crypto.getRandomValues(new Uint8Array(size));
@@ -66,13 +65,13 @@ export const encrypt = async (
   );
   const composed = [salt, iv, ciphertext]
     .map((item) => hexEncode(item))
-    .join(":");
+    .join(CIPHERTEXT_DELIMITER);
   return composed;
 };
 
 export const decrypt = async (password: string, composed: string) => {
   const [salt, iv, ciphertext] = composed
-    .split(":")
+    .split(CIPHERTEXT_DELIMITER)
     .map((item) => hexDecode(item));
   const initialKey = await getInitialKey(password);
   const key = await getDerivedKey(initialKey, salt);

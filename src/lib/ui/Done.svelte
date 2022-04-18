@@ -1,17 +1,14 @@
 <script lang="ts">
-  import Check from "./icons/check.svelte";
-  import streamSaver from "streamsaver";
-  import { encrypter, reset } from "./stores/encrypter";
+  import Check from "../icons/check.svelte";
+  import { encrypter, reset } from "../stores/encrypter";
+  import { getEncryptedFilename, download } from "../utils";
 
   let isFailToDownload = false;
   const handleDownload = () => {
     isFailToDownload = false;
     try {
-      const fileStream = new streamSaver("encrypted.txt");
-      new Response($encrypter.ciphertext).body.pipeTo(fileStream).then(
-        () => null,
-        () => (isFailToDownload = true)
-      );
+      const fileName = getEncryptedFilename($encrypter.files);
+      download(fileName, $encrypter.crypString);
     } catch (error) {
       isFailToDownload = true;
       console.error(error);
@@ -20,29 +17,24 @@
 </script>
 
 <div>
-  <div class="vertical-center button-wrapper">
-    <button class="vertical-center" on:click={handleDownload}>
-      <span class="icon vertical-center">
-        <Check width={40} />
-      </span>
-      Success
-      <small>Click to download</small>
-    </button>
-  </div>
+  <h3 class="vertical-center">
+    <span class="icon vertical-center">
+      <Check width={40} />
+    </span>
+    Successfully encrypted
+  </h3>
   {#if isFailToDownload}
     <div class="error">Failed to Download File.</div>
   {/if}
   <div class="bottom-box">
+    <button class="vertical-center success-button" on:click={handleDownload}>
+      Download
+    </button>
     <button on:click={reset}> Start Over </button>
   </div>
 </div>
 
 <style>
-  .button-wrapper {
-    width: 100%;
-    padding: 0 4rem;
-  }
-
   .bottom-box {
     margin: 0 auto;
   }
@@ -52,28 +44,21 @@
     margin: 0 auto;
   }
 
-  .button-wrapper button {
+  .success-button {
     color: var(--light);
     background: -webkit-linear-gradient(var(--purple), var(--info));
-    /* background-color: var(--purple); */
-    font-size: 2rem;
-    border: solid 1px transparent;
-    padding: 2rem;
+    border: solid 1px var(--light);
     animation: floating 20s ease-in-out infinite;
     border-radius: 2px;
     transition: all 0.3s ease;
   }
-  .button-wrapper button:hover {
+  .success-button:hover {
     border: solid 2px var(--light);
   }
   .icon {
     margin-right: 0.5rem;
   }
 
-  small {
-    margin-top: 1rem;
-    font-size: 1rem;
-  }
   .error {
     color: var(--error);
     text-align: center;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { encrypter, State } from "./stores/encrypter";
+  import { encrypter, State } from "../stores/encrypter";
 </script>
 
 <div class="container" class:active={$encrypter.state !== State.INITIAL}>

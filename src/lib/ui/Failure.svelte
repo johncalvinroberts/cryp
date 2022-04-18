@@ -1,0 +1,34 @@
+<script lang="ts">
+  import { encrypter, reset } from "../stores/encrypter";
+</script>
+
+<div class="wrapper vertical-center">
+  <h2>Error</h2>
+  <div>An error occured during the encryption or decryption process.</div>
+  <div>
+    <strong>Error: </strong>
+    <em>
+      {$encrypter.error}
+    </em>
+  </div>
+  <div class="bottom-box">
+    <button on:click={reset}> Start Over </button>
+  </div>
+</div>
+
+<style>
+  .wrapper {
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+  }
+  .wrapper h2,
+  .wrapper div {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  h2 {
+    color: var(--error);
+  }
+</style>
