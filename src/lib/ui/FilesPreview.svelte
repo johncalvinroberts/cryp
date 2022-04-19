@@ -22,7 +22,9 @@
       <h6>
         {files.accepted.length} Files -
       </h6>
-      <FileSize bytes={totalFileBytes} />
+      <span class="vertical-center">
+        <FileSize bytes={totalFileBytes} />
+      </span>
     </div>
   {/if}
   <ul>
@@ -90,7 +92,7 @@
   }
   h6 {
     text-align: center;
-    margin-bottom: 0;
+    margin: 0;
   }
   li {
     display: flex;
@@ -106,5 +108,6 @@
     display: flex;
     width: 100%;
     justify-content: center;
+    margin-top: 3rem;
   }
 </style>

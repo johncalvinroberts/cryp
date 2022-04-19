@@ -5,21 +5,21 @@
   let isDraggingOver = false;
 </script>
 
-<div
-  class="dropzone"
-  class:is-dragging-over={isDraggingOver}
-  on:mouseover={() => (isDraggingOver = true)}
-  on:mouseleave={() => (isDraggingOver = false)}
-  on:focus={() => (isDraggingOver = true)}
+<FileDrop
+  on:filedrop={(e) => handleFiles(e.detail.files)}
+  on:dragover={() => (isDraggingOver = true)}
+  on:dragleave={() => (isDraggingOver = false)}
 >
-  <FileDrop
-    on:filedrop={(e) => handleFiles(e.detail.files)}
-    on:dragover={() => (isDraggingOver = true)}
-    on:dragleave={() => (isDraggingOver = false)}
+  <div
+    class="dropzone"
+    class:is-dragging-over={isDraggingOver}
+    on:mouseover={() => (isDraggingOver = true)}
+    on:mouseleave={() => (isDraggingOver = false)}
+    on:focus={() => (isDraggingOver = true)}
   >
     <Plus {isDraggingOver} />
-  </FileDrop>
-</div>
+  </div>
+</FileDrop>
 <small> Drop Files or Folders to Get Started </small>
 
 <style>
