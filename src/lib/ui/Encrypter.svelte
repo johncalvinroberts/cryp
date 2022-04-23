@@ -1,21 +1,24 @@
 <script>
+  import Guu from "guu";
   import Dropzone from "./Dropzone.svelte";
   import EncryptedPreview from "./EncryptedPreview.svelte";
-  import { encrypter, State } from "../stores/encrypter";
+  import { encrypter } from "../stores/encrypter";
   import FilesPreview from "./FilesPreview.svelte";
   import Done from "./Done.svelte";
   import Failure from "./Failure.svelte";
   import Processing from "./Processing.svelte";
+  import { STATE } from "../constants";
 
+  const log = new Guu("Encrypter.svelte", "goldenrod");
   const elements = {
-    [State.INITIAL]: Dropzone,
-    [State.SHOULD_DECRYPT]: EncryptedPreview,
-    [State.SHOULD_ENCRYPT]: FilesPreview,
-    [State.PROCESSING]: Processing,
-    [State.FAILURE]: Failure,
-    [State.DONE]: Done,
+    [STATE.INITIAL]: Dropzone,
+    [STATE.SHOULD_DECRYPT]: EncryptedPreview,
+    [STATE.SHOULD_ENCRYPT]: FilesPreview,
+    [STATE.PROCESSING]: Processing,
+    [STATE.FAILURE]: Failure,
+    [STATE.DONE]: Done,
   };
-  $: console.log($encrypter.state);
+  $: log.info($encrypter.state);
 </script>
 
 <div class="wrapper vertical-center">

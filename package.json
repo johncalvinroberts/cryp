@@ -24,6 +24,7 @@
   "dependencies": {
     "file-saver": "^2.0.5",
     "filedrop-svelte": "^0.1.1",
-    "filesize": "^8.0.7"
+    "filesize": "^8.0.7",
+    "guu": "^0.3.1"
   }
 }

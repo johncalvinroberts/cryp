@@ -23,7 +23,7 @@
       </small>
     {/if}
   </div>
-  <form on:submit={handleSubmit} on:reset={reset}>
+  <form on:submit={handleSubmit} on:reset={reset} autocomplete="off">
     <div class="input-box">
       <input
         name="secret"

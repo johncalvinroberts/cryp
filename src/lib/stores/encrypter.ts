@@ -1,42 +1,20 @@
 import { writable, get } from "svelte/store";
 import type { Files } from "filedrop-svelte";
+import Guu from "guu";
 import { decrypt, encrypt, hexDecode, hexEncode } from "../crypto";
 import { formatCrypString, parseCrypString } from "../utils";
-import { CRYP_FILE_EXTENSION } from "../constants";
+import { CRYP_FILE_EXTENSION, STATE } from "../constants";
+import type { Encrypter, HexEncodedFile } from "../types";
 
-export enum State {
-  INITIAL = "INITIAL",
-  SHOULD_ENCRYPT = "SHOULD_ENCRYPT",
-  SHOULD_DECRYPT = "SHOULD_DECRYPT",
-  PROCESSING = "PROCESSING",
-  DONE = "DONE",
-  FAILURE = "FAILURE",
-}
+const log = new Guu("encrypter", "pink");
 
-type HexEncodedFile = {
-  hex: string;
-  name: string;
-};
-
-type Encrypter = {
-  isProcessing: boolean;
-  filesToEncrypt: Files | undefined;
-  ciphertext: string | undefined;
-  state: State;
-  password: string | undefined;
-  hint: string | undefined;
-  error: Error | undefined;
-  crypString: string | undefined;
-  decryptedFiles: File[] | undefined;
-};
-
-const initialState = {
+const initialState: Encrypter = {
   isProcessing: false,
   filesToEncrypt: undefined,
   ciphertext: undefined,
   password: undefined,
   hint: undefined,
-  state: State.INITIAL,
+  state: STATE.INITIAL,
   error: undefined,
   crypString: undefined,
   decryptedFiles: undefined,
@@ -48,16 +26,18 @@ export const dispatch = (payload: Partial<Encrypter>) =>
   encrypter.update((prevState) => ({ ...prevState, ...payload }));
 
 export const handleFiles = async (filesToEncrypt: Files) => {
+  log.info("handleFiles", filesToEncrypt);
   const isCrypFile = filesToEncrypt?.accepted?.[0]?.name
     ?.trim()
     ?.endsWith(CRYP_FILE_EXTENSION);
+  log.info({ isCrypFile });
   if (!isCrypFile) {
-    dispatch({ filesToEncrypt, state: State.SHOULD_ENCRYPT });
+    dispatch({ filesToEncrypt, state: STATE.SHOULD_ENCRYPT });
   } else {
     const arrayBuffer = await filesToEncrypt?.accepted?.[0].arrayBuffer();
     const crypString = new TextDecoder().decode(arrayBuffer);
     const { ciphertext, hint } = parseCrypString(crypString);
-    dispatch({ ciphertext, hint, crypString, state: State.SHOULD_DECRYPT });
+    dispatch({ ciphertext, hint, crypString, state: STATE.SHOULD_DECRYPT });
   }
 };
 
@@ -71,7 +51,7 @@ export const handleEncrypt = async ({
   dispatch({
     password,
     hint,
-    state: State.PROCESSING,
+    state: STATE.PROCESSING,
   });
   try {
     const { filesToEncrypt } = get(encrypter);
@@ -88,11 +68,11 @@ export const handleEncrypt = async ({
     const ciphertext = await encrypt(password, plaintext);
     const { hint } = get(encrypter);
     const crypString = formatCrypString(ciphertext, hint);
-    dispatch({ ciphertext, crypString, state: State.DONE });
+    dispatch({ ciphertext, crypString, state: STATE.DONE });
   } catch (error) {
-    console.error(error);
+    log.error(error);
     dispatch({
-      state: State.FAILURE,
+      state: STATE.FAILURE,
       error,
     });
   }
@@ -101,7 +81,7 @@ export const handleEncrypt = async ({
 export const handleDecrypt = async (password: string) => {
   dispatch({
     password,
-    state: State.PROCESSING,
+    state: STATE.PROCESSING,
   });
   try {
     const { ciphertext } = get(encrypter);
@@ -111,11 +91,11 @@ export const handleDecrypt = async (password: string) => {
       const blob = new Blob([hexDecode(item.hex)]);
       return new File([blob], item.name);
     });
-    dispatch({ decryptedFiles, state: State.DONE });
+    dispatch({ decryptedFiles, state: STATE.DONE });
   } catch (error) {
-    console.error(error);
+    log.error(error);
     dispatch({
-      state: State.FAILURE,
+      state: STATE.FAILURE,
       error,
     });
   }
