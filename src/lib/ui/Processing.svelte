@@ -1,16 +1,8 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
+  import { getRandomUnicodeString } from "../utils";
   const CHAR_AMT = 25;
 
-  const getRandomUnicodeString = (length: number): string => {
-    const array = new Uint16Array(length);
-    window.crypto.getRandomValues(array);
-    let str = "";
-    for (var i = 0; i < array.length; i++) {
-      str += String.fromCharCode(array[i]);
-    }
-    return str;
-  };
   let randomChars = getRandomUnicodeString(CHAR_AMT);
   let bottom = 0;
   const shiftString = () => {

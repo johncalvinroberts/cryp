@@ -25,3 +25,13 @@ export const parseCrypString = (crypString: string) => {
   const [, ciphertext, hint] = crypString.split(CRYP_DELIMITER);
   return { ciphertext, hint };
 };
+
+export const getRandomUnicodeString = (length: number): string => {
+  const array = new Uint16Array(length);
+  window.crypto.getRandomValues(array);
+  let str = "";
+  for (let i = 0; i < array.length; i++) {
+    str += String.fromCharCode(array[i]);
+  }
+  return str;
+};

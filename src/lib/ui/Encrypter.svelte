@@ -8,8 +8,8 @@
   import Failure from "./Failure.svelte";
   import Processing from "./Processing.svelte";
   import { STATE } from "../constants";
-
   const log = new Guu("Encrypter.svelte", "goldenrod");
+  const { store } = encrypter;
   const elements = {
     [STATE.INITIAL]: Dropzone,
     [STATE.SHOULD_DECRYPT]: EncryptedPreview,
@@ -18,12 +18,12 @@
     [STATE.FAILURE]: Failure,
     [STATE.DONE]: Done,
   };
-  $: log.info($encrypter.state);
+  $: log.info($store.state);
 </script>
 
 <div class="wrapper vertical-center">
   <div class="inner">
-    <svelte:component this={elements[$encrypter.state]} />
+    <svelte:component this={elements[$store.state]} />
   </div>
 </div>
 

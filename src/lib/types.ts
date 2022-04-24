@@ -20,7 +20,7 @@ export type HexEncodedFile = {
   name: string;
 };
 
-export type Encrypter = {
+export type EncrypterState = {
   isProcessing: boolean;
   filesToEncrypt: Files | undefined;
   ciphertext: string | undefined;

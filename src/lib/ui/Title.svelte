@@ -1,12 +1,13 @@
 <script lang="ts">
   import { encrypter } from "../stores/encrypter";
   import { STATE } from "../constants";
+  const { store } = encrypter;
 </script>
 
-<div class="container" class:active={$encrypter.state !== STATE.INITIAL}>
+<div class="container" class:active={$store.state !== STATE.INITIAL}>
   <h1>cryp.</h1>
   <h1 class="gradient">cryp.</h1>
-  <small>Encrypt The Files You Send</small>
+  <small>Encrypt and decrypt any files</small>
 </div>
 
 <style>

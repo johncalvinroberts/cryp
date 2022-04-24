@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { encrypter, reset } from "../stores/encrypter";
+  import { encrypter } from "../stores/encrypter";
+  const { store, reset } = encrypter;
 </script>
 
 <div class="wrapper vertical-center">
@@ -8,7 +9,7 @@
   <div>
     <strong>Error: </strong>
     <em>
-      {$encrypter.error}
+      {$store.error}
     </em>
   </div>
   <div class="bottom-box">

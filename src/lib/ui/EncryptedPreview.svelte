@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { encrypter, handleDecrypt, reset } from "../stores/encrypter";
+  import { encrypter } from "../stores/encrypter";
   import Eye from "../icons/eye.svelte";
 
+  const { store, handleDecrypt, reset } = encrypter;
   let showPassword = false;
   let password = "";
   const handleSubmit = (e: SubmitEvent) => {
@@ -13,9 +14,9 @@
 <div class="wrapper">
   <div class="title">
     <h6>Decrypt File</h6>
-    {#if $encrypter.hint}
+    {#if $store.hint}
       <small>
-        Hint: {$encrypter.hint}
+        Hint: {$store.hint}
       </small>
     {:else}
       <small>

@@ -1,7 +1,8 @@
 <script lang="ts">
   import FileDrop from "filedrop-svelte";
   import Plus from "../icons/plus.svelte";
-  import { handleFiles } from "../stores/encrypter";
+  import { encrypter } from "../stores/encrypter";
+  const { handleFiles } = encrypter;
   let isDraggingOver = false;
 </script>
 

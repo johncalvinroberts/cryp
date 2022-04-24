@@ -1,15 +1,18 @@
 <script lang="ts">
   import Empty from "./Empty.svelte";
-  import { encrypter, reset, handleEncrypt } from "../stores/encrypter";
+  import { encrypter } from "../stores/encrypter";
   import FileSize from "./FileSize.svelte";
   import Eye from "../icons/eye.svelte";
-  const files = $encrypter.filesToEncrypt;
+
+  const { store, reset, handleEncrypt } = encrypter;
+  const files = $store.filesToEncrypt;
   const totalFileBytes = files.accepted.reduce((memo, current) => {
     return memo + current.size;
   }, 0);
   let showPassword = false;
   let password = "";
   let hint = "";
+
   const handleSubmit = (e: SubmitEvent) => {
     e.preventDefault();
     handleEncrypt({ password, hint });
