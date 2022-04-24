@@ -8,12 +8,12 @@ export type StateKey =
   | "DONE"
   | "FAILURE";
 
-export type MessageKey = "ENCRYPT" | "DECRYPT";
-
-export type MessagePayload = {
-  type: MessageKey;
-  value: string;
-};
+export type MessageKey =
+  | "ENCRYPT"
+  | "DECRYPT"
+  | "ENCRYPTED"
+  | "DECRYPTED"
+  | "FAILURE";
 
 export type HexEncodedFile = {
   hex: string;
@@ -30,4 +30,9 @@ export type EncrypterState = {
   error: Error | undefined;
   crypString: string | undefined;
   decryptedFiles: File[] | undefined;
+};
+
+export type MessagePayload = {
+  type: MessageKey;
+  payload: EncrypterState;
 };

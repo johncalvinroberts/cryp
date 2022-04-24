@@ -15,7 +15,7 @@
 
   const handleSubmit = (e: SubmitEvent) => {
     e.preventDefault();
-    handleEncrypt({ password, hint });
+    handleEncrypt(password, hint);
   };
 </script>
 

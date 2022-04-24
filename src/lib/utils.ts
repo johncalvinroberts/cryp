@@ -35,3 +35,5 @@ export const getRandomUnicodeString = (length: number): string => {
   }
   return str;
 };
+
+export const clone = (obj: unknown) => JSON.parse(JSON.stringify(obj));

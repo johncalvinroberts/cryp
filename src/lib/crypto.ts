@@ -1,7 +1,7 @@
 import { ENCRYPT_ALGO, KEY_ALGO, CIPHERTEXT_DELIMITER } from "./constants";
 
 export const getRandomBytes = (size = 16): Uint8Array => {
-  return window.crypto.getRandomValues(new Uint8Array(size));
+  return crypto.getRandomValues(new Uint8Array(size));
 };
 
 export const hexEncode = (buffer: ArrayBuffer) => {
@@ -24,7 +24,7 @@ export const hexDecode = (raw: string) => {
 };
 
 const getInitialKey = (password: string): Promise<CryptoKey> => {
-  return window.crypto.subtle.importKey(
+  return crypto.subtle.importKey(
     "raw",
     new TextEncoder().encode(password),
     KEY_ALGO,
@@ -38,7 +38,7 @@ const getDerivedKey = (
   salt: ArrayBuffer
 ): Promise<CryptoKey> => {
   const iterations = 100_000;
-  return window.crypto.subtle.deriveKey(
+  return crypto.subtle.deriveKey(
     { name: "PBKDF2", iterations, salt, hash: "SHA-512" },
     baseKey,
     { name: ENCRYPT_ALGO, length: 256 },
@@ -55,7 +55,7 @@ export const encrypt = async (
   const salt = getRandomBytes();
   const key = await getDerivedKey(initialKey, salt);
   const iv = getRandomBytes(12);
-  const ciphertext: ArrayBuffer = await window.crypto.subtle.encrypt(
+  const ciphertext: ArrayBuffer = await crypto.subtle.encrypt(
     {
       name: ENCRYPT_ALGO,
       iv,
@@ -75,7 +75,7 @@ export const decrypt = async (password: string, composed: string) => {
     .map((item) => hexDecode(item));
   const initialKey = await getInitialKey(password);
   const key = await getDerivedKey(initialKey, salt);
-  const plaintext = await window.crypto.subtle.decrypt(
+  const plaintext = await crypto.subtle.decrypt(
     {
       name: ENCRYPT_ALGO,
       iv,

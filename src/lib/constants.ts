@@ -18,4 +18,7 @@ export const STATE: Record<string, StateKey> = {
 export const MESSAGE: Record<string, MessageKey> = {
   ENCRYPT: "ENCRYPT",
   DECRYPT: "DECRYPT",
+  ENCRYPTED: "ENCRYPTED",
+  DECRYPTED: "DECRYPTED",
+  FAILURE: "FAILURE",
 };

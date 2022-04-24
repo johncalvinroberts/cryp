@@ -1,10 +1,9 @@
 import { Writable, writable, get } from "svelte/store";
 import type { Files } from "filedrop-svelte";
 import Guu from "guu";
-import { decrypt, encrypt, hexDecode, hexEncode } from "../crypto";
-import { formatCrypString, parseCrypString } from "../utils";
-import { CRYP_FILE_EXTENSION, STATE } from "../constants";
-import type { EncrypterState, HexEncodedFile } from "../types";
+import { parseCrypString } from "../utils";
+import { CRYP_FILE_EXTENSION, STATE, MESSAGE } from "../constants";
+import type { EncrypterState, MessageKey, MessagePayload } from "../types";
 
 const log = new Guu("encrypter", "pink");
 
@@ -23,28 +22,45 @@ const initialState: EncrypterState = {
 class Encrypter {
   constructor(
     public store: Writable<EncrypterState> = writable(initialState),
-    public worker: Worker = new Worker(
-      new URL("./crypto.worker.js", import.meta.url)
+    private worker: Worker = new Worker(
+      new URL("../crypto.worker.ts", import.meta.url),
+      {
+        type: "module",
+      }
     )
   ) {
     this.worker.onmessage = this.handleMessage;
     this.worker.onerror = this.handleWorkerError;
+    this.worker.onmessageerror = this.handleWorkerError;
   }
 
   private dispatch(payload: Partial<EncrypterState>) {
     this.store.update((prevState) => ({ ...prevState, ...payload }));
   }
 
-  private handleMessage = (msg: MessageEvent<unknown>) => {
-    log.info({ msg });
+  private handleMessage = (msg: MessageEvent<MessagePayload>) => {
+    const { payload } = msg.data;
+    this.dispatch(payload);
   };
 
-  private handleWorkerError = (err: ErrorEvent) => {
-    log.error(err);
-    this.dispatch({
-      state: STATE.FAILURE,
-      error: err.error,
-    });
+  private postMessage = (type: MessageKey) => {
+    const payload = get(this.store);
+    log.debug(payload);
+    this.worker.postMessage({ type, payload });
+  };
+
+  private handleWorkerError = (err: ErrorEvent | MessageEvent) => {
+    log.error("Worker Error:", err);
+    let error: Error;
+    if (err instanceof ErrorEvent) {
+      error = err.error;
+    }
+    if (error) {
+      this.dispatch({
+        state: STATE.FAILURE,
+        error,
+      });
+    }
   };
 
   public reset = () => this.store.update(() => initialState);
@@ -70,41 +86,13 @@ class Encrypter {
     }
   };
 
-  public handleEncrypt = async ({
-    password,
-    hint,
-  }: {
-    password: string;
-    hint: string | undefined;
-  }) => {
+  public handleEncrypt = async (password: string, hint: string) => {
     this.dispatch({
       password,
       hint,
       state: STATE.PROCESSING,
     });
-    try {
-      const { filesToEncrypt } = get(this.store);
-      const accepted = await Promise.all(
-        filesToEncrypt.accepted.map((item) => item.arrayBuffer())
-      );
-      const hexEncodedFiles: HexEncodedFile[] = accepted.map((item, index) => ({
-        hex: hexEncode(item),
-        name: filesToEncrypt?.accepted?.[index].name,
-      }));
-      // the plaintext is a stringified JSON array of files
-      const plaintext = JSON.stringify(hexEncodedFiles);
-      // ciphertext is the encrypted array
-      const ciphertext = await encrypt(password, plaintext);
-      const { hint } = get(this.store);
-      const crypString = formatCrypString(ciphertext, hint);
-      this.dispatch({ ciphertext, crypString, state: STATE.DONE });
-    } catch (error) {
-      log.error(error);
-      this.dispatch({
-        state: STATE.FAILURE,
-        error,
-      });
-    }
+    this.postMessage(MESSAGE.ENCRYPT);
   };
 
   public handleDecrypt = async (password: string) => {
@@ -112,22 +100,7 @@ class Encrypter {
       password,
       state: STATE.PROCESSING,
     });
-    try {
-      const { ciphertext } = get(this.store);
-      const plaintext = await decrypt(password, ciphertext);
-      const hexEncodedFiles: HexEncodedFile[] = JSON.parse(plaintext);
-      const decryptedFiles = hexEncodedFiles.map((item) => {
-        const blob = new Blob([hexDecode(item.hex)]);
-        return new File([blob], item.name);
-      });
-      this.dispatch({ decryptedFiles, state: STATE.DONE });
-    } catch (error) {
-      log.error(error);
-      this.dispatch({
-        state: STATE.FAILURE,
-        error,
-      });
-    }
+    this.postMessage(MESSAGE.DECRYPT);
   };
 }
 
