@@ -19,12 +19,17 @@
     "svelte-preprocess": "^4.9.8",
     "tslib": "^2.3.1",
     "typescript": "^4.5.4",
-    "vite": "^2.9.5"
+    "vite": "^2.9.5",
+    "vite-plugin-pwa": "^0.12.0"
   },
   "dependencies": {
     "file-saver": "^2.0.5",
     "filedrop-svelte": "^0.1.1",
     "filesize": "^8.0.7",
-    "guu": "^0.3.1"
+    "guu": "^0.3.1",
+    "workbox-core": "^6.5.3",
+    "workbox-precaching": "^6.5.3",
+    "workbox-routing": "^6.5.3",
+    "workbox-window": "^6.5.3"
   }
 }
