@@ -7,7 +7,7 @@
 <div class="container" class:active={$store.state !== STATE.INITIAL}>
   <h1>cryp.</h1>
   <h1 class="gradient">cryp.</h1>
-  <small>Encrypt & decrypt any files</small>
+  <small>Encrypt & Decrypt Any Files</small>
 </div>
 
 <style>
