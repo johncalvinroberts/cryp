@@ -43,7 +43,6 @@ body {
   background-color: var(--dark);
 }
 
-
 a {
   background-color: transparent;
 }
@@ -51,7 +50,6 @@ a:hover {
   color: #000;
   text-decoration: underline;
 }
-
 
 button {
   border-radius: 0;
@@ -87,7 +85,7 @@ h6 {
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;  
+  white-space: nowrap;
 }
 
 .vertical-center {
