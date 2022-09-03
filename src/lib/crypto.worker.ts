@@ -1,5 +1,5 @@
 import { encrypt, decrypt, hexEncode, hexDecode } from "./crypto";
-import { MESSAGE, STATE } from "./constants";
+import { MESSAGE, STATE, FALLBACK_FILE_NAME } from "./constants";
 import { formatCrypString } from "./utils";
 import type { MessagePayload, HexEncodedFile, EncrypterState } from "./types";
 
@@ -10,13 +10,13 @@ const ctx: Worker = self as any;
 class CryptoWorker {
   encrypt = async (encrypterState: EncrypterState) => {
     try {
-      const { filesToEncrypt, password, hint } = encrypterState;
+      const { filesToEncrypt, password = "", hint = "" } = encrypterState;
       const accepted = await Promise.all(
-        filesToEncrypt.accepted.map((item) => item.arrayBuffer())
+        filesToEncrypt?.accepted.map((item) => item.arrayBuffer()) || []
       );
       const hexEncodedFiles: HexEncodedFile[] = accepted.map((item, index) => ({
         hex: hexEncode(item),
-        name: filesToEncrypt?.accepted?.[index].name,
+        name: filesToEncrypt?.accepted?.[index].name || FALLBACK_FILE_NAME,
       }));
       // the plaintext is a stringified JSON array of files
       const plaintext = JSON.stringify(hexEncodedFiles);
@@ -35,7 +35,7 @@ class CryptoWorker {
 
   decrypt = async (encrypterState: EncrypterState) => {
     try {
-      const { ciphertext, password } = encrypterState;
+      const { ciphertext = "", password = "" } = encrypterState;
       const plaintext = await decrypt(password, ciphertext);
       const hexEncodedFiles: HexEncodedFile[] = JSON.parse(plaintext);
       const decryptedFiles = hexEncodedFiles.map((item) => {

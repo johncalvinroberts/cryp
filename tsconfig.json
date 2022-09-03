@@ -15,7 +15,8 @@
     "allowJs": true,
     "checkJs": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext", "WebWorker"],
-    "types": ["vite-plugin-pwa/client"]
+    "types": ["vite-plugin-pwa/client"],
+    "strict": true
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]

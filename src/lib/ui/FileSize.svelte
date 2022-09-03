@@ -6,7 +6,7 @@
 </script>
 
 <span class={className}>
-  {fileSize(bytes)}
+  {fileSize(bytes ?? 0)}
 </span>
 
 <style>

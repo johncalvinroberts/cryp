@@ -12,6 +12,9 @@
   const downloadEncrypted = () => {
     isFailToDownload = false;
     try {
+      if (!$store.filesToEncrypt || !$store.crypString) {
+        throw new Error("Cannot create download");
+      }
       const fileName = getEncryptedFilename($store.filesToEncrypt);
       const file = new File([$store.crypString], fileName);
       saveAs(file);
@@ -24,6 +27,9 @@
   const downloadDecrypted = () => {
     isFailToDownload = false;
     try {
+      if (!$store.decryptedFiles) {
+        throw new Error("Cannot create download");
+      }
       for (const file of $store.decryptedFiles) {
         saveAs(file, file.name);
       }

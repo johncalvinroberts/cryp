@@ -1,0 +1,25 @@
+name: Quick Check 👮🏽
+on: [push]
+jobs:
+  build:
+    name: Check everything
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7.0.0
+          run_install: true
+
+      - name: Check Typescript and Svelte files
+        run: pnpm check
+
+      - name: Format files
+        run: pnpm format
+
+      - name: Ensure can build successfully
+        run: pnpm build
+
+      - name: Check for clean status
+        run: sh scripts/ensure-git-clean.sh

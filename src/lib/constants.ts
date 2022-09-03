@@ -5,6 +5,7 @@ export const KEY_ALGO = "PBKDF2";
 export const CRYP_DELIMITER = "@CRYP@";
 export const CIPHERTEXT_DELIMITER = "::";
 export const CRYP_FILE_EXTENSION = ".cryp";
+export const FALLBACK_FILE_NAME = "file";
 
 export const STATE: Record<string, StateKey> = {
   INITIAL: "INITIAL",

@@ -5,8 +5,9 @@
   import Eye from "../icons/eye.svelte";
 
   const { store, reset, handleEncrypt } = encrypter;
-  const files = $store.filesToEncrypt;
-  const totalFileBytes = files.accepted.reduce((memo, current) => {
+  const accepted = $store.filesToEncrypt?.accepted || [];
+  const rejected = $store.filesToEncrypt?.rejected || [];
+  const totalFileBytes = accepted.reduce((memo, current) => {
     return memo + current.size;
   }, 0);
   let showPassword = false;
@@ -20,10 +21,10 @@
 </script>
 
 <div class="wrapper">
-  {#if files.accepted.length > 1}
+  {#if accepted.length > 1}
     <div class="title">
       <h6>
-        {files.accepted.length} Files -
+        {accepted.length} Files -
       </h6>
       <span class="vertical-center">
         <FileSize bytes={totalFileBytes} />
@@ -31,7 +32,7 @@
     </div>
   {/if}
   <ul>
-    {#each files.accepted as file}
+    {#each accepted as file}
       <li>
         <span class="file-name truncate">{file.name}</span>
         -
@@ -39,14 +40,14 @@
       </li>
     {/each}
   </ul>
-  {#if !files.accepted?.length}
+  {#if !accepted?.length}
     <Empty />
   {/if}
 
-  {#if files.rejected?.length}
+  {#if rejected?.length}
     <h6>Rejected Files</h6>
     <ul>
-      {#each files.rejected as rejected}
+      {#each rejected as rejected}
         <li>{rejected.file.name} - {rejected.error.message}</li>
       {/each}
     </ul>

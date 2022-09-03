@@ -52,14 +52,10 @@ class Encrypter {
 
   private handleWorkerError = (err: ErrorEvent | MessageEvent) => {
     log.error("Worker Error:", err);
-    let error: Error;
     if (err instanceof ErrorEvent) {
-      error = err.error;
-    }
-    if (error) {
       this.dispatch({
         state: STATE.FAILURE,
-        error,
+        error: err.error,
       });
     }
   };
