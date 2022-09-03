@@ -1,5 +1,6 @@
-import { Writable, writable, get } from "svelte/store";
+import type { Writable } from "svelte/store";
 import type { Files } from "filedrop-svelte";
+import { writable, get } from "svelte/store";
 import Guu from "guu";
 import { parseCrypString } from "../utils";
 import { CRYP_FILE_EXTENSION, STATE, MESSAGE } from "../constants";
