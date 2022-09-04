@@ -1,25 +1,38 @@
-name: Quick Check 👮🏽
+name: Code Cleanliness Check 👮🏽
 on: [push]
 jobs:
-  build:
-    name: Check everything
+  check-frontend:
+    name: Check Frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          working-directory: client
+
       - uses: actions/setup-node@v3
+        with:
+          working-directory: client
+
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: 7.0.0
           run_install: true
+          working-directory: client
 
       - name: Check Typescript and Svelte files
         run: pnpm check
+        with:
+          working-directory: client
 
       - name: Format files
         run: pnpm format
+        with:
+          working-directory: client        
 
       - name: Ensure can build successfully
         run: pnpm build
+        with:
+          working-directory: client        
 
       - name: Check for clean status
         run: sh scripts/ensure-git-clean.sh
