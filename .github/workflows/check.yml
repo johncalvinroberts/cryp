@@ -21,18 +21,16 @@ jobs:
 
       - name: Check Typescript and Svelte files
         run: pnpm check
-        with:
-          working-directory: client
+        working-directory: client
 
       - name: Format files
         run: pnpm format
-        with:
-          working-directory: client        
+        working-directory: client
+
 
       - name: Ensure can build successfully
         run: pnpm build
-        with:
-          working-directory: client        
+        working-directory: client
 
       - name: Check for clean status
         run: sh scripts/ensure-git-clean.sh

@@ -10,12 +10,16 @@ jobs:
       pull-requests: write
       contents: write
     steps:
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v2.2.2
         with:
-          version: ^7
+          version: 7.0.0
+          run_install: true
+          working-directory: client
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+          working-directory: client
+
       - run: pnpm i --lockfile-only
       - run: |
           git config --global user.name github-actions[bot]
