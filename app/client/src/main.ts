@@ -1,8 +1,11 @@
 import App from "./App.svelte";
 import "./assets/global.css";
 import { registerSW } from "virtual:pwa-register";
+import { mountCloudflareAnalytics } from "./lib/analytics";
 
-if ("serviceWorker" in navigator) {
+const IS_PROD = import.meta.env.PROD;
+
+if ("serviceWorker" in navigator && IS_PROD) {
   // && !/localhost/.test(window.location) && !/lvh.me/.test(window.location)) {
   const updateSW = registerSW({
     onNeedRefresh() {
@@ -13,6 +16,11 @@ if ("serviceWorker" in navigator) {
     },
   });
 }
+
+if (IS_PROD) {
+  mountCloudflareAnalytics();
+}
+
 const target = document.getElementById("app") || document.body;
 const app = new App({
   target,

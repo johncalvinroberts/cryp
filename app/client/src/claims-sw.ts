@@ -15,7 +15,11 @@ precacheAndRoute(ctx.__WB_MANIFEST);
 cleanupOutdatedCaches();
 
 // to allow work offline
-registerRoute(new NavigationRoute(createHandlerBoundToURL("index.html")));
+registerRoute(
+  new NavigationRoute(createHandlerBoundToURL("index.html"), {
+    denylist: [/\/api.*$/],
+  })
+);
 
 ctx.skipWaiting();
 clientsClaim();

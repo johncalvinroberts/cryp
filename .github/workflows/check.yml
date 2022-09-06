@@ -7,30 +7,30 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          working-directory: client
+          working-directory: app/client
 
       - uses: actions/setup-node@v3
         with:
-          working-directory: client
+          working-directory: app/client
 
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: 7.0.0
           run_install: true
-          working-directory: client
+          working-directory: app/client
 
       - name: Check Typescript and Svelte files
         run: pnpm check
-        working-directory: client
+        working-directory: app/client
 
       - name: Format files
         run: pnpm format
-        working-directory: client
+        working-directory: app/client
 
 
       - name: Ensure can build successfully
         run: pnpm build
-        working-directory: client
+        working-directory: app/client
 
       - name: Check for clean status
         run: sh scripts/ensure-git-clean.sh
