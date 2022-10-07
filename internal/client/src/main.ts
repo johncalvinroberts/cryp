@@ -17,6 +17,7 @@ if ("serviceWorker" in navigator && IS_PROD) {
   });
 }
 
+
 if (IS_PROD) {
   mountCloudflareAnalytics();
 }
