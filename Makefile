@@ -1,4 +1,4 @@
-FE_DIR=app/client
+FE_DIR=internal/ui
 BE_CLI_ENTRYPOINT=cmd/server/main.go
 AIR_BIN=./bin/air
 BIN=./bin/cryp
@@ -14,7 +14,7 @@ install-air:
 	curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s
 
 install-be: 
-	go get ./app
+	go mod tidy
 
 build-be:
 	go build -o $(BIN) $(BE_ENTRYPOINT)

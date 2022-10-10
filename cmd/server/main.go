@@ -9,8 +9,8 @@ import (
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
-	"github.com/johncalvinroberts/cryp/internal/client"
 	"github.com/johncalvinroberts/cryp/internal/health"
+	"github.com/johncalvinroberts/cryp/internal/ui"
 )
 
 const defaultPort = "9000"
@@ -24,7 +24,7 @@ func main() {
 		port = defaultPort
 	}
 
-	router.Use(static.Serve("/", client.GetClientFileSystem()))
+	router.Use(static.Serve("/", ui.GetUIFileSystem()))
 	router.GET("/api/health", GetHealth)
 	log.Fatal(router.Run("localhost:" + port))
 }

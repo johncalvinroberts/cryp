@@ -1,4 +1,4 @@
-package client
+package ui
 
 import (
 	"embed"
@@ -15,7 +15,7 @@ type embedFileSystem struct {
 //go:embed dist
 var embeddedFiles embed.FS
 
-func GetClientFileSystem() static.ServeFileSystem {
+func GetUIFileSystem() static.ServeFileSystem {
 	// Get the build subdirectory as the
 	// root directory so that it can be passed
 	// to the http.FileServer
