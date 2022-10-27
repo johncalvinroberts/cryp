@@ -25,3 +25,5 @@ dist-ssr
 
 tmp/*
 bin/*
+.env
+.terraform

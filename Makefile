@@ -7,6 +7,7 @@ BIN=./bin/cryp
 build: build-fe build-be
 
 install: install-be install-fe install-air
+
 dev: 
 	make -j 2 dev-fe dev-be
 
@@ -19,6 +20,9 @@ install-be:
 build-be:
 	go build -o $(BIN) $(BE_ENTRYPOINT)
 
+dev-be:
+	$(AIR_BIN) $(BE_ENTRYPOINT)
+
 build-fe:
 	cd $(FE_DIR); pnpm run build;
 
@@ -28,9 +32,6 @@ install-fe:
 dev-fe:
 	cd $(FE_DIR); pnpm run dev;
 
-dev-be:
-	export GIN_MODE=release
-	$(AIR_BIN) $(BE_ENTRYPOINT)
 
 run:
 	$(BIN)
@@ -39,3 +40,14 @@ clean:
 	rm -rf $(BIN)
 	rm -rf bin/main
 	rm -rf $(FE_DIR)/build
+
+docker-up:
+	docker compose up -d
+
+docker-down:
+	docker compose down
+
+docker-restart: docker-down docker-up
+
+fmt:
+	@gofmt -l -w internal cmd
