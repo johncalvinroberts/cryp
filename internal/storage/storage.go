@@ -43,10 +43,10 @@ func (svc *StorageService) Write(ctx context.Context, bucket, key string, body i
 	return res.Location, nil
 }
 
-func (svc *StorageService) Read(ctx context.Context, bucket, fileName string, body io.WriterAt) error {
+func (svc *StorageService) Read(ctx context.Context, bucket, key string, body io.WriterAt) error {
 	if _, err := svc.downloader.DownloadWithContext(ctx, body, &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
-		Key:    aws.String(fileName),
+		Key:    aws.String(key),
 	}); err != nil {
 		return fmt.Errorf("failed to read from storage: %w", err)
 	}
@@ -54,17 +54,17 @@ func (svc *StorageService) Read(ctx context.Context, bucket, fileName string, bo
 	return nil
 }
 
-func (svc *StorageService) Delete(ctx context.Context, bucket, fileName string) error {
+func (svc *StorageService) Delete(ctx context.Context, bucket, key string) error {
 	if _, err := svc.client.DeleteObjectWithContext(ctx, &s3.DeleteObjectInput{
 		Bucket: aws.String(bucket),
-		Key:    aws.String(fileName),
+		Key:    aws.String(key),
 	}); err != nil {
 		return fmt.Errorf("failed to delete from storage: %w", err)
 	}
 
 	if err := svc.client.WaitUntilObjectNotExists(&s3.HeadObjectInput{
 		Bucket: aws.String(bucket),
-		Key:    aws.String(fileName),
+		Key:    aws.String(key),
 	}); err != nil {
 		return fmt.Errorf("wait: %w", err)
 	}

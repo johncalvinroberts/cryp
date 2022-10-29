@@ -2,11 +2,13 @@ package whoami
 
 import (
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/johncalvinroberts/cryp/internal/email"
+	"github.com/johncalvinroberts/cryp/internal/errors"
 	"github.com/johncalvinroberts/cryp/internal/storage"
 	"github.com/johncalvinroberts/cryp/internal/utils"
 	"golang.org/x/net/context"
@@ -16,11 +18,6 @@ const (
 	OTP_LENGTH              = 6
 	WHOAMI_CHALLENGE_PREFIX = "whoami-challenge"
 )
-
-type WhoamiChallengeResponse struct {
-	Success bool   `json:"success"`
-	JWT     string `json:"jwt"`
-}
 
 type WhoamiService struct {
 	secret           string
@@ -59,24 +56,34 @@ func (svc *WhoamiService) StartWhoamiChallenge(email string) error {
 		return err
 	}
 	msg := fmt.Sprintf("Your one-time password for Cryp: <code>%s</code>", otp)
-	svc.emailService.SendANiceEmail(email, msg, "Cryp One-time password")
+	err = svc.emailService.SendANiceEmail(email, msg, "Cryp One-time password")
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 // redeem otp
-func (svc *WhoamiService) TryWhoamiChallenge(email string, otp string) WhoamiChallengeResponse {
-	res := &WhoamiChallengeResponse{}
+func (svc *WhoamiService) TryWhoamiChallenge(email string, otp string) (string, error) {
 	challenge := svc.FindWhoamiChallenge(email)
-	res.Success = challenge != nil && otp == *challenge
-	if res.Success {
-		jwt, err := svc.issueJWT(email)
-		if err != nil {
-			res.Success = false
-		} else {
-			res.JWT = jwt
-		}
+	if otp != *challenge || challenge == nil {
+		log.Default().Print("otp challenge failed or not found")
+		return "", errors.ErrValidationFailure
 	}
-	return *res
+	// TODO: check expiration of whoami challenge
+	// cleanup
+	defer svc.DestroyWhoamiChallenge(email)
+	jwt, err := svc.issueJWT(email)
+	if err != nil {
+		return "", err
+	}
+	return jwt, nil
+}
+
+func (svc *WhoamiService) DestroyWhoamiChallenge(email string) {
+	ctx := context.Background()
+	key := storage.ComposeKey(WHOAMI_CHALLENGE_PREFIX, email)
+	svc.storageService.Delete(ctx, svc.whoamiBucketName, key)
 }
 
 func InitWhoamiService(JWTSecret string, whoamiBucketName string, storageService *storage.StorageService, emailService *email.EmailService) *WhoamiService {

@@ -22,6 +22,7 @@ type AppConfig struct {
 		Secret   string `env:"AWS_SECRET_ACCESS_KEY,required"`
 		Region   string `env:"AWS_REGION,required"`
 		Endpoint string `env:"AWS_ENDPOINT,required"`
+		Token    string `env:"AWS_TOKEN"`
 	}
 	Storage struct {
 		WhoamiBucketName string `env:"WHOAMI_BUCKET_NAME,required"`
@@ -38,7 +39,7 @@ func InitAppConfig() *AppConfig {
 	c.AWSSession = session.Must(session.NewSession(&aws.Config{
 		S3ForcePathStyle: aws.Bool(true),
 		Region:           aws.String(c.AWS.Region),
-		Credentials:      &credentials.Credentials{},
+		Credentials:      credentials.NewStaticCredentials(c.AWS.ID, c.AWS.Secret, c.AWS.Token),
 		Endpoint:         aws.String(c.AWS.Endpoint),
 	}))
 	return &c

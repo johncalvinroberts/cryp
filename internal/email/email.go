@@ -19,7 +19,7 @@ type EmailService struct {
 	ses *ses.SES
 }
 
-func (svc *EmailService) SendANiceEmail(to string, msg string, subject string) {
+func (svc *EmailService) SendANiceEmail(to string, msg string, subject string) error {
 	// Assemble the email.
 	input := &ses.SendEmailInput{
 		Destination: &ses.Destination{
@@ -57,11 +57,11 @@ func (svc *EmailService) SendANiceEmail(to string, msg string, subject string) {
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
 			case ses.ErrCodeMessageRejected:
-				fmt.Println(ses.ErrCodeMessageRejected, aerr.Error())
+				log.Println(ses.ErrCodeMessageRejected, aerr.Error())
 			case ses.ErrCodeMailFromDomainNotVerifiedException:
-				fmt.Println(ses.ErrCodeMailFromDomainNotVerifiedException, aerr.Error())
+				log.Println(ses.ErrCodeMailFromDomainNotVerifiedException, aerr.Error())
 			case ses.ErrCodeConfigurationSetDoesNotExistException:
-				fmt.Println(ses.ErrCodeConfigurationSetDoesNotExistException, aerr.Error())
+				log.Println(ses.ErrCodeConfigurationSetDoesNotExistException, aerr.Error())
 			default:
 				log.Println(aerr.Error())
 			}
@@ -71,10 +71,11 @@ func (svc *EmailService) SendANiceEmail(to string, msg string, subject string) {
 			log.Println(err.Error())
 		}
 
-		return
+		return err
 	}
 
 	log.Println(result)
+	return nil
 }
 
 func (svc *EmailService) buildHtml(msg string) string {

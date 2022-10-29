@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -24,9 +25,10 @@ func RespondCreated(c *gin.Context, data any) {
 
 func RespondError(c *gin.Context, statusCode int, msg string) {
 	data := gin.H{"msg": msg}
+	c.Error(fmt.Errorf(msg))
 	ComposeResponse(false, statusCode, c, data)
 }
 
 func RespondInternalServerError(c *gin.Context) {
-	RespondError(c, http.StatusInternalServerError, errors.ErrInternalServerError)
+	RespondError(c, http.StatusInternalServerError, errors.ErrInternalServerError.Error())
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/gin-contrib/static"
@@ -18,7 +17,6 @@ import (
 func main() {
 	log.Print("Starting Server")
 	config := config.InitAppConfig()
-	fmt.Println(config.GinMode)
 	gin.SetMode(config.GinMode)
 	router := gin.Default()
 	storageSrv := storage.InitStorageService(config.AWSSession, config.Timeout)

@@ -16,7 +16,7 @@ func (svc *WhoamiService) HandleStartWhoamiChallenge(c *gin.Context) {
 		utils.RespondError(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = svc.StartWhoamiChallenge(req.email)
+	err = svc.StartWhoamiChallenge(req.Email)
 	if err != nil {
 		utils.RespondError(c, http.StatusBadRequest, err.Error())
 		return
@@ -25,7 +25,18 @@ func (svc *WhoamiService) HandleStartWhoamiChallenge(c *gin.Context) {
 }
 
 func (svc *WhoamiService) HandleTryWhoamiChallenge(c *gin.Context) {
-	// TODO
+	req := &TryWhoamiChallengeRequestDTO{}
+	err := c.BindJSON(req)
+	if err != nil {
+		utils.RespondError(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	jwt, err := svc.TryWhoamiChallenge(req.Email, req.OTP)
+	if err != nil {
+		utils.RespondError(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	utils.RespondOK(c, &TryWhoamiChallengeResponseDTO{jwt: jwt})
 }
 
 func (svc *WhoamiService) HandleGetWhoami(c *gin.Context) {
