@@ -67,7 +67,7 @@ func (svc *WhoamiService) StartWhoamiChallenge(email string) error {
 func (svc *WhoamiService) TryWhoamiChallenge(email string, otp string) (string, error) {
 	challenge := svc.FindWhoamiChallenge(email)
 	if otp != *challenge || challenge == nil {
-		log.Default().Print("otp challenge failed or not found")
+		log.Println("whoami challenge failed or not found")
 		return "", errors.ErrValidationFailure
 	}
 	// TODO: check expiration of whoami challenge
@@ -83,7 +83,10 @@ func (svc *WhoamiService) TryWhoamiChallenge(email string, otp string) (string, 
 func (svc *WhoamiService) DestroyWhoamiChallenge(email string) {
 	ctx := context.Background()
 	key := storage.ComposeKey(WHOAMI_CHALLENGE_PREFIX, email)
-	svc.storageService.Delete(ctx, svc.whoamiBucketName, key)
+	err := svc.storageService.Delete(ctx, svc.whoamiBucketName, key)
+	if err != nil {
+		log.Printf("failed to delete whoami challenge, key: %s", key)
+	}
 }
 
 func InitWhoamiService(JWTSecret string, whoamiBucketName string, storageService *storage.StorageService, emailService *email.EmailService) *WhoamiService {

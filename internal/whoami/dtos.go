@@ -10,5 +10,5 @@ type TryWhoamiChallengeRequestDTO struct {
 }
 
 type TryWhoamiChallengeResponseDTO struct {
-	jwt string `json:"jwt"`
+	JWT string `json:"jwt"`
 }

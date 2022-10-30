@@ -11,13 +11,14 @@ import (
 )
 
 type AppConfig struct {
-	Debug      bool   `env:"DEBUG,required"`
-	GinMode    string `env:"GIN_MODE,required"`
-	JWTSecret  string `env:"JWT_SECRET,required"`
-	Port       string `env:"PORT,default=9000"`
-	Timeout    int    `env:"TIMEOUT,default=8000"`
-	AWSSession *session.Session
-	AWS        struct {
+	Debug              bool   `env:"DEBUG,required"`
+	GinMode            string `env:"GIN_MODE,required"`
+	JWTSecret          string `env:"JWT_SECRET,required"`
+	Port               string `env:"PORT,default=9000"`
+	Timeout            int    `env:"TIMEOUT,default=8000"`
+	EmailTransportName string `env:"EMAIL_TRANSPORT_NAME,default=fs"`
+	AWSSession         *session.Session
+	AWS                struct {
 		ID       string `env:"AWS_ACCESS_KEY_ID"`
 		Secret   string `env:"AWS_SECRET_ACCESS_KEY,required"`
 		Region   string `env:"AWS_REGION,required"`

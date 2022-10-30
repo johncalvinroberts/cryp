@@ -20,7 +20,7 @@ func main() {
 	gin.SetMode(config.GinMode)
 	router := gin.Default()
 	storageSrv := storage.InitStorageService(config.AWSSession, config.Timeout)
-	emailSrv := email.InitEmailService(config.AWSSession)
+	emailSrv := email.InitEmailService(config)
 	whoamiSrv := whoami.InitWhoamiService(config.JWTSecret, config.Storage.WhoamiBucketName, storageSrv, emailSrv)
 	router.Use(static.Serve("/", ui.GetUIFileSystem()))
 	router.GET("/api/health", health.HandleGetHealth)
