@@ -54,6 +54,16 @@ func (svc *StorageService) Read(ctx context.Context, bucket, key string, body io
 	return nil
 }
 
+func (svc *StorageService) ReadToString(ctx context.Context, bucket, key string) (string, error) {
+	body := aws.NewWriteAtBuffer([]byte{})
+	err := svc.Read(ctx, bucket, key, body)
+	if err != nil {
+		return "", err
+	}
+	res := string(body.Bytes())
+	return res, nil
+}
+
 func (svc *StorageService) Delete(ctx context.Context, bucket, key string) error {
 	if _, err := svc.client.DeleteObjectWithContext(ctx, &s3.DeleteObjectInput{
 		Bucket: aws.String(bucket),

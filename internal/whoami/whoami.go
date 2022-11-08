@@ -26,19 +26,19 @@ type WhoamiService struct {
 	emailService     *email.EmailService
 }
 
-func (svc *WhoamiService) FindWhoamiChallenge(email string) *string {
-	var challenge string
-	// TODO: lookup from storage
-	return &challenge
+func (svc *WhoamiService) FindWhoamiChallenge(email string) (string, error) {
+	key := storage.ComposeKey(WHOAMI_CHALLENGE_PREFIX, email)
+	ctx := context.Background()
+	return svc.storageService.ReadToString(ctx, svc.whoamiBucketName, key)
 }
 
 func (svc *WhoamiService) issueJWT(email string) (string, error) {
-	token := jwt.New(jwt.SigningMethodEdDSA)
+	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["exp"] = time.Now().Add(10 * time.Minute)
 	claims["authorized"] = true
 	claims["email"] = email
-	tokenString, err := token.SignedString(svc.secret)
+	tokenString, err := token.SignedString([]byte((svc.secret)))
 	if err != nil {
 		return "Signing Error", err
 	}
@@ -65,18 +65,23 @@ func (svc *WhoamiService) StartWhoamiChallenge(email string) error {
 
 // redeem otp
 func (svc *WhoamiService) TryWhoamiChallenge(email string, otp string) (string, error) {
-	challenge := svc.FindWhoamiChallenge(email)
-	if otp != *challenge || challenge == nil {
+	challenge, err := svc.FindWhoamiChallenge(email)
+	if err != nil {
+		log.Printf("encountered error when finding whoami challenge: %v\n", err)
+		return "", errors.ErrInternalServerError
+	}
+	if otp != challenge || challenge == "" {
 		log.Println("whoami challenge failed or not found")
-		return "", errors.ErrValidationFailure
+		return "", errors.ErrWhoamiChallengeNotFound
 	}
 	// TODO: check expiration of whoami challenge
-	// cleanup
-	defer svc.DestroyWhoamiChallenge(email)
 	jwt, err := svc.issueJWT(email)
 	if err != nil {
-		return "", err
+		log.Printf("failed to issue jwt: %v\n", err)
+		return "", errors.ErrInternalServerError
 	}
+	// cleanup
+	defer svc.DestroyWhoamiChallenge(email)
 	return jwt, nil
 }
 
