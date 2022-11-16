@@ -43,6 +43,7 @@ clean:
 
 docker-up:
 	docker compose up -d
+	sh ./scripts/scaffold-local-resources.sh
 
 docker-down:
 	docker compose down

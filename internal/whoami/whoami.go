@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"github.com/johncalvinroberts/cryp/internal/email"
 	"github.com/johncalvinroberts/cryp/internal/errors"
@@ -91,6 +92,37 @@ func (svc *WhoamiService) DestroyWhoamiChallenge(email string) {
 	err := svc.storageService.Delete(ctx, svc.whoamiBucketName, key)
 	if err != nil {
 		log.Printf("failed to delete whoami challenge, key: %s", key)
+	}
+}
+
+func (svc *WhoamiService) VerifyWhoami(endpointHandler func(c *gin.Context)) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tokenHeader := c.Request.Header.Get("Authorization")
+		// no token in header
+		if tokenHeader == "" {
+			utils.RespondUnauthorized(c, errors.ErrUnauthorized)
+			return
+		}
+		token, err := jwt.Parse(tokenHeader, func(token *jwt.Token) (interface{}, error) {
+			_, ok := token.Method.(*jwt.SigningMethodHMAC)
+			if !ok {
+				log.Printf("failed to init token method")
+				return "", errors.ErrInternalServerError
+			}
+			return []byte((svc.secret)), nil
+		})
+		// error parsing JWT
+		if err != nil {
+			println(err.Error(), tokenHeader)
+			utils.RespondUnauthorized(c, err)
+			return
+		}
+		// invalid token
+		if !token.Valid {
+			utils.RespondUnauthorized(c, errors.ErrInvalidToken)
+			return
+		}
+		endpointHandler(c)
 	}
 }
 

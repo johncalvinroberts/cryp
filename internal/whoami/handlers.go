@@ -39,5 +39,5 @@ func (svc *WhoamiService) HandleTryWhoamiChallenge(c *gin.Context) {
 }
 
 func (svc *WhoamiService) HandleGetWhoami(c *gin.Context) {
-	// TODO
+	utils.RespondOK(c, "good")
 }

@@ -12,6 +12,8 @@ var (
 	ErrDataUpdateFailure   = goerrs.New("data update failure")
 	ErrDataDeletionFailure = goerrs.New("data deletion failure")
 	ErrInternalServerError = goerrs.New("something unexpectedly went wrong")
+	ErrInvalidToken        = goerrs.New("invalid token")
+	ErrUnauthorized        = goerrs.New("unauthorized")
 
 	// auth
 	ErrWhoamiChallengeNotFound = goerrs.New("whoami challenge failed or not found")

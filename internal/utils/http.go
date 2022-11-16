@@ -31,3 +31,7 @@ func RespondError(c *gin.Context, statusCode int, err error) {
 func RespondInternalServerError(c *gin.Context) {
 	RespondError(c, http.StatusInternalServerError, errors.ErrInternalServerError)
 }
+
+func RespondUnauthorized(c *gin.Context, err error) {
+	RespondError(c, http.StatusUnauthorized, errors.ErrInternalServerError)
+}
