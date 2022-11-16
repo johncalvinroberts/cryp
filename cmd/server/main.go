@@ -26,6 +26,6 @@ func main() {
 	router.GET("/api/health", health.HandleGetHealth)
 	router.POST("/api/whoami/start", whoamiSrv.HandleStartWhoamiChallenge)
 	router.POST("/api/whoami/try", whoamiSrv.HandleTryWhoamiChallenge)
-	router.GET("/api/whoami", whoamiSrv.VerifyWhoami(whoamiSrv.HandleGetWhoami))
+	router.GET("/api/whoami", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleGetWhoami))
 	log.Fatal(router.Run("localhost:" + config.Port))
 }

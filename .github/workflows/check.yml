@@ -27,7 +27,6 @@ jobs:
         run: pnpm format
         working-directory: internal/ui
 
-
       - name: Ensure can build successfully
         run: pnpm build
         working-directory: internal/ui

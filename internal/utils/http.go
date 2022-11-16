@@ -33,5 +33,5 @@ func RespondInternalServerError(c *gin.Context) {
 }
 
 func RespondUnauthorized(c *gin.Context, err error) {
-	RespondError(c, http.StatusUnauthorized, errors.ErrInternalServerError)
+	RespondError(c, http.StatusUnauthorized, err)
 }

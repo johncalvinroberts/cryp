@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/johncalvinroberts/cryp/internal/email"
 	"github.com/johncalvinroberts/cryp/internal/errors"
 	"github.com/johncalvinroberts/cryp/internal/storage"
+	"github.com/johncalvinroberts/cryp/internal/token"
 	"github.com/johncalvinroberts/cryp/internal/utils"
 	"golang.org/x/net/context"
 )
@@ -18,45 +17,22 @@ import (
 const (
 	OTP_LENGTH              = 6
 	WHOAMI_CHALLENGE_PREFIX = "whoami-challenge"
+	CTX_JWT_KEY             = "CTX_JWT_KEY"
+	CTX_JWT_CLAIMS_KEY      = "CTX_JWT_CLAIMS_KEY"
 )
-
-// Create a struct that will be encoded to a JWT.
-// We add jwt.RegisteredClaims as an embedded type, to provide fields like expiry time
-type Claims struct {
-	Email string `json:"email"`
-	jwt.RegisteredClaims
-}
 
 type WhoamiService struct {
 	secret           string
 	whoamiBucketName string
 	storageService   *storage.StorageService
 	emailService     *email.EmailService
+	tokenService     *token.TokenService
 }
 
 func (svc *WhoamiService) FindWhoamiChallenge(email string) (string, error) {
 	key := storage.ComposeKey(WHOAMI_CHALLENGE_PREFIX, email)
 	ctx := context.Background()
 	return svc.storageService.ReadToString(ctx, svc.whoamiBucketName, key)
-}
-
-func (svc *WhoamiService) issueJWT(email string) (string, error) {
-	expirationTime := time.Now().Add(5 * time.Minute)
-	// Create the JWT claims, which includes the username and expiry time
-	claims := &Claims{
-		Email: email,
-		RegisteredClaims: jwt.RegisteredClaims{
-			// In JWT, the expiry time is expressed as unix milliseconds
-			ExpiresAt: jwt.NewNumericDate(expirationTime),
-		},
-	}
-
-	// Declare the token with the algorithm used for signing, and the claims
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	// Create the JWT string
-	tokenString, err := token.SignedString([]byte((svc.secret)))
-	// TODO: persist to storage or redis
-	return tokenString, err
 }
 
 // create otp + start whoami flow
@@ -88,7 +64,7 @@ func (svc *WhoamiService) TryWhoamiChallenge(email string, otp string) (string, 
 		return "", errors.ErrWhoamiChallengeNotFound
 	}
 	// TODO: check expiration of whoami challenge
-	jwt, err := svc.issueJWT(email)
+	jwt, err := svc.tokenService.IssueJWT(email)
 	if err != nil {
 		log.Printf("failed to issue jwt: %v\n", err)
 		return "", errors.ErrInternalServerError
@@ -107,34 +83,34 @@ func (svc *WhoamiService) DestroyWhoamiChallenge(email string) {
 	}
 }
 
-func (svc *WhoamiService) VerifyWhoami(endpointHandler func(c *gin.Context)) gin.HandlerFunc {
+func (svc *WhoamiService) VerifyWhoamiMiddleware(endpointHandler func(c *gin.Context)) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenHeader := c.Request.Header.Get("Authorization")
+		token := c.Request.Header.Get("Authorization")
 		// no token in header
-		if tokenHeader == "" {
+		if token == "" {
 			utils.RespondUnauthorized(c, errors.ErrUnauthorized)
 			return
 		}
-		claims := &Claims{}
-
-		token, err := jwt.ParseWithClaims(tokenHeader, claims, func(token *jwt.Token) (interface{}, error) {
-			return []byte((svc.secret)), nil
-		})
+		claims, err := svc.tokenService.VerifyTokenAndParseClaims(token)
 		// error parsing JWT
 		if err != nil {
-			println(err.Error(), tokenHeader)
 			utils.RespondUnauthorized(c, err)
 			return
 		}
-		// invalid token
-		if !token.Valid {
-			utils.RespondUnauthorized(c, errors.ErrInvalidToken)
-			return
-		}
+		c.Set(CTX_JWT_KEY, token)
+		c.Set(CTX_JWT_CLAIMS_KEY, &claims)
 		endpointHandler(c)
 	}
 }
 
 func InitWhoamiService(JWTSecret string, whoamiBucketName string, storageService *storage.StorageService, emailService *email.EmailService) *WhoamiService {
-	return &WhoamiService{secret: JWTSecret, storageService: storageService, whoamiBucketName: whoamiBucketName, emailService: emailService}
+	return &WhoamiService{
+		secret:           JWTSecret,
+		storageService:   storageService,
+		whoamiBucketName: whoamiBucketName,
+		emailService:     emailService,
+		tokenService: &token.TokenService{
+			Secret: JWTSecret,
+		},
+	}
 }
