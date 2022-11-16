@@ -10,10 +10,8 @@ jobs:
           working-directory: internal/ui
 
       - uses: actions/setup-node@v3
-        with:
-          working-directory: internal/ui
 
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v2
         with:
           version: 7.0.0
           run_install: true
