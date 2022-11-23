@@ -5,13 +5,14 @@ import (
 	"log"
 	"strings"
 
+	"context"
+
 	"github.com/gin-gonic/gin"
 	"github.com/johncalvinroberts/cryp/internal/email"
 	"github.com/johncalvinroberts/cryp/internal/errors"
 	"github.com/johncalvinroberts/cryp/internal/storage"
 	"github.com/johncalvinroberts/cryp/internal/token"
 	"github.com/johncalvinroberts/cryp/internal/utils"
-	"golang.org/x/net/context"
 )
 
 const (
