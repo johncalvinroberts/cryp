@@ -1,4 +1,4 @@
-FE_DIR=internal/ui
+FE_DIR=ui
 BE_CLI_ENTRYPOINT=cmd/server/main.go
 AIR_BIN=./bin/air
 BIN=./bin/cryp

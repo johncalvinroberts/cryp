@@ -10,8 +10,8 @@ import (
 	"github.com/johncalvinroberts/cryp/internal/email"
 	"github.com/johncalvinroberts/cryp/internal/health"
 	"github.com/johncalvinroberts/cryp/internal/storage"
-	"github.com/johncalvinroberts/cryp/internal/ui"
 	"github.com/johncalvinroberts/cryp/internal/whoami"
+	"github.com/johncalvinroberts/cryp/ui"
 )
 
 func main() {
