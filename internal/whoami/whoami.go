@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"context"
 
@@ -62,6 +63,8 @@ func (svc *WhoamiService) TryWhoamiChallenge(email string, otp string) (string, 
 	}
 	if otp != challenge || challenge == "" {
 		log.Println("whoami challenge failed or not found")
+		// cheap throttling
+		time.Sleep(2 * time.Second)
 		return "", errors.ErrWhoamiChallengeNotFound
 	}
 	// TODO: check expiration of whoami challenge
