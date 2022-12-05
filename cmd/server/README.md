@@ -20,6 +20,9 @@ Basically, it does three things:
 * POST `/api/whoami/try`
   * Accepts a one-time token as input
   * Returns a JWT if the authentication succeeds
+* POST `/api/whoami/refresh`
+  * Requires a valid token
+  * Returns a new token
 * DELETE `/api/whoami/end`
   * Revoke the current token holder's token
 * GET `/api/whoami`

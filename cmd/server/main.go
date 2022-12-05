@@ -27,5 +27,6 @@ func main() {
 	router.POST("/api/whoami/start", whoamiSrv.HandleStartWhoamiChallenge)
 	router.POST("/api/whoami/try", whoamiSrv.HandleTryWhoamiChallenge)
 	router.GET("/api/whoami", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleGetWhoami))
+	router.POST("/api/whoami/refresh", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleRefreshWhoamiToken))
 	log.Fatal(router.Run("localhost:" + config.Port))
 }

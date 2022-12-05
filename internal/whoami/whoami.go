@@ -107,6 +107,17 @@ func (svc *WhoamiService) VerifyWhoamiMiddleware(endpointHandler func(c *gin.Con
 	}
 }
 
+func (svc *WhoamiService) RefreshWhoamiToken(token string, claims *token.Claims) (string, error) {
+	// TODO: validate token against database
+	email := claims.Email
+	jwt, err := svc.tokenService.IssueJWT(email)
+	if err != nil {
+		log.Printf("failed to issue jwt: %v\n", err)
+		return "", errors.ErrInternalServerError
+	}
+	return jwt, nil
+}
+
 func InitWhoamiService(JWTSecret string, whoamiBucketName string, storageService *storage.StorageService, emailService *email.EmailService) *WhoamiService {
 	return &WhoamiService{
 		secret:           JWTSecret,
