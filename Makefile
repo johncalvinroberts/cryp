@@ -30,7 +30,7 @@ install-fe:
 	cd $(FE_DIR); pnpm install;
 
 dev-fe:
-	cd $(FE_DIR); pnpm run dev;
+	cd $(FE_DIR); pnpm start;
 
 
 run:

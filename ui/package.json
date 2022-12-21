@@ -11,26 +11,26 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.0.1",
+    "@sveltejs/vite-plugin-svelte": "^1.4.0",
     "@tsconfig/svelte": "^3.0.0",
     "@types/file-saver": "^2.0.5",
-    "prettier": "^2.5.1",
-    "svelte": "^3.49.0",
-    "svelte-check": "^2.8.0",
-    "svelte-preprocess": "^4.10.7",
-    "tslib": "^2.4.0",
-    "typescript": "^4.6.4",
-    "vite": "^3.0.7",
-    "vite-plugin-pwa": "^0.12.6"
+    "prettier": "^2.8.1",
+    "svelte": "^3.55.0",
+    "svelte-check": "^2.10.3",
+    "svelte-preprocess": "^5.0.0",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.4",
+    "vite": "^3.2.5",
+    "vite-plugin-pwa": "^0.14.0"
   },
   "dependencies": {
     "file-saver": "^2.0.5",
-    "filedrop-svelte": "^0.1.1",
-    "filesize": "^9.0.11",
+    "filedrop-svelte": "^0.1.2",
+    "filesize": "^10.0.6",
     "guu": "^0.3.1",
-    "workbox-core": "^6.5.3",
-    "workbox-precaching": "^6.5.3",
-    "workbox-routing": "^6.5.3",
-    "workbox-window": "^6.5.3"
+    "workbox-core": "^6.5.4",
+    "workbox-precaching": "^6.5.4",
+    "workbox-routing": "^6.5.4",
+    "workbox-window": "^6.5.4"
   }
 }
