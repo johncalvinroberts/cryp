@@ -11,10 +11,9 @@ jobs:
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 7.19.0
+          version: 7.0.0
           run_install: |
               - cwd: ui
-                args: [--no-frozen-lockfile]
       - name: Check Typescript and Svelte files
         run: pnpm check
         working-directory: ui
