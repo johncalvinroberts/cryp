@@ -1,6 +1,7 @@
 package whoami
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/johncalvinroberts/cryp/internal/errors"
@@ -46,11 +47,7 @@ func (svc *WhoamiService) HandleGetWhoami(c *gin.Context) {
 }
 
 func (svc *WhoamiService) HandleRefreshWhoamiToken(c *gin.Context) {
-	token := c.Request.Header.Get("Authorization")
-	if token == "" {
-		utils.RespondError(c, http.StatusUnauthorized, errors.ErrUnauthorized)
-	}
-
+	token := svc.extractTokenFromRequest(c)
 	claims, err := svc.tokenService.VerifyTokenAndParseClaims(token)
 	// error parsing JWT
 	if err != nil {
@@ -64,4 +61,24 @@ func (svc *WhoamiService) HandleRefreshWhoamiToken(c *gin.Context) {
 	}
 	utils.RespondOK(c, &RefreshWhoamiTokenResponseDTO{JWT: jwt})
 
+}
+
+func (svc *WhoamiService) HandleDestroyWhoamiToken(c *gin.Context) {
+	token := svc.extractTokenFromRequest(c)
+	if token == "" {
+		// don't do anything
+		log.Println("token gone. exiting.")
+		return
+	}
+	err := svc.tokenService.EvictToken(token)
+	if err != nil {
+		utils.RespondError(c, http.StatusBadRequest, err)
+	} else {
+		utils.RespondOK(c, nil)
+	}
+
+}
+
+func (svc *WhoamiService) HandleDestroyEverything(c *gin.Context) {
+	utils.RespondError(c, http.StatusExpectationFailed, errors.ErrNotImplemented)
 }

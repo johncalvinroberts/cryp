@@ -42,7 +42,7 @@ Basically, it does three things:
 * GET `/api/uploads`
   * Get uploads of current token holder
   * Protected
-* GET `/api/uploads/:id:`
+* GET `/api/uploads/:key:`
   * Get a persisted encrypted file upload.
   * Public, not protected.
 * DELETE `/api/uploads/:id:`

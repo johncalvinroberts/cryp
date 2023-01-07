@@ -17,4 +17,5 @@ var (
 
 	// auth
 	ErrWhoamiChallengeNotFound = goerrs.New("whoami challenge failed or not found")
+	ErrNotImplemented          = goerrs.New("not implemented")
 )

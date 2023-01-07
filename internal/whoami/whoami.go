@@ -89,12 +89,7 @@ func (svc *WhoamiService) DestroyWhoamiChallenge(email string) {
 
 func (svc *WhoamiService) VerifyWhoamiMiddleware(endpointHandler func(c *gin.Context)) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.Request.Header.Get("Authorization")
-		// no token in header
-		if token == "" {
-			utils.RespondUnauthorized(c, errors.ErrUnauthorized)
-			return
-		}
+		token := svc.extractTokenFromRequest(c)
 		claims, err := svc.tokenService.VerifyTokenAndParseClaims(token)
 		// error parsing JWT
 		if err != nil {
@@ -116,6 +111,15 @@ func (svc *WhoamiService) RefreshWhoamiToken(token string, claims *token.Claims)
 		return "", errors.ErrInternalServerError
 	}
 	return jwt, nil
+}
+
+func (svc *WhoamiService) extractTokenFromRequest(c *gin.Context) string {
+	token := c.Request.Header.Get("Authorization")
+	// no token in header
+	if token == "" {
+		utils.RespondUnauthorized(c, errors.ErrUnauthorized)
+	}
+	return token
 }
 
 func InitWhoamiService(JWTSecret string, whoamiBucketName string, storageService *storage.StorageService, emailService *email.EmailService) *WhoamiService {

@@ -24,9 +24,13 @@ func main() {
 	whoamiSrv := whoami.InitWhoamiService(config.JWTSecret, config.Storage.WhoamiBucketName, storageSrv, emailSrv)
 	router.Use(static.Serve("/", ui.GetUIFileSystem()))
 	router.GET("/api/health", health.HandleGetHealth)
+	// whoami
 	router.POST("/api/whoami/start", whoamiSrv.HandleStartWhoamiChallenge)
 	router.POST("/api/whoami/try", whoamiSrv.HandleTryWhoamiChallenge)
 	router.GET("/api/whoami", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleGetWhoami))
 	router.POST("/api/whoami/refresh", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleRefreshWhoamiToken))
+	router.DELETE("/api/whoami", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleDestroyWhoamiToken))
+	router.DELETE("/api/whoami/everything", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleDestroyEverything))
+	// credits
 	log.Fatal(router.Run("localhost:" + config.Port))
 }
