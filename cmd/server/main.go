@@ -1,36 +1,38 @@
 package main
 
 import (
-	"log"
-
-	"github.com/gin-contrib/static"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/johncalvinroberts/cryp/internal/config"
 	"github.com/johncalvinroberts/cryp/internal/email"
-	"github.com/johncalvinroberts/cryp/internal/health"
 	"github.com/johncalvinroberts/cryp/internal/storage"
+
+	"github.com/johncalvinroberts/cryp/internal/health"
 	"github.com/johncalvinroberts/cryp/internal/whoami"
 	"github.com/johncalvinroberts/cryp/ui"
 )
 
 func main() {
-	log.Print("Starting Server")
 	config := config.InitAppConfig()
-	gin.SetMode(config.GinMode)
-	router := gin.Default()
+	e := echo.New()
+	e.Logger.Print("Starting Server")
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(20)))
 	storageSrv := storage.InitStorageService(config.AWSSession, config.Timeout)
 	emailSrv := email.InitEmailService(config)
 	whoamiSrv := whoami.InitWhoamiService(config.JWTSecret, config.Storage.WhoamiBucketName, storageSrv, emailSrv)
-	router.Use(static.Serve("/", ui.GetUIFileSystem()))
-	router.GET("/api/health", health.HandleGetHealth)
-	// whoami
-	router.POST("/api/whoami/start", whoamiSrv.HandleStartWhoamiChallenge)
-	router.POST("/api/whoami/try", whoamiSrv.HandleTryWhoamiChallenge)
-	router.GET("/api/whoami", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleGetWhoami))
-	router.POST("/api/whoami/refresh", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleRefreshWhoamiToken))
-	router.DELETE("/api/whoami", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleDestroyWhoamiToken))
-	router.DELETE("/api/whoami/everything", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleDestroyEverything))
-	// credits
-	log.Fatal(router.Run("localhost:" + config.Port))
+
+	e.GET("/", echo.WrapHandler(ui.GetHandler()))
+	e.GET("/api/health", health.HandleGetHealth)
+	// // whoami
+	e.POST("/api/whoami/start", whoamiSrv.HandleStartWhoamiChallenge)
+	e.POST("/api/whoami/try", whoamiSrv.HandleTryWhoamiChallenge)
+	e.GET("/api/whoami", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleGetWhoami))
+	e.POST("/api/whoami/refresh", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleRefreshWhoamiToken))
+	e.DELETE("/api/whoami", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleDestroyWhoamiToken))
+	e.DELETE("/api/whoami/everything", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleDestroyEverything))
+
+	e.Logger.Fatal(e.Start("localhost:" + config.Port))
 }

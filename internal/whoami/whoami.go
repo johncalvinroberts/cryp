@@ -8,7 +8,6 @@ import (
 
 	"context"
 
-	"github.com/gin-gonic/gin"
 	"github.com/johncalvinroberts/cryp/internal/email"
 	"github.com/johncalvinroberts/cryp/internal/errors"
 	"github.com/johncalvinroberts/cryp/internal/storage"
@@ -87,21 +86,6 @@ func (svc *WhoamiService) DestroyWhoamiChallenge(email string) {
 	}
 }
 
-func (svc *WhoamiService) VerifyWhoamiMiddleware(endpointHandler func(c *gin.Context)) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		token := svc.extractTokenFromRequest(c)
-		claims, err := svc.tokenService.VerifyTokenAndParseClaims(token)
-		// error parsing JWT
-		if err != nil {
-			utils.RespondUnauthorized(c, err)
-			return
-		}
-		c.Set(CTX_JWT_KEY, token)
-		c.Set(CTX_JWT_CLAIMS_KEY, &claims)
-		endpointHandler(c)
-	}
-}
-
 func (svc *WhoamiService) RefreshWhoamiToken(token string, claims *token.Claims) (string, error) {
 	// TODO: validate token against database
 	email := claims.Email
@@ -111,15 +95,6 @@ func (svc *WhoamiService) RefreshWhoamiToken(token string, claims *token.Claims)
 		return "", errors.ErrInternalServerError
 	}
 	return jwt, nil
-}
-
-func (svc *WhoamiService) extractTokenFromRequest(c *gin.Context) string {
-	token := c.Request.Header.Get("Authorization")
-	// no token in header
-	if token == "" {
-		utils.RespondUnauthorized(c, errors.ErrUnauthorized)
-	}
-	return token
 }
 
 func InitWhoamiService(JWTSecret string, whoamiBucketName string, storageService *storage.StorageService, emailService *email.EmailService) *WhoamiService {

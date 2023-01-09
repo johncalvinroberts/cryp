@@ -3,35 +3,36 @@ package utils
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/johncalvinroberts/cryp/internal/errors"
+	"github.com/labstack/echo/v4"
 )
 
-func ComposeResponse(success bool, statusCode int, c *gin.Context, data any) {
-	c.JSON(statusCode, gin.H{
-		"success": success,
-		"data":    data,
-	})
+type CrypAPIResponse struct {
+	Success bool `json:"success"`
+	Data    any  `json:"data"`
 }
 
-func RespondOK(c *gin.Context, data any) {
-	ComposeResponse(true, http.StatusOK, c, data)
+func ComposeResponse(success bool, statusCode int, c echo.Context, data any) error {
+	return c.JSON(statusCode, &CrypAPIResponse{Success: success, Data: data})
 }
 
-func RespondCreated(c *gin.Context, data any) {
-	ComposeResponse(true, http.StatusCreated, c, data)
+func RespondOK(c echo.Context, data any) error {
+	return ComposeResponse(true, http.StatusOK, c, data)
 }
 
-func RespondError(c *gin.Context, statusCode int, err error) {
-	data := gin.H{"msg": err.Error()}
-	c.Error(err)
-	ComposeResponse(false, statusCode, c, data)
+func RespondCreated(c echo.Context, data any) error {
+	return ComposeResponse(true, http.StatusCreated, c, data)
 }
 
-func RespondInternalServerError(c *gin.Context) {
-	RespondError(c, http.StatusInternalServerError, errors.ErrInternalServerError)
+func RespondError(c echo.Context, statusCode int, err error) error {
+	data := err.Error()
+	return ComposeResponse(false, statusCode, c, data)
 }
 
-func RespondUnauthorized(c *gin.Context, err error) {
-	RespondError(c, http.StatusUnauthorized, err)
+func RespondInternalServerError(c echo.Context) error {
+	return RespondError(c, http.StatusInternalServerError, errors.ErrInternalServerError)
+}
+
+func RespondUnauthorized(c echo.Context, err error) error {
+	return RespondError(c, http.StatusUnauthorized, err)
 }

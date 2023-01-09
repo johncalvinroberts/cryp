@@ -1,15 +1,15 @@
 package health
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/johncalvinroberts/cryp/internal/utils"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetHealth(c *gin.Context) {
+func HandleGetHealth(c echo.Context) error {
 	healthy := GetHealth()
 	if healthy {
-		utils.RespondOK(c, nil)
+		return utils.RespondOK(c, nil)
 	} else {
-		utils.RespondInternalServerError(c)
+		return utils.RespondInternalServerError(c)
 	}
 }
