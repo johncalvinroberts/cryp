@@ -8,6 +8,7 @@ import (
 	"github.com/johncalvinroberts/cryp/internal/email"
 	"github.com/johncalvinroberts/cryp/internal/storage"
 
+	"github.com/johncalvinroberts/cryp/internal/blob"
 	"github.com/johncalvinroberts/cryp/internal/health"
 	"github.com/johncalvinroberts/cryp/internal/whoami"
 	"github.com/johncalvinroberts/cryp/ui"
@@ -23,7 +24,7 @@ func main() {
 	storageSrv := storage.InitStorageService(config.AWSSession, config.Timeout)
 	emailSrv := email.InitEmailService(config)
 	whoamiSrv := whoami.InitWhoamiService(config.JWTSecret, config.Storage.WhoamiBucketName, storageSrv, emailSrv)
-
+	blobSrv := blob.InitBlobService(storageSrv, config.Storage.BlobBucketName, config.Storage.BlobPointerBucketName)
 	e.GET("/", echo.WrapHandler(ui.GetHandler()))
 	e.GET("/api/health", health.HandleGetHealth)
 	// // whoami
@@ -33,6 +34,7 @@ func main() {
 	e.POST("/api/whoami/refresh", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleRefreshWhoamiToken))
 	e.DELETE("/api/whoami", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleDestroyWhoamiToken))
 	e.DELETE("/api/whoami/everything", whoamiSrv.VerifyWhoamiMiddleware(whoamiSrv.HandleDestroyEverything))
-
+	// uploads
+	e.POST("/api/blobs", whoamiSrv.VerifyWhoamiMiddleware(blobSrv.HandleInitializeUpload))
 	e.Logger.Fatal(e.Start("localhost:" + config.Port))
 }

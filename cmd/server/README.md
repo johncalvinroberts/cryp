@@ -23,26 +23,26 @@ Basically, it does three things:
 * POST `/api/whoami/refresh`
   * Requires a valid token
   * Returns a new token
-* DELETE `/api/whoami/end`
+* DELETE `/api/whoami`
   * Revoke the current token holder's token
+* DELETE `/api/whoami/everything`
+  * Delete everything
 * GET `/api/whoami`
   * Returns information about the current token holder
   * Protected
-* DELETE `/api/whoami`
-  * Delete all records related to the current token holder (!!)
 * POST `/api/creds`
   * Initialize payment flow
   * Protected
 * GET `/api/creds`
   * Get creds of current token holder
   * Protected
-* POST `/api/uploads`
+* POST `/api/blobs`
   * Initialize upload flow
   * Protected
-* GET `/api/uploads`
+* GET `/api/blobs`
   * Get uploads of current token holder
   * Protected
-* GET `/api/uploads/:key:`
+* GET `/api/blobs/:key:`
   * Get a persisted encrypted file upload.
   * Public, not protected.
 * DELETE `/api/uploads/:id:`

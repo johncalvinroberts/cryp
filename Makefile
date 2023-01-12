@@ -4,51 +4,55 @@ AIR_BIN=./bin/air
 BIN=./bin/cryp
 
 
-build: build-fe build-be
+build: ## build everything
+	build-fe build-be
 
-install: install-be install-fe install-air
+install: ## install deps for both backend and frontend
+	install-be install-fe install-air
 
-dev: 
+dev: ## run dev servers of both backend and frontend
 	make -j 2 dev-fe dev-be
 
-install-air: 
+install-air: ## install Air for backend hot reload
 	curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s
 
-install-be: 
+install-be: ## install backend dependencies
 	go mod tidy
 
-build-be:
+build-be: ## build backend 
 	go build -o $(BIN) $(BE_ENTRYPOINT)
 
-dev-be:
+dev-be: ## run backend dev server with hot reload
 	$(AIR_BIN) $(BE_ENTRYPOINT)
 
-build-fe:
+build-fe: ## build the frontend deploy artifacts
 	cd $(FE_DIR); pnpm run build;
 
-install-fe:
+install-fe: ## install frontend deps
 	cd $(FE_DIR); pnpm install;
 
-dev-fe:
+dev-fe: ## run frontend dev vite server with hot reload
 	cd $(FE_DIR); pnpm start;
 
-
-run:
-	$(BIN)
-
-clean:
+clean: ## delete all build artifacts
 	rm -rf $(BIN)
 	rm -rf bin/main
 	rm -rf $(FE_DIR)/build
 
-docker-up:
+docker-up: ## start docker dependencies
 	docker compose up -d
 	sh ./scripts/scaffold-local-resources.sh
 
-docker-down:
+docker-down: ## stop docker dependencies
 	docker compose down
 
 docker-restart: docker-down docker-up
 
-fmt:
+fmt: #format the files in the repo
 	@gofmt -l -w internal cmd
+	cd $(FE_DIR); pnpm format;
+
+.PHONY: help fmt docker-up docker-down docker-restart clean install build build-fe build-be dev dev-be dev-fe
+
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

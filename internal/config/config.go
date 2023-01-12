@@ -26,7 +26,9 @@ type AppConfig struct {
 		Token    string `env:"AWS_TOKEN"`
 	}
 	Storage struct {
-		WhoamiBucketName string `env:"WHOAMI_BUCKET_NAME,required"`
+		WhoamiBucketName      string `env:"WHOAMI_BUCKET_NAME,required"`
+		BlobBucketName        string `env:"BLOB_BUCKET_NAME,required"`
+		BlobPointerBucketName string `env:"BLOB_POINTERS_BUCKET_NAME,required"`
 	}
 }
 

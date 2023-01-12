@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/johncalvinroberts/cryp/internal/errors"
+	"github.com/johncalvinroberts/cryp/internal/token"
 	"github.com/johncalvinroberts/cryp/internal/utils"
 	"github.com/labstack/echo/v4"
 )
@@ -41,8 +42,8 @@ func (svc *WhoamiService) HandleGetWhoami(c echo.Context) error {
 }
 
 func (svc *WhoamiService) HandleRefreshWhoamiToken(c echo.Context) error {
-	token := svc.extractTokenFromRequest(c)
-	claims, err := svc.tokenService.VerifyTokenAndParseClaims(token)
+	token := extractTokenFromRequest(c)
+	claims, err := svc.tokenSrv.VerifyTokenAndParseClaims(token)
 	// error parsing JWT
 	if err != nil {
 		return utils.RespondUnauthorized(c, err)
@@ -55,8 +56,8 @@ func (svc *WhoamiService) HandleRefreshWhoamiToken(c echo.Context) error {
 }
 
 func (svc *WhoamiService) HandleDestroyWhoamiToken(c echo.Context) error {
-	token := svc.extractTokenFromRequest(c)
-	err := svc.tokenService.EvictToken(token)
+	token := extractTokenFromRequest(c)
+	err := svc.tokenSrv.EvictToken(token)
 	if err != nil {
 		return utils.RespondError(c, http.StatusBadRequest, err)
 	} else {
@@ -70,19 +71,24 @@ func (svc *WhoamiService) HandleDestroyEverything(c echo.Context) error {
 
 func (svc *WhoamiService) VerifyWhoamiMiddleware(endpointHandler echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		token := svc.extractTokenFromRequest(c)
-		claims, err := svc.tokenService.VerifyTokenAndParseClaims(token)
+		token := extractTokenFromRequest(c)
+		claims, err := svc.tokenSrv.VerifyTokenAndParseClaims(token)
 		// error parsing JWT
 		if err != nil {
 			return utils.RespondUnauthorized(c, err)
 		}
 		c.Set(CTX_JWT_KEY, token)
-		c.Set(CTX_JWT_CLAIMS_KEY, &claims)
+		c.Set(CTX_JWT_CLAIMS_KEY, claims)
+		c.Set(CTX_JWT_EMAIL, claims.Email)
 		return endpointHandler(c)
 	}
 }
 
-func (svc *WhoamiService) extractTokenFromRequest(c echo.Context) string {
+func GetUserFromContext(c echo.Context) token.Claims {
+	return c.Get(CTX_JWT_CLAIMS_KEY).(token.Claims)
+}
+
+func extractTokenFromRequest(c echo.Context) string {
 	token := c.Request().Header.Get("Authorization")
 	// no token in header
 	if token == "" {

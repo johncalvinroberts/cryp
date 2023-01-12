@@ -27,7 +27,8 @@ type StorageService struct {
 	downloader *s3manager.Downloader
 }
 
-func (svc *StorageService) Write(ctx context.Context, bucket, key string, body io.Reader) (string, error) {
+func (svc *StorageService) Write(bucket string, key string, body io.Reader) (string, error) {
+	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, svc.timeout)
 	defer cancel()
 
@@ -36,6 +37,7 @@ func (svc *StorageService) Write(ctx context.Context, bucket, key string, body i
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})
+
 	if err != nil {
 		return "", fmt.Errorf("failed to write to storage: %w", err)
 	}
@@ -43,7 +45,8 @@ func (svc *StorageService) Write(ctx context.Context, bucket, key string, body i
 	return res.Location, nil
 }
 
-func (svc *StorageService) Read(ctx context.Context, bucket, key string, body io.WriterAt) error {
+func (svc *StorageService) Read(bucket, key string, body io.WriterAt) error {
+	ctx := context.Background()
 	if _, err := svc.downloader.DownloadWithContext(ctx, body, &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
@@ -54,9 +57,9 @@ func (svc *StorageService) Read(ctx context.Context, bucket, key string, body io
 	return nil
 }
 
-func (svc *StorageService) ReadToString(ctx context.Context, bucket, key string) (string, error) {
+func (svc *StorageService) ReadToString(bucket, key string) (string, error) {
 	body := aws.NewWriteAtBuffer([]byte{})
-	err := svc.Read(ctx, bucket, key, body)
+	err := svc.Read(bucket, key, body)
 	if err != nil {
 		return "", err
 	}
