@@ -8,7 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (svc *BlobService) HandleInitializeUpload(c echo.Context) error {
+func (svc *BlobService) HandleCreateBlob(c echo.Context) error {
+
 	file, err := c.FormFile("file")
 	if err != nil {
 		return utils.RespondError(c, http.StatusBadRequest, err)
@@ -20,6 +21,22 @@ func (svc *BlobService) HandleInitializeUpload(c echo.Context) error {
 	defer src.Close()
 	claims := whoami.GetUserFromContext(c)
 	email := claims.Email
-	svc.UploadFile(src, email)
-	return nil
+	location, err := svc.UploadFile(src, email)
+	// TODO: more granular error handling
+	if err != nil {
+		return utils.RespondError(c, http.StatusBadRequest, err)
+	}
+	res := &UploadBlobResponseDTO{Location: location}
+	return utils.RespondOK(c, res)
+}
+
+func (svc *BlobService) HandleListBlobs(c echo.Context) error {
+	claims := whoami.GetUserFromContext(c)
+	email := claims.Email
+	ptr, err := svc.ListBlobs(email)
+	if err != nil {
+		return utils.RespondError(c, http.StatusBadRequest, err)
+	}
+	res := &ListBlobsResponseDTO{Blobs: ptr.Blobs, Count: ptr.Count}
+	return utils.RespondOK(c, res)
 }

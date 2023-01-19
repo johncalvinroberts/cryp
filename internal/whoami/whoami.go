@@ -96,14 +96,15 @@ func (svc *WhoamiService) RefreshWhoamiToken(token string, claims *token.Claims)
 	return jwt, nil
 }
 
-func InitWhoamiService(JWTSecret string, whoamiBucketName string, storageSrv *storage.StorageService, emailSrv *email.EmailService) *WhoamiService {
+func InitWhoamiService(JWTSecret string, whoamiBucketName string, TokenTTLMins int, storageSrv *storage.StorageService, emailSrv *email.EmailService) *WhoamiService {
 	return &WhoamiService{
 		secret:           JWTSecret,
 		storageSrv:       storageSrv,
 		whoamiBucketName: whoamiBucketName,
 		emailSrv:         emailSrv,
 		tokenSrv: &token.TokenService{
-			Secret: JWTSecret,
+			Secret:   JWTSecret,
+			TokenTTL: time.Duration(TokenTTLMins) * time.Minute,
 		},
 	}
 }

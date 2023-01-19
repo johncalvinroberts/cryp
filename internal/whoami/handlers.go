@@ -52,6 +52,11 @@ func (svc *WhoamiService) HandleRefreshWhoamiToken(c echo.Context) error {
 	if err != nil {
 		return utils.RespondError(c, http.StatusBadRequest, err)
 	}
+	// evict original token
+	err = svc.tokenSrv.EvictToken(token)
+	if err != nil {
+		return utils.RespondError(c, http.StatusBadRequest, err)
+	}
 	return utils.RespondOK(c, &RefreshWhoamiTokenResponseDTO{JWT: jwt})
 }
 
@@ -84,8 +89,8 @@ func (svc *WhoamiService) VerifyWhoamiMiddleware(endpointHandler echo.HandlerFun
 	}
 }
 
-func GetUserFromContext(c echo.Context) token.Claims {
-	return c.Get(CTX_JWT_CLAIMS_KEY).(token.Claims)
+func GetUserFromContext(c echo.Context) *token.Claims {
+	return c.Get(CTX_JWT_CLAIMS_KEY).(*token.Claims)
 }
 
 func extractTokenFromRequest(c echo.Context) string {

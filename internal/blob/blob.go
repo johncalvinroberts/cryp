@@ -28,32 +28,76 @@ func (svc *BlobService) UploadFile(file multipart.File, email string) (string, e
 	if err != nil {
 		return "", errors.ErrDataCreationFailure
 	}
-	_, err = svc.AddBlobPointer(key, email)
+
+	_, err = svc.AddBlobPointer(location, email)
 	if err != nil {
 		return "", errors.ErrDataCreationFailure
 	}
 	return location, nil
 }
 
-func (svc *BlobService) AddBlobPointer(key, email string) (string, error) {
-	pointersStr, err := svc.storageSrv.ReadToString(svc.blobPointerBucketName, key)
+func (svc *BlobService) AddBlobPointer(keyToAdd, email string) (string, error) {
+	var (
+		pointersStr string
+		pointers    = &BlobPointers{}
+		exists, err = svc.storageSrv.Exists(svc.blobPointerBucketName, email)
+	)
+	if err != nil {
+		return "", err
+	}
+	if exists {
+		res, err := svc.storageSrv.ReadToString(svc.blobPointerBucketName, email)
+		if err != nil {
+			return "", err
+		}
+		pointersStr = res
+	} else {
+		res, err := svc.CreateBlobPointer(email)
+		if err != nil {
+			return "", err
+		}
+		pointersStr = res
+	}
+	err = json.Unmarshal([]byte(pointersStr), pointers)
 	if err != nil {
 		return "", err
 	}
 	// TODO: need to lock the s3 object to prevent concurrent writes to the same object resulting in data loss
-	pointers := &BlobPointers{}
-	json.Unmarshal([]byte(pointersStr), pointers)
-	pointers.Blobs = append(pointers.Blobs, key)
+	pointers.Blobs = append(pointers.Blobs, keyToAdd)
 	pointers.Count++
 	nextPointers, err := json.Marshal(pointers)
 	if err != nil {
 		return "", err
 	}
-	_, err = svc.storageSrv.Write(svc.blobPointerBucketName, key, strings.NewReader(string(nextPointers)))
+	_, err = svc.storageSrv.Write(svc.blobPointerBucketName, keyToAdd, strings.NewReader(string(nextPointers)))
 	if err != nil {
 		return "", err
 	}
 	return "", nil
+}
+
+func (svc *BlobService) CreateBlobPointer(email string) (string, error) {
+	pointers := &BlobPointers{}
+	nextPointers, err := json.Marshal(pointers)
+	if err != nil {
+		return "", nil
+	}
+	_, err = svc.storageSrv.Write(svc.blobPointerBucketName, email, strings.NewReader(string(nextPointers)))
+	if err != nil {
+		return "", nil
+	}
+	return string(nextPointers), err
+}
+
+func (svc *BlobService) ListBlobs(email string) (*BlobPointers, error) {
+	// TODO: pagination?
+	pointersStr, err := svc.storageSrv.ReadToString(svc.blobPointerBucketName, email)
+	if err != nil {
+		return nil, err
+	}
+	pointers := &BlobPointers{}
+	err = json.Unmarshal([]byte(pointersStr), pointers)
+	return pointers, err
 }
 
 func InitBlobService(storageSrv *storage.StorageService, blobBucketName, blobPointerBucketName string) *BlobService {

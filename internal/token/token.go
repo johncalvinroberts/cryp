@@ -15,12 +15,13 @@ type Claims struct {
 }
 
 type TokenService struct {
-	Secret string
+	Secret   string
+	TokenTTL time.Duration
 	// storageService   *storage.StorageService
 }
 
 func (svc *TokenService) IssueJWT(email string) (string, error) {
-	expirationTime := time.Now().Add(10 * time.Minute)
+	expirationTime := time.Now().Add(svc.TokenTTL)
 	// Create the JWT claims, which includes the username and expiry time
 	claims := &Claims{
 		Email: email,
