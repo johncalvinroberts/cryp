@@ -21,12 +21,19 @@ func (svc *BlobService) HandleCreateBlob(c echo.Context) error {
 	defer src.Close()
 	claims := whoami.GetUserFromContext(c)
 	email := claims.Email
-	location, err := svc.UploadFile(src, email)
+	blob, err := svc.UploadFile(src, email)
 	// TODO: more granular error handling
 	if err != nil {
 		return utils.RespondError(c, http.StatusBadRequest, err)
 	}
-	res := &UploadBlobResponseDTO{Location: location}
+	res := &UploadBlobResponseDTO{
+		Blob{
+			Url:       blob.Url,
+			CreatedAt: blob.CreatedAt,
+			UpdatedAt: blob.UpdatedAt,
+			Title:     blob.Title,
+		},
+	}
 	return utils.RespondOK(c, res)
 }
 
@@ -37,6 +44,10 @@ func (svc *BlobService) HandleListBlobs(c echo.Context) error {
 	if err != nil {
 		return utils.RespondError(c, http.StatusBadRequest, err)
 	}
-	res := &ListBlobsResponseDTO{Blobs: ptr.Blobs, Count: ptr.Count}
+	res := &BlobPointersResponseDTO{
+		BlobPointers{
+			Blobs: ptr.Blobs, Count: ptr.Count,
+		},
+	}
 	return utils.RespondOK(c, res)
 }

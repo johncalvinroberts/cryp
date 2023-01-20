@@ -57,6 +57,9 @@ func (svc *WhoamiService) TryWhoamiChallenge(email string, otp string) (string, 
 	challenge, err := svc.FindWhoamiChallenge(email)
 	if err != nil {
 		log.Printf("encountered error when finding whoami challenge: %v\n", err)
+		if storage.IsNotFoundError(err) {
+			return "", errors.ErrWhoamiChallengeNotFound
+		}
 		return "", errors.ErrInternalServerError
 	}
 	if otp != challenge || challenge == "" {

@@ -52,7 +52,7 @@ func (svc *StorageService) Read(bucket, key string, body io.WriterAt) error {
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	}); err != nil {
-		return fmt.Errorf("failed to read from storage: %w", err)
+		return err
 	}
 
 	return nil
@@ -113,13 +113,8 @@ func (svc *StorageService) Exists(bucket, key string) (bool, error) {
 		Key:    aws.String(key),
 	})
 	if err != nil {
-		if aerr, ok := err.(awserr.Error); ok {
-			switch aerr.Code() {
-			case "NotFound": // s3.ErrCodeNoSuchKey does not work, aws is missing this error code so we hardwire a string
-				return false, nil
-			default:
-				return false, err
-			}
+		if IsNotFoundError(err) {
+			return false, nil
 		}
 		return false, err
 	}
@@ -136,6 +131,20 @@ func ComposeKey(comps ...string) string {
 
 func DecomposeKey(key string) []string {
 	return strings.Split(key, DELIMITER)
+}
+
+func IsNotFoundError(err error) bool {
+	if aerr, ok := err.(awserr.Error); ok {
+		fmt.Println(aerr.Code())
+		switch aerr.Code() {
+		case "NotFound":
+		case "NoSuchKey":
+			return true
+		default:
+			return false
+		}
+	}
+	return false
 }
 
 func InitStorageService(session *session.Session, timeout int) *StorageService {

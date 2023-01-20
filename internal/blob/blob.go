@@ -2,8 +2,10 @@ package blob
 
 import (
 	"encoding/json"
+	"fmt"
 	"mime/multipart"
 	"strings"
+	"time"
 
 	"github.com/johncalvinroberts/cryp/internal/errors"
 	"github.com/johncalvinroberts/cryp/internal/storage"
@@ -15,78 +17,73 @@ type BlobService struct {
 	blobBucketName, blobPointerBucketName string
 }
 
-type BlobPointers struct {
-	Blobs []string `json:"blobs"`
-	Count int      `json:"count"`
-}
-
-func (svc *BlobService) UploadFile(file multipart.File, email string) (string, error) {
+func (svc *BlobService) UploadFile(file multipart.File, email string) (*Blob, error) {
 	guid := xid.New()
 	id := guid.String()
 	key := storage.ComposeKey(id, email)
 	location, err := svc.storageSrv.Write(svc.blobBucketName, key, file)
 	if err != nil {
-		return "", errors.ErrDataCreationFailure
+		return nil, errors.ErrDataCreationFailure
 	}
 
-	_, err = svc.AddBlobPointer(location, email)
+	blob, err := svc.AddBlobPointer(location, email)
 	if err != nil {
-		return "", errors.ErrDataCreationFailure
+		return nil, errors.ErrDataCreationFailure
 	}
-	return location, nil
+	return blob, nil
 }
 
-func (svc *BlobService) AddBlobPointer(keyToAdd, email string) (string, error) {
+func (svc *BlobService) AddBlobPointer(urlToAdd, email string) (*Blob, error) {
 	var (
-		pointersStr string
-		pointers    = &BlobPointers{}
-		exists, err = svc.storageSrv.Exists(svc.blobPointerBucketName, email)
+		now               = time.Now().Unix()
+		blobToAdd         = &Blob{Url: urlToAdd, CreatedAt: now, UpdatedAt: now}
+		blobPointers, err = svc.FindOrCreateBlobPointer(email)
 	)
 	if err != nil {
-		return "", err
-	}
-	if exists {
-		res, err := svc.storageSrv.ReadToString(svc.blobPointerBucketName, email)
-		if err != nil {
-			return "", err
-		}
-		pointersStr = res
-	} else {
-		res, err := svc.CreateBlobPointer(email)
-		if err != nil {
-			return "", err
-		}
-		pointersStr = res
-	}
-	err = json.Unmarshal([]byte(pointersStr), pointers)
-	if err != nil {
-		return "", err
+		return nil, err
 	}
 	// TODO: need to lock the s3 object to prevent concurrent writes to the same object resulting in data loss
-	pointers.Blobs = append(pointers.Blobs, keyToAdd)
-	pointers.Count++
-	nextPointers, err := json.Marshal(pointers)
+	blobPointers.Blobs = append(blobPointers.Blobs, *blobToAdd)
+	blobPointers.Count++
+	encodedPointers, err := json.Marshal(blobPointers)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	_, err = svc.storageSrv.Write(svc.blobPointerBucketName, keyToAdd, strings.NewReader(string(nextPointers)))
+	_, err = svc.storageSrv.Write(svc.blobPointerBucketName, email, strings.NewReader(string(encodedPointers)))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return "", nil
+	fmt.Println(blobToAdd)
+	return blobToAdd, nil
 }
 
-func (svc *BlobService) CreateBlobPointer(email string) (string, error) {
-	pointers := &BlobPointers{}
-	nextPointers, err := json.Marshal(pointers)
+func (svc *BlobService) FindOrCreateBlobPointer(email string) (*BlobPointers, error) {
+	var (
+		blobPointers = &BlobPointers{}
+		exists, err  = svc.storageSrv.Exists(svc.blobPointerBucketName, email)
+	)
 	if err != nil {
-		return "", nil
+		return nil, err
 	}
-	_, err = svc.storageSrv.Write(svc.blobPointerBucketName, email, strings.NewReader(string(nextPointers)))
-	if err != nil {
-		return "", nil
+	if exists {
+		var existingJSONPointers string
+		// read directly and copy to blobPointers
+		existingJSONPointers, err = svc.storageSrv.ReadToString(svc.blobPointerBucketName, email)
+		if err != nil {
+			return nil, err
+		}
+		err = json.Unmarshal([]byte(existingJSONPointers), blobPointers)
+	} else {
+		var emptyPointersJSON []byte
+		// if doesn't exist, write the empty value to s3
+		emptyPointersJSON, err = json.Marshal(blobPointers)
+		if err != nil {
+			return nil, err
+		}
+		// write to db
+		_, err = svc.storageSrv.Write(svc.blobPointerBucketName, email, strings.NewReader(string(emptyPointersJSON)))
 	}
-	return string(nextPointers), err
+	return blobPointers, err
 }
 
 func (svc *BlobService) ListBlobs(email string) (*BlobPointers, error) {
