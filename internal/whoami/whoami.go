@@ -6,8 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"context"
-
 	"github.com/johncalvinroberts/cryp/internal/email"
 	"github.com/johncalvinroberts/cryp/internal/errors"
 	"github.com/johncalvinroberts/cryp/internal/storage"
@@ -80,9 +78,8 @@ func (svc *WhoamiService) TryWhoamiChallenge(email string, otp string) (string, 
 }
 
 func (svc *WhoamiService) DestroyWhoamiChallenge(email string) {
-	ctx := context.Background()
 	key := storage.ComposeKey(WHOAMI_CHALLENGE_PREFIX, email)
-	err := svc.storageSrv.Delete(ctx, svc.whoamiBucketName, key)
+	err := svc.storageSrv.Delete(svc.whoamiBucketName, key)
 	if err != nil {
 		log.Printf("failed to delete whoami challenge, key: %s", key)
 	}

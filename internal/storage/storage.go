@@ -65,19 +65,20 @@ func (svc *StorageService) ReadToString(bucket, key string) (string, error) {
 	return res, nil
 }
 
-func (svc *StorageService) Delete(ctx context.Context, bucket, key string) error {
+func (svc *StorageService) Delete(bucket, key string) error {
+	ctx := context.Background()
 	if _, err := svc.client.DeleteObjectWithContext(ctx, &s3.DeleteObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	}); err != nil {
-		return fmt.Errorf("failed to delete from storage: %w", err)
+		return err
 	}
 
 	if err := svc.client.WaitUntilObjectNotExists(&s3.HeadObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	}); err != nil {
-		return fmt.Errorf("wait: %w", err)
+		return err
 	}
 
 	return nil

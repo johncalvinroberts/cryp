@@ -42,9 +42,6 @@ Basically, it does three things:
 * GET `/api/blobs`
   * Get uploads of current token holder
   * Protected
-* GET `/api/blobs/:key:`
-  * Get a persisted encrypted file upload.
-  * Public, not protected.
 * DELETE `/api/uploads/:id:`
   * Delete an upload
   * Protected

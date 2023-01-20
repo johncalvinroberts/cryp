@@ -5,6 +5,7 @@ type Blob struct {
 	CreatedAt int64  `json:"createdAt"`
 	UpdatedAt int64  `json:"updatedAt"`
 	Title     string `json:"title"`
+	Key       string `json:"key"`
 }
 type BlobPointers struct {
 	Blobs []Blob `json:"blobs"`

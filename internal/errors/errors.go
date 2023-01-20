@@ -14,6 +14,7 @@ var (
 	ErrInternalServerError = goerrs.New("something unexpectedly went wrong")
 	ErrInvalidToken        = goerrs.New("invalid token")
 	ErrUnauthorized        = goerrs.New("unauthorized")
+	ErrForbidden           = goerrs.New("forbidden")
 
 	// auth
 	ErrWhoamiChallengeNotFound = goerrs.New("whoami challenge failed or not found")

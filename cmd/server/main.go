@@ -37,5 +37,6 @@ func main() {
 	// uploads
 	e.POST("/api/blobs", whoamiSrv.VerifyWhoamiMiddleware(blobSrv.HandleCreateBlob))
 	e.GET("/api/blobs", whoamiSrv.VerifyWhoamiMiddleware(blobSrv.HandleListBlobs))
+	e.DELETE("/api/blobs/:key", whoamiSrv.VerifyWhoamiMiddleware(blobSrv.HandleDeleteBlob))
 	e.Logger.Fatal(e.Start("localhost:" + config.Port))
 }

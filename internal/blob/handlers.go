@@ -32,6 +32,7 @@ func (svc *BlobService) HandleCreateBlob(c echo.Context) error {
 			CreatedAt: blob.CreatedAt,
 			UpdatedAt: blob.UpdatedAt,
 			Title:     blob.Title,
+			Key:       blob.Key,
 		},
 	}
 	return utils.RespondOK(c, res)
@@ -50,4 +51,15 @@ func (svc *BlobService) HandleListBlobs(c echo.Context) error {
 		},
 	}
 	return utils.RespondOK(c, res)
+}
+
+func (svc *BlobService) HandleDeleteBlob(c echo.Context) error {
+	key := c.Param("key")
+	claims := whoami.GetUserFromContext(c)
+	email := claims.Email
+	err := svc.DestroyBlob(email, key)
+	if err != nil {
+		return utils.RespondError(c, http.StatusBadRequest, err)
+	}
+	return utils.RespondOK(c, nil)
 }
