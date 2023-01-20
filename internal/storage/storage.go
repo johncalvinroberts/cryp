@@ -32,17 +32,14 @@ func (svc *StorageService) Write(bucket string, key string, body io.Reader) (str
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, svc.timeout)
 	defer cancel()
-
 	res, err := svc.uploader.UploadWithContext(ctx, &s3manager.UploadInput{
 		Body:   body,
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})
-
 	if err != nil {
-		return "", fmt.Errorf("failed to write to storage: %w", err)
+		return "", err
 	}
-
 	return res.Location, nil
 }
 
@@ -135,9 +132,9 @@ func DecomposeKey(key string) []string {
 
 func IsNotFoundError(err error) bool {
 	if aerr, ok := err.(awserr.Error); ok {
-		fmt.Println(aerr.Code())
 		switch aerr.Code() {
 		case "NotFound":
+			return true
 		case "NoSuchKey":
 			return true
 		default:

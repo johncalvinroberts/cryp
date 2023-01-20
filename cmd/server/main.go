@@ -24,7 +24,7 @@ func main() {
 	storageSrv := storage.InitStorageService(config.AWSSession, config.Timeout)
 	emailSrv := email.InitEmailService(config)
 	whoamiSrv := whoami.InitWhoamiService(config.JWTSecret, config.Storage.WhoamiBucketName, config.JWTTokenTTL, storageSrv, emailSrv)
-	blobSrv := blob.InitBlobService(storageSrv, config.Storage.BlobBucketName, config.Storage.BlobPointerBucketName)
+	blobSrv := blob.InitBlobService(storageSrv, config.Storage.BlobBucketName, config.Storage.BlobPointerBucketName, config.EmailMaskSecret)
 	e.GET("/", echo.WrapHandler(ui.GetHandler()))
 	e.GET("/api/health", health.HandleGetHealth)
 	// // whoami

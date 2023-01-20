@@ -15,6 +15,7 @@ type AppConfig struct {
 	GinMode            string `env:"GIN_MODE,required"`
 	JWTSecret          string `env:"JWT_SECRET,required"`
 	JWTTokenTTL        int    `env:"JWT_TOKEN_TTL,default=10"`
+	EmailMaskSecret    string `env:"EMAIL_MASK_SECRET,required"` // NOTE: This MUST be of 32 byte length
 	Port               string `env:"PORT,default=9000"`
 	Timeout            int    `env:"TIMEOUT,default=8000"`
 	EmailTransportName string `env:"EMAIL_TRANSPORT_NAME,default=fs"`
@@ -36,6 +37,7 @@ type AppConfig struct {
 func InitAppConfig() *AppConfig {
 	var c AppConfig
 	godotenv.Load()
+
 	if err := envdecode.StrictDecode(&c); err != nil {
 		log.Fatalf("Failed to decode: %s", err)
 	}

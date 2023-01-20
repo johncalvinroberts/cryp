@@ -2,30 +2,30 @@ package blob
 
 import (
 	"encoding/json"
-	"fmt"
 	"mime/multipart"
 	"strings"
 	"time"
 
 	"github.com/johncalvinroberts/cryp/internal/errors"
 	"github.com/johncalvinroberts/cryp/internal/storage"
+	"github.com/johncalvinroberts/cryp/internal/utils"
 	"github.com/rs/xid"
 )
 
 type BlobService struct {
 	storageSrv                            *storage.StorageService
 	blobBucketName, blobPointerBucketName string
+	emailMaskSecret                       string
 }
 
 func (svc *BlobService) UploadFile(file multipart.File, email string) (*Blob, error) {
 	guid := xid.New()
 	id := guid.String()
-	key := storage.ComposeKey(id, email)
+	key := storage.ComposeKey(id, utils.EncryptMessage(svc.emailMaskSecret, email))
 	location, err := svc.storageSrv.Write(svc.blobBucketName, key, file)
 	if err != nil {
 		return nil, errors.ErrDataCreationFailure
 	}
-
 	blob, err := svc.AddBlobPointer(location, email)
 	if err != nil {
 		return nil, errors.ErrDataCreationFailure
@@ -37,7 +37,7 @@ func (svc *BlobService) AddBlobPointer(urlToAdd, email string) (*Blob, error) {
 	var (
 		now               = time.Now().Unix()
 		blobToAdd         = &Blob{Url: urlToAdd, CreatedAt: now, UpdatedAt: now}
-		blobPointers, err = svc.FindOrCreateBlobPointer(email)
+		blobPointers, err = svc.FindOrCreateBlobPointers(email)
 	)
 	if err != nil {
 		return nil, err
@@ -53,11 +53,10 @@ func (svc *BlobService) AddBlobPointer(urlToAdd, email string) (*Blob, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(blobToAdd)
 	return blobToAdd, nil
 }
 
-func (svc *BlobService) FindOrCreateBlobPointer(email string) (*BlobPointers, error) {
+func (svc *BlobService) FindOrCreateBlobPointers(email string) (*BlobPointers, error) {
 	var (
 		blobPointers = &BlobPointers{}
 		exists, err  = svc.storageSrv.Exists(svc.blobPointerBucketName, email)
@@ -90,17 +89,18 @@ func (svc *BlobService) ListBlobs(email string) (*BlobPointers, error) {
 	// TODO: pagination?
 	pointersStr, err := svc.storageSrv.ReadToString(svc.blobPointerBucketName, email)
 	if err != nil {
-		return nil, err
+		return nil, errors.ErrDataAccessFailure
 	}
 	pointers := &BlobPointers{}
 	err = json.Unmarshal([]byte(pointersStr), pointers)
 	return pointers, err
 }
 
-func InitBlobService(storageSrv *storage.StorageService, blobBucketName, blobPointerBucketName string) *BlobService {
+func InitBlobService(storageSrv *storage.StorageService, blobBucketName, blobPointerBucketName, emailMaskSecret string) *BlobService {
 	return &BlobService{
 		storageSrv:            storageSrv,
 		blobBucketName:        blobBucketName,
 		blobPointerBucketName: blobPointerBucketName,
+		emailMaskSecret:       emailMaskSecret,
 	}
 }
