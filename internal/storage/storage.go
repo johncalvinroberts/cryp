@@ -121,8 +121,12 @@ func (svc *StorageService) Exists(bucket, key string) (bool, error) {
 
 func ComposeKey(comps ...string) string {
 	key := ""
-	for _, s := range comps {
-		key = fmt.Sprintf("%s%s%s", key, DELIMITER, s)
+	for i, s := range comps {
+		front := key
+		if i != 0 {
+			front += DELIMITER
+		}
+		key = front + s
 	}
 	return key
 }

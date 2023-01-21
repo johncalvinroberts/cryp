@@ -2,6 +2,7 @@ package blob
 
 import (
 	"encoding/json"
+	"fmt"
 	"mime/multipart"
 	"strings"
 	"time"
@@ -18,7 +19,7 @@ type BlobService struct {
 	emailMaskSecret                       string
 }
 
-func (svc *BlobService) UploadFile(file multipart.File, email string) (*Blob, error) {
+func (svc *BlobService) CreateBlob(file multipart.File, title, email string) (*Blob, error) {
 	guid := xid.New()
 	id := guid.String()
 	key := storage.ComposeKey(id, utils.EncryptMessage(svc.emailMaskSecret, email))
@@ -26,17 +27,17 @@ func (svc *BlobService) UploadFile(file multipart.File, email string) (*Blob, er
 	if err != nil {
 		return nil, errors.ErrDataCreationFailure
 	}
-	blob, err := svc.AddBlobPointer(location, key, email)
+	blob, err := svc.AddBlobPointer(location, key, title, email)
 	if err != nil {
 		return nil, errors.ErrDataCreationFailure
 	}
 	return blob, nil
 }
 
-func (svc *BlobService) AddBlobPointer(url, key, email string) (*Blob, error) {
+func (svc *BlobService) AddBlobPointer(url, key, title, email string) (*Blob, error) {
 	var (
 		now               = time.Now().Unix()
-		blobToAdd         = &Blob{Url: url, CreatedAt: now, UpdatedAt: now, Key: key}
+		blobToAdd         = &Blob{Url: url, CreatedAt: now, UpdatedAt: now, Key: key, Title: title}
 		blobPointers, err = svc.FindOrCreateBlobPointers(email)
 	)
 	if err != nil {
@@ -98,10 +99,14 @@ func (svc *BlobService) ListBlobs(email string) (*BlobPointers, error) {
 
 func (svc *BlobService) DestroyBlob(email, key string) error {
 	var (
-		keyComponents  = storage.DecomposeKey(key)
-		decryptedEmail = utils.DecryptMessage(svc.emailMaskSecret, keyComponents[1])
-		blobPointers   = &BlobPointers{}
+		keyComponents       = storage.DecomposeKey(key)
+		decryptedEmail, err = utils.DecryptMessage(svc.emailMaskSecret, keyComponents[1])
+		blobPointers        = &BlobPointers{}
 	)
+	if err != nil {
+		fmt.Println(err)
+		return errors.ErrInternalServerError
+	}
 	// check if it belongs to bearer
 	if decryptedEmail != email {
 		return errors.ErrForbidden

@@ -19,12 +19,15 @@ func (svc *BlobService) HandleCreateBlob(c echo.Context) error {
 		return err
 	}
 	defer src.Close()
-	claims := whoami.GetUserFromContext(c)
-	email := claims.Email
-	blob, err := svc.UploadFile(src, email)
+	var (
+		claims            = whoami.GetUserFromContext(c)
+		email             = claims.Email
+		title             = c.FormValue("title")
+		blob, createError = svc.CreateBlob(src, title, email)
+	)
 	// TODO: more granular error handling
-	if err != nil {
-		return utils.RespondError(c, http.StatusBadRequest, err)
+	if createError != nil {
+		return utils.RespondError(c, http.StatusBadRequest, createError)
 	}
 	res := &UploadBlobResponseDTO{
 		Blob{
