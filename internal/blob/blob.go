@@ -2,7 +2,6 @@ package blob
 
 import (
 	"encoding/json"
-	"fmt"
 	"mime/multipart"
 	"strings"
 	"time"
@@ -14,16 +13,17 @@ import (
 )
 
 type BlobService struct {
-	storageSrv                            *storage.StorageService
-	blobBucketName, blobPointerBucketName string
-	emailMaskSecret                       string
+	storageSrv                                             *storage.StorageService
+	blobBucketName, blobPointerBucketName, emailMaskSecret string
 }
 
 func (svc *BlobService) CreateBlob(file multipart.File, title, email string) (*Blob, error) {
-	guid := xid.New()
-	id := guid.String()
-	key := storage.ComposeKey(id, utils.EncryptMessage(svc.emailMaskSecret, email))
-	location, err := svc.storageSrv.Write(svc.blobBucketName, key, file)
+	var (
+		guid          = xid.New()
+		id            = guid.String()
+		key           = storage.ComposeKey(id, utils.EncryptMessage(svc.emailMaskSecret, email))
+		location, err = svc.storageSrv.Write(svc.blobBucketName, key, file)
+	)
 	if err != nil {
 		return nil, errors.ErrDataCreationFailure
 	}
@@ -104,7 +104,6 @@ func (svc *BlobService) DestroyBlob(email, key string) error {
 		blobPointers        = &BlobPointers{}
 	)
 	if err != nil {
-		fmt.Println(err)
 		return errors.ErrInternalServerError
 	}
 	// check if it belongs to bearer
