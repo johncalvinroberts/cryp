@@ -6,19 +6,18 @@ import (
 	"net/http"
 )
 
-//go:embed dist
+//go:embed build
 var embeddedFiles embed.FS
 
 func GetHandler() http.Handler {
 	// Get the build subdirectory as the
 	// root directory so that it can be passed
 	// to the http.FileServer
-	fsys, err := fs.Sub(embeddedFiles, "dist")
+	fsys, err := fs.Sub(embeddedFiles, "build")
 	if err != nil {
 		panic(err)
 	}
 
 	fs := http.FS(fsys)
-	// return embedFolder(embeddedFiles, "dist")
 	return http.FileServer(fs)
 }

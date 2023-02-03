@@ -28,5 +28,22 @@ dist-ssr
 tmp/*
 bin/*
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 .terraform
+.env.*
 emails/*
+
+dist
+build
+node_modules
+
+# misc
+.DS_Store
+ui/.svelte-kit
+/package
+!.env.example
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
