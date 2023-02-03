@@ -1,16 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 class StubWorker implements Worker {
 	onmessage() {
 		// noop
 	}
+
 	onerror() {
 		// noop
 	}
+
 	onmessageerror() {
 		// noop
 	}
+
 	terminate(): void {
 		// noop
 	}
+
 	postMessage(message: unknown, options?: unknown): void {
 		// noop
 	}
@@ -31,4 +37,8 @@ class StubWorker implements Worker {
 	}
 }
 
-export default StubWorker;
+const IsomorphicWorker = typeof window == 'undefined' ? StubWorker : Worker;
+
+export default IsomorphicWorker;
+
+/* eslint-enable @typescript-eslint/no-unused-vars */

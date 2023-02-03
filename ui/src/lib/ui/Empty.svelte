@@ -1,11 +1,11 @@
 <div>
-  <em>Empty</em>
+	<em>Empty</em>
 </div>
 
 <style>
-  div {
-    display: flex;
-    align-items: center;
-    color: var(--light);
-  }
+	div {
+		display: flex;
+		align-items: center;
+		color: var(--light);
+	}
 </style>

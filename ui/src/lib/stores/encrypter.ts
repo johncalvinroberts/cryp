@@ -4,7 +4,7 @@ import { writable, get } from 'svelte/store';
 import { parseCrypString } from '../utils';
 import { CRYP_FILE_EXTENSION, STATE, MESSAGE } from '../constants';
 import type { EncrypterState, MessageKey, MessagePayload } from '../types';
-import StubWorker from '../stub-worker';
+import IsomorphicWorker from '../stub-worker';
 
 const initialState: EncrypterState = {
 	isProcessing: false,
@@ -22,16 +22,12 @@ class Encrypter {
 	private worker: Worker;
 
 	constructor(public store: Writable<EncrypterState> = writable(initialState)) {
-		if (typeof window !== 'undefined') {
-			this.worker = new Worker(new URL('../crypto.worker.ts', import.meta.url), {
-				type: 'module'
-			});
-			this.worker.onmessage = this.handleMessage;
-			this.worker.onerror = this.handleWorkerError;
-			this.worker.onmessageerror = this.handleWorkerError;
-		} else {
-			this.worker = new StubWorker();
-		}
+		this.worker = new IsomorphicWorker(new URL('../crypto.worker.ts', import.meta.url), {
+			type: 'module'
+		});
+		this.worker.onmessage = this.handleMessage;
+		this.worker.onerror = this.handleWorkerError;
+		this.worker.onmessageerror = this.handleWorkerError;
 	}
 
 	private dispatch(payload: Partial<EncrypterState>) {
