@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Title from "./lib/ui/Title.svelte";
-  import Encrypter from "./lib/ui/Encrypter.svelte";
+  import Title from "./Title.svelte";
+  import Encrypter from "./Encrypter.svelte";
 </script>
 
 <main class="vertical-center">

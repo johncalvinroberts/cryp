@@ -1,5 +1,4 @@
 <script>
-  import Guu from "guu";
   import Dropzone from "./Dropzone.svelte";
   import EncryptedPreview from "./EncryptedPreview.svelte";
   import { encrypter } from "../stores/encrypter";
@@ -8,7 +7,7 @@
   import Failure from "./Failure.svelte";
   import Processing from "./Processing.svelte";
   import { STATE } from "../constants";
-  const log = new Guu("Encrypter.svelte", "goldenrod");
+  
   const { store } = encrypter;
   const elements = {
     [STATE.INITIAL]: Dropzone,
@@ -18,7 +17,7 @@
     [STATE.FAILURE]: Failure,
     [STATE.DONE]: Done,
   };
-  $: log.info($store.state);
+  $: console.info($store.state);
 </script>
 
 <div class="wrapper vertical-center">
