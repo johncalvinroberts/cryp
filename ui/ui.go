@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-//go:embed build
+//go:embed all:build
 var embeddedFiles embed.FS
 
 func GetHandler() http.Handler {
