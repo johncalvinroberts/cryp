@@ -32,6 +32,7 @@ class StubWorker implements Worker {
 	removeEventListener(type: unknown, listener: unknown, options?: unknown): void {
 		// noop
 	}
+
 	dispatchEvent(event: Event): boolean {
 		return true;
 	}

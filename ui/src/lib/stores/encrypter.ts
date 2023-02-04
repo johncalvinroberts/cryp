@@ -4,7 +4,7 @@ import { writable, get } from 'svelte/store';
 import { parseCrypString } from '../utils';
 import { CRYP_FILE_EXTENSION, STATE, MESSAGE } from '../constants';
 import type { EncrypterState, MessageKey, MessagePayload } from '../types';
-import IsomorphicWorker from '../stub-worker';
+import IsomorphicWorker from '../isomorphic-worker';
 
 const initialState: EncrypterState = {
 	isProcessing: false,
