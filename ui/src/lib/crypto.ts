@@ -26,7 +26,7 @@ export const hexDecode = (raw: string) => {
 const getInitialKey = (password: string): Promise<CryptoKey> => {
 	return crypto.subtle.importKey('raw', new TextEncoder().encode(password), KEY_ALGO, false, [
 		'deriveKey',
-		'deriveBits'
+		'deriveBits',
 	]);
 };
 
@@ -37,7 +37,7 @@ const getDerivedKey = (baseKey: CryptoKey, salt: ArrayBuffer): Promise<CryptoKey
 		baseKey,
 		{ name: ENCRYPT_ALGO, length: 256 },
 		false,
-		['encrypt', 'decrypt']
+		['encrypt', 'decrypt'],
 	);
 };
 
@@ -49,10 +49,10 @@ export const encrypt = async (password: string, plaintext: string): Promise<stri
 	const ciphertext: ArrayBuffer = await crypto.subtle.encrypt(
 		{
 			name: ENCRYPT_ALGO,
-			iv
+			iv,
 		},
 		key,
-		new TextEncoder().encode(plaintext)
+		new TextEncoder().encode(plaintext),
 	);
 	const composed = [salt, iv, ciphertext].map((item) => hexEncode(item)).join(CIPHERTEXT_DELIMITER);
 	return composed;
@@ -67,10 +67,10 @@ export const decrypt = async (password: string, composed: string) => {
 	const plaintext = await crypto.subtle.decrypt(
 		{
 			name: ENCRYPT_ALGO,
-			iv
+			iv,
 		},
 		key,
-		ciphertext
+		ciphertext,
 	);
 	return new TextDecoder().decode(plaintext);
 };

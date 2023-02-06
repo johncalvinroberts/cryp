@@ -15,23 +15,17 @@
 		[STATE.SHOULD_ENCRYPT]: FilesPreview,
 		[STATE.PROCESSING]: Processing,
 		[STATE.FAILURE]: Failure,
-		[STATE.DONE]: Done
+		[STATE.DONE]: Done,
 	};
 	$: console.info($store.state);
 </script>
 
-<div class="wrapper vertical-center">
-	<div class="inner">
-		<svelte:component this={elements[$store.state]} />
-	</div>
+<div class="encrypter vertical-center">
+	<svelte:component this={elements[$store.state]} />
 </div>
 
 <style>
-	.wrapper {
+	.encrypter {
 		width: 100%;
-	}
-	.inner {
-		width: 100%;
-		max-width: 400px;
 	}
 </style>

@@ -24,7 +24,7 @@ class StubWorker implements Worker {
 	addEventListener(
 		type: string,
 		listener: EventListenerOrEventListenerObject,
-		options?: boolean | AddEventListenerOptions | undefined
+		options?: boolean | AddEventListenerOptions | undefined,
 	): void {
 		// noop
 	}

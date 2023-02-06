@@ -1,14 +1,27 @@
-:root {
-	--pink: #e83e8c;
-	--yellow: #ffd24c;
-	--white: #fff;
-	--success: #28a745;
-	--info: #17a2b8;
-	--purple: #6a11cb;
-	--error: #dc3545;
-	--light: #f8f9fa;
-	--dark: #282828;
+
+@font-face {
+	font-family: 'Chicago';
+	src: local('Chicago'), url('../ChicagoFLF.woff') format('woff2');
+	font-display: swap;
 }
+
+:root {
+	--gray: #8792a2;
+	--error: #dc3545;
+	--light: #ffffff;
+	--dark: #000000;
+	--font-size-small: 10px;
+	--font-size-normal: 12px;
+	--font-size-h1: 28px;
+	--font-size-h2: 18px;
+	--font-size-h3: 16px;
+	--font-size-huge: 138px;
+	--boxy-shadow: 2px 2px 0px #000000;
+	--nav-height: 20px;
+	--spacing: 5px;
+	--font-family-chicago: 'Chicago', sans-serif;
+}
+
 *,
 :after,
 :before {
@@ -16,10 +29,8 @@
 }
 html {
 	font-family: sans-serif;
-	line-height: 1.15;
 	-webkit-text-size-adjust: 100%;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-	background-color: var(--dark);
 }
 
 main,
@@ -29,20 +40,19 @@ section {
 }
 body {
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans,
-		Liberation Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol,
-		Noto Color Emoji;
-	font-size: 1rem;
-	font-weight: 400;
+	font-family: var(--font-family-chicago);
+	font-size: var(--font-size-normal);
 	line-height: 1.5;
-	color: var(--light);
+	color: var(--dark);
 	text-align: left;
-	background-color: var(--dark);
 }
 
 a {
 	background-color: transparent;
+	text-decoration: none;
+	color: inherit;
 }
+
 a:hover {
 	color: #000;
 	text-decoration: underline;
@@ -50,34 +60,31 @@ a:hover {
 
 button {
 	border-radius: 0;
-}
-button:focus:not(:focus-visible) {
-	outline: 0;
+	font-family: var(--font-family-chicago);
 }
 
+
 h1 {
-	font-size: 3.125rem;
+	font-size: var(--font-size-h1);
 }
 
 h2 {
-	font-size: 2.8125rem;
+	font-size: var(--font-size-h2);
 }
 
 h3 {
-	font-size: 2.1875rem;
+	font-size: var(--font-size-h3);
 }
 
 h4 {
-	font-size: 1.5625rem;
+	font-size: var(--font-size-normal);
 }
 
-h5 {
-	font-size: 1.125rem;
+small {
+	font-size: var(--font-size-small);
 }
 
-h6 {
-	font-size: 1rem;
-}
+/* UTIL CLASSES */
 
 .truncate {
 	overflow: hidden;
@@ -90,21 +97,6 @@ h6 {
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
-}
-
-@keyframes floating {
-	0% {
-		transform: translate(0, 0px) rotateY(-12deg);
-		text-shadow: 10px 10px 3px rgba(0, 0, 0, 0.15);
-	}
-	65% {
-		transform: translate(0, 15px) rotateY(10deg) rotateX(10deg);
-		text-shadow: -10px -10px 3px rgba(0, 0, 0, 0.15);
-	}
-	100% {
-		transform: translate(0, 0px) rotateY(-12deg);
-		text-shadow: 10px 10px 3px rgba(0, 0, 0, 0.15);
-	}
 }
 
 button {
@@ -127,7 +119,6 @@ input {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background-color: var(--yellow);
 	padding: 0.3rem;
 	position: relative;
 }
@@ -166,17 +157,12 @@ form {
 }
 
 .bottom-box button {
-	background-color: var(--yellow);
 	color: var(--dark);
 	border-radius: 2px;
 	border: none;
 	padding: 0.2rem 1.5rem;
 	flex-grow: 1;
 	font-size: 0.9rem;
-}
-
-.bottom-box button:hover {
-	animation: floating 20s ease-in-out infinite;
 }
 
 .bottom-box button:disabled {

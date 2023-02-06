@@ -1,9 +1,5 @@
 <script lang="ts">
-	import App from '../lib/ui/App.svelte';
+	import Encrypter from '../lib/ui/Encrypter.svelte';
 </script>
 
-<svelte:head>
-	<title>yolo</title>
-</svelte:head>
-
-<App />
+<Encrypter />

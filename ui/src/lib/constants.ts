@@ -13,7 +13,7 @@ export const STATE: Record<string, StateKey> = {
 	SHOULD_DECRYPT: 'SHOULD_DECRYPT',
 	PROCESSING: 'PROCESSING',
 	DONE: 'DONE',
-	FAILURE: 'FAILURE'
+	FAILURE: 'FAILURE',
 };
 
 export const MESSAGE: Record<string, MessageKey> = {
@@ -21,5 +21,5 @@ export const MESSAGE: Record<string, MessageKey> = {
 	DECRYPT: 'DECRYPT',
 	ENCRYPTED: 'ENCRYPTED',
 	DECRYPTED: 'DECRYPTED',
-	FAILURE: 'FAILURE'
+	FAILURE: 'FAILURE',
 };

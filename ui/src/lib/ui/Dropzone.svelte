@@ -6,22 +6,24 @@
 	let isDraggingOver = false;
 </script>
 
-<FileDrop
-	on:filedrop={(e) => handleFiles(e.detail.files)}
-	on:dragover={() => (isDraggingOver = true)}
-	on:dragleave={() => (isDraggingOver = false)}
->
-	<div
-		class="dropzone"
-		class:is-dragging-over={isDraggingOver}
-		on:mouseover={() => (isDraggingOver = true)}
-		on:mouseleave={() => (isDraggingOver = false)}
-		on:focus={() => (isDraggingOver = true)}
+<div>
+	<FileDrop
+		on:filedrop={(e) => handleFiles(e.detail.files)}
+		on:dragover={() => (isDraggingOver = true)}
+		on:dragleave={() => (isDraggingOver = false)}
 	>
-		<Plus {isDraggingOver} />
-	</div>
-</FileDrop>
-<small> Drop Files or Folders to Get Started </small>
+		<div
+			class="dropzone"
+			class:is-dragging-over={isDraggingOver}
+			on:mouseover={() => (isDraggingOver = true)}
+			on:mouseleave={() => (isDraggingOver = false)}
+			on:focus={() => (isDraggingOver = true)}
+		>
+			<Plus {isDraggingOver} />
+		</div>
+	</FileDrop>
+	<small> Drop Files or Folders to Get Started </small>
+</div>
 
 <style>
 	.dropzone {
@@ -30,7 +32,7 @@
 		padding: 2rem 1rem;
 		width: 100%;
 		background-color: var(--yellow);
-		margin-bottom: 5rem;
+		margin-bottom: var(--spacing);
 		transition: padding cubic-bezier(0.075, 0.82, 0.165, 1) 0.2s;
 		cursor: pointer;
 	}

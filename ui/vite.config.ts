@@ -6,7 +6,10 @@ export default defineConfig(() => {
 	return {
 		plugins: [sveltekit()],
 		server: {
-			port: 1234
-		}
+			port: 1234,
+		},
+		fs: {
+			allow: ['..'],
+		},
 	};
 });

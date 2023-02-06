@@ -12,11 +12,11 @@ class CryptoWorker {
 		try {
 			const { filesToEncrypt, password = '', hint = '' } = encrypterState;
 			const accepted = await Promise.all(
-				filesToEncrypt?.accepted.map((item) => item.arrayBuffer()) || []
+				filesToEncrypt?.accepted.map((item) => item.arrayBuffer()) || [],
 			);
 			const hexEncodedFiles: HexEncodedFile[] = accepted.map((item, index) => ({
 				hex: hexEncode(item),
-				name: filesToEncrypt?.accepted?.[index].name || FALLBACK_FILE_NAME
+				name: filesToEncrypt?.accepted?.[index].name || FALLBACK_FILE_NAME,
 			}));
 			// the plaintext is a stringified JSON array of files
 			const plaintext = JSON.stringify(hexEncodedFiles);
@@ -27,7 +27,7 @@ class CryptoWorker {
 		} catch (error) {
 			const payload = {
 				state: STATE.FAILURE,
-				error
+				error,
 			};
 			ctx.postMessage({ payload, type: MESSAGE.FAILURE });
 		}
@@ -47,7 +47,7 @@ class CryptoWorker {
 		} catch (error) {
 			ctx.postMessage({
 				state: STATE.FAILURE,
-				error
+				error,
 			});
 		}
 	};

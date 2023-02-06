@@ -27,6 +27,11 @@ export type EncrypterState = {
 	decryptedFiles: File[] | undefined;
 };
 
+export type WhoamiState = {
+	isAuthenticated: boolean;
+	email: string | undefined;
+};
+
 export type MessagePayload = {
 	type: MessageKey;
 	payload: EncrypterState;

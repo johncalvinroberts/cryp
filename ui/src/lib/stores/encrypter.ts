@@ -15,16 +15,16 @@ const initialState: EncrypterState = {
 	state: STATE.INITIAL,
 	error: undefined,
 	crypString: undefined,
-	decryptedFiles: undefined
+	decryptedFiles: undefined,
 };
 
 class Encrypter {
-	private worker: Worker;
-
-	constructor(public store: Writable<EncrypterState> = writable(initialState)) {
-		this.worker = new IsomorphicWorker(new URL('../crypto.worker.ts', import.meta.url), {
-			type: 'module'
-		});
+	constructor(
+		public store: Writable<EncrypterState> = writable(initialState),
+		private worker: Worker = new IsomorphicWorker(new URL('../crypto.worker.ts', import.meta.url), {
+			type: 'module',
+		}),
+	) {
 		this.worker.onmessage = this.handleMessage;
 		this.worker.onerror = this.handleWorkerError;
 		this.worker.onmessageerror = this.handleWorkerError;
@@ -48,7 +48,7 @@ class Encrypter {
 		if (err instanceof ErrorEvent) {
 			this.dispatch({
 				state: STATE.FAILURE,
-				error: err.error
+				error: err.error,
 			});
 		}
 	};
@@ -67,7 +67,7 @@ class Encrypter {
 				ciphertext,
 				hint,
 				crypString,
-				state: STATE.SHOULD_DECRYPT
+				state: STATE.SHOULD_DECRYPT,
 			});
 		}
 	};
@@ -76,7 +76,7 @@ class Encrypter {
 		this.dispatch({
 			password,
 			hint,
-			state: STATE.PROCESSING
+			state: STATE.PROCESSING,
 		});
 		this.postMessage(MESSAGE.ENCRYPT);
 	};
@@ -84,7 +84,7 @@ class Encrypter {
 	public handleDecrypt = async (password: string) => {
 		this.dispatch({
 			password,
-			state: STATE.PROCESSING
+			state: STATE.PROCESSING,
 		});
 		this.postMessage(MESSAGE.DECRYPT);
 	};
