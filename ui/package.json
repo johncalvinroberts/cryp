@@ -34,6 +34,7 @@
 		"vite": "^4.0.4"
 	},
 	"dependencies": {
+		"@neodrag/svelte": "^2.0.3",
 		"file-saver": "^2.0.5",
 		"filedrop-svelte": "^0.1.2",
 		"guu": "^0.3.1",

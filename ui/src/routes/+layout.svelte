@@ -2,9 +2,6 @@
 	import { whoami } from '../lib/stores/whoami';
 	import { encrypter } from '../lib/stores/encrypter';
 	import Button from '../lib/ui/Button.svelte';
-	import Card from '../lib/ui/Card.svelte';
-	import MacintoshBar from '../lib/ui/MacintoshBar.svelte';
-	import Banner from '../lib/ui/Banner.svelte';
 
 	const { store: encrypterStore } = encrypter;
 	const { store: whoamiStore } = whoami;
@@ -25,13 +22,7 @@
 </nav>
 
 <main>
-	<Card class="card">
-		<MacintoshBar>
-			{state}
-		</MacintoshBar>
-		<slot />
-	</Card>
-	<Banner />
+	<slot />
 </main>
 
 <style>
@@ -47,10 +38,5 @@
 
 	main {
 		padding: var(--spacing);
-	}
-
-	main :global(.card) {
-		max-width: 400px;
-		min-height: 400px;
 	}
 </style>

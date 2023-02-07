@@ -1,11 +1,21 @@
 <script lang="ts">
+	import { draggable } from '@neodrag/svelte';
+	export let isDraggable = false;
 	let clazz: string = '';
 	export { clazz as class };
 </script>
 
-<div class={`card ${clazz || ''}`}>
-	<slot />
-</div>
+{#if isDraggable}
+	<div class={`card ${clazz || ''}`} use:draggable>
+		<slot />
+	</div>
+{/if}
+
+{#if !isDraggable}
+	<div class={`card ${clazz || ''}`}>
+		<slot />
+	</div>
+{/if}
 
 <style>
 	.card {
