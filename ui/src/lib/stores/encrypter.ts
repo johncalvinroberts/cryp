@@ -1,10 +1,9 @@
-import type { Writable } from 'svelte/store';
-import type { Files } from 'filedrop-svelte';
-import { writable, get } from 'svelte/store';
-import { parseCrypString } from '../utils';
-import { CRYP_FILE_EXTENSION, STATE, MESSAGE } from '../constants';
-import type { EncrypterState, MessageKey, MessagePayload } from '../types';
-import IsomorphicWorker from '../isomorphic-worker';
+import { writable, get, type Writable } from "svelte/store";
+import type { Files } from "filedrop-svelte";
+import { parseCrypString } from "../utils";
+import { CRYP_FILE_EXTENSION, STATE, MESSAGE } from "../constants";
+import type { EncrypterState, MessageKey, MessagePayload } from "../types";
+import IsomorphicWorker from "../isomorphic-worker";
 
 const initialState: EncrypterState = {
 	isProcessing: false,
@@ -18,11 +17,11 @@ const initialState: EncrypterState = {
 	decryptedFiles: undefined,
 };
 
-class Encrypter {
+class EncrypterStore {
 	constructor(
 		public store: Writable<EncrypterState> = writable(initialState),
-		private worker: Worker = new IsomorphicWorker(new URL('../crypto.worker.ts', import.meta.url), {
-			type: 'module',
+		private worker: Worker = new IsomorphicWorker(new URL("../crypto.worker.ts", import.meta.url), {
+			type: "module",
 		}),
 	) {
 		this.worker.onmessage = this.handleMessage;
@@ -90,4 +89,4 @@ class Encrypter {
 	};
 }
 
-export const encrypter = new Encrypter();
+export const encrypter = new EncrypterStore();

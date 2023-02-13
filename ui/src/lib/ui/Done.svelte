@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Check from '../icons/check.svelte';
+	import Check from './icons/Check.svelte';
 	import { encrypter } from '../stores/encrypter';
 	import { saveAs } from 'file-saver';
 	import { getEncryptedFilename } from '../utils';

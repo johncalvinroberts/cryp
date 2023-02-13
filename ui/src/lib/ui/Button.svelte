@@ -1,15 +1,37 @@
 <script lang="ts">
 	type Variant = "dropdown" | "default";
 	export let disabled: boolean = false;
-	export let variant: Variant = "default"
+	export let variant: Variant = "default";
+	export let ariaExpanded: boolean | null;
+	export let ariaHaspopup:
+		| boolean
+		| "dialog"
+		| "menu"
+		| "true"
+		| "false"
+		| "grid"
+		| "listbox"
+		| "tree"
+		| null
+		| undefined;
 	const additionalClasses: Record<Variant, string> = {
-		"default": "",
-		"dropdown": "dropdown-button"
-	}
+		default: "",
+		dropdown: "dropdown-button",
+	};
+	const additionalProps = {
+		...(disabled ? { disabled } : null),
+		...(ariaExpanded != null ? { "aria-expanded": ariaExpanded } : null),
+		...(ariaHaspopup ? { "aria-haspopup": ariaHaspopup } : null),
+	};
 </script>
 
-<button class={`button ${additionalClasses[variant] || ''}`} disabled={disabled}>
-	<slot></slot>
+<button
+	class={`button ${additionalClasses[variant] || ""}`}
+	{...additionalProps}
+	on:click
+	on:mouseleave
+>
+	<slot />
 </button>
 
 <style>
@@ -45,7 +67,7 @@
 	.button:disabled:active {
 		background-color: var(--light);
 		color: var(--dark);
-	}	
+	}
 
 	.button:disabled:hover {
 		box-shadow: none;
@@ -55,11 +77,14 @@
 		border: none;
 		border-radius: 0;
 		background-color: transparent;
-	}	
+		position: relative;
+		padding: 0;
+	}
 	.dropdown-button:hover {
 		box-shadow: none;
 	}
-	.dropdown-button:focus,.dropdown-button:active {
+	.dropdown-button:focus,
+	.dropdown-button:active {
 		border: none;
 		outline: none;
 		background-color: var(--dark);

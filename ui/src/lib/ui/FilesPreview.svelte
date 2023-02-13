@@ -2,7 +2,7 @@
 	import Empty from './Empty.svelte';
 	import { encrypter } from '../stores/encrypter';
 	import FileSize from './FileSize.svelte';
-	import Eye from '../icons/eye.svelte';
+	import Eye from './icons/Eye.svelte';
 
 	const { store, reset, handleEncrypt } = encrypter;
 	const accepted = $store.filesToEncrypt?.accepted || [];

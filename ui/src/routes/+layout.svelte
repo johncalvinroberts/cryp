@@ -1,14 +1,42 @@
 <script>
-	import { whoami } from '../lib/stores/whoami';
-	import { encrypter } from '../lib/stores/encrypter';
-	import Button from '../lib/ui/Button.svelte';
+	import { onMount } from "svelte";
+	import { whoami } from "$lib/stores/whoami";
+	import { encrypter } from "$lib/stores/encrypter";
+	import Dropdown from "$lib/ui/Dropdown.svelte";
+	import Control from "$lib/ui/icons/Control.svelte";
+	import Money from "$lib/ui/icons/Money.svelte";
+	import Keycaps from "$lib/ui/icons/Keycaps.svelte";
+	import { theme } from "$lib/stores/theme";
 
 	const { store: encrypterStore } = encrypter;
 	const { store: whoamiStore } = whoami;
-	$: state = $encrypterStore.state;
-	let title = `furizu. | ${state}`;
+	let title = `furizu. | ${$encrypterStore.state}`;
 	const isAuthenticated = $whoamiStore.isAuthenticated;
 	const email = $whoamiStore.email;
+	const dropdownOptions = [
+		...(isAuthenticated
+			? [
+					{
+						Icon: Money,
+						label: "Authenticate",
+						onClick: () => alert("TODO: implement me"),
+					},
+			  ]
+			: [
+					{
+						Icon: Keycaps,
+						label: "Authenticate",
+						onClick: () => alert("TODO: implement me"),
+					},
+			  ]),
+		{
+			Icon: Control,
+			label: "Settings",
+			href: "/settings",
+		},
+	];
+	// TODO: make this isomorphic + no FOUC
+	onMount(() => theme.init());
 </script>
 
 <svelte:head>
@@ -16,9 +44,7 @@
 </svelte:head>
 
 <nav>
-	<Button variant="dropdown">
-		{isAuthenticated ? email : 'Guest'}
-	</Button>
+	<Dropdown label={isAuthenticated ? email : "Guest"} options={dropdownOptions} />
 </nav>
 
 <main>
@@ -37,6 +63,7 @@
 	}
 
 	main {
-		padding: var(--spacing);
+		padding: calc(var(--spacing) * 4);
+		position: relative;
 	}
 </style>

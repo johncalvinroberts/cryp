@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { encrypter } from '../stores/encrypter';
-	import Eye from '../icons/eye.svelte';
+	import Eye from './icons/Eye.svelte';
 
 	const { store, handleDecrypt, reset } = encrypter;
 	let showPassword = false;
