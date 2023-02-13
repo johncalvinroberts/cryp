@@ -1,9 +1,8 @@
 <script lang="ts">
 	import Button from "./Button.svelte";
-	import Card from "./Card.svelte";
 
 	type DropdownItem = {
-		Icon: any;
+		Icon: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 		label: string;
 		href?: string;
 		onClick?: () => void;

@@ -1,7 +1,6 @@
-
 @font-face {
-	font-family: 'Chicago';
-	src: local('Chicago'), url('../ChicagoFLF.woff') format('woff2');
+	font-family: "Chicago";
+	src: local("Chicago"), url("../ChicagoFLF.woff") format("woff2");
 	font-display: swap;
 }
 
@@ -19,7 +18,7 @@
 	--boxy-shadow: 2px 2px 0px #000000;
 	--nav-height: 20px;
 	--spacing: 5px;
-	--font-family-chicago: 'Chicago', sans-serif;
+	--font-family-chicago: "Chicago", sans-serif;
 	--z-index-popover: 99;
 }
 
@@ -66,7 +65,6 @@ button {
 	cursor: pointer;
 }
 
-
 h1 {
 	font-size: var(--font-size-h1);
 }
@@ -86,7 +84,6 @@ h4 {
 small {
 	font-size: var(--font-size-small);
 }
-
 
 /* UTIL CLASSES */
 
@@ -121,7 +118,6 @@ small {
 .input-box button:hover {
 	opacity: 1;
 }
-
 
 .input-box:not(:last-child) {
 	border-bottom: solid 1px var(--dark);

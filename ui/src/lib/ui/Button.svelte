@@ -1,6 +1,6 @@
 <script lang="ts">
 	type Variant = "dropdown" | "default";
-	export let disabled: boolean = false;
+	export let disabled = false;
 	export let variant: Variant = "default";
 	export let ariaExpanded: boolean | null;
 	export let ariaHaspopup:

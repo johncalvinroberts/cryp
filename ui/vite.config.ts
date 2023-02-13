@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
-import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from "vite";
+import { sveltekit } from "@sveltejs/kit/vite";
 
 /** @type {import('vite').UserConfig} */
 export default defineConfig(() => {
@@ -9,7 +9,7 @@ export default defineConfig(() => {
 			port: 1234,
 		},
 		fs: {
-			allow: ['..'],
+			allow: [".."],
 		},
 	};
 });

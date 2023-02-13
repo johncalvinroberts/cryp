@@ -1,7 +1,7 @@
-import { encrypt, decrypt, hexEncode, hexDecode } from './crypto';
-import { MESSAGE, STATE, FALLBACK_FILE_NAME } from './constants';
-import { formatCrypString } from './utils';
-import type { MessagePayload, HexEncodedFile, EncrypterState } from './types';
+import { encrypt, decrypt, hexEncode, hexDecode } from "./crypto";
+import { MESSAGE, STATE, FALLBACK_FILE_NAME } from "./constants";
+import { formatCrypString } from "./utils";
+import type { MessagePayload, HexEncodedFile, EncrypterState } from "./types";
 
 // alias self to ctx and give it our newly created type
 const ctx: Worker = self as unknown as Worker;
@@ -10,7 +10,7 @@ const ctx: Worker = self as unknown as Worker;
 class CryptoWorker {
 	encrypt = async (encrypterState: EncrypterState) => {
 		try {
-			const { filesToEncrypt, password = '', hint = '' } = encrypterState;
+			const { filesToEncrypt, password = "", hint = "" } = encrypterState;
 			const accepted = await Promise.all(
 				filesToEncrypt?.accepted.map((item) => item.arrayBuffer()) || [],
 			);
@@ -35,7 +35,7 @@ class CryptoWorker {
 
 	decrypt = async (encrypterState: EncrypterState) => {
 		try {
-			const { ciphertext = '', password = '' } = encrypterState;
+			const { ciphertext = "", password = "" } = encrypterState;
 			const plaintext = await decrypt(password, ciphertext);
 			const hexEncodedFiles: HexEncodedFile[] = JSON.parse(plaintext);
 			const decryptedFiles = hexEncodedFiles.map((item) => {
@@ -62,7 +62,7 @@ class CryptoWorker {
 				this.decrypt(payload);
 				break;
 			default:
-				throw new Error('Unknown Message Type');
+				throw new Error("Unknown Message Type");
 		}
 	};
 }
@@ -70,4 +70,4 @@ class CryptoWorker {
 // instantiate a worker
 const cryptoWorker = new CryptoWorker();
 // add listener to the worker global scope
-ctx.addEventListener('message', cryptoWorker.handleMessage);
+ctx.addEventListener("message", cryptoWorker.handleMessage);

@@ -1,12 +1,12 @@
 <script>
-	import Dropzone from './Dropzone.svelte';
-	import EncryptedPreview from './EncryptedPreview.svelte';
-	import { encrypter } from '../stores/encrypter';
-	import FilesPreview from './FilesPreview.svelte';
-	import Done from './Done.svelte';
-	import Failure from './Failure.svelte';
-	import Processing from './Processing.svelte';
-	import { STATE } from '../constants';
+	import Dropzone from "./Dropzone.svelte";
+	import EncryptedPreview from "./EncryptedPreview.svelte";
+	import { encrypter } from "../stores/encrypter";
+	import FilesPreview from "./FilesPreview.svelte";
+	import Done from "./Done.svelte";
+	import Failure from "./Failure.svelte";
+	import Processing from "./Processing.svelte";
+	import { STATE } from "../constants";
 
 	const { store } = encrypter;
 	const elements = {

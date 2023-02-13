@@ -1,6 +1,6 @@
-import type { Writable } from 'svelte/store';
-import type { WhoamiState } from '../types';
-import { writable } from 'svelte/store';
+import type { Writable } from "svelte/store";
+import type { WhoamiState } from "../types";
+import { writable } from "svelte/store";
 
 const initialState: WhoamiState = {
 	isAuthenticated: false,

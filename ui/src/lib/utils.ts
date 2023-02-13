@@ -1,14 +1,14 @@
-import type { Files } from 'filedrop-svelte';
-import { CRYP_DELIMITER, CRYP_FILE_EXTENSION } from './constants';
+import type { Files } from "filedrop-svelte";
+import { CRYP_DELIMITER, CRYP_FILE_EXTENSION } from "./constants";
 
 const MAX_NAME_LENGTH = 100;
 
 export const getEncryptedFilename = (files: Files) => {
-	let concatenatedNames = '';
+	let concatenatedNames = "";
 	const accepted = files?.accepted || [];
 	for (const file of accepted) {
-		const name = file.name?.substring(0, file?.name.lastIndexOf('.'));
-		concatenatedNames = `${concatenatedNames}${concatenatedNames?.length ? '+' : ''}${name}`;
+		const name = file.name?.substring(0, file?.name.lastIndexOf("."));
+		concatenatedNames = `${concatenatedNames}${concatenatedNames?.length ? "+" : ""}${name}`;
 		if (concatenatedNames.length >= MAX_NAME_LENGTH) {
 			concatenatedNames = `${concatenatedNames.substring(0, 97)}...`;
 			break;
@@ -28,7 +28,7 @@ export const parseCrypString = (crypString: string) => {
 export const getRandomUnicodeString = (length: number): string => {
 	const array = new Uint16Array(length);
 	window.crypto.getRandomValues(array);
-	let str = '';
+	let str = "";
 	for (let i = 0; i < array.length; i++) {
 		str += String.fromCharCode(array[i]);
 	}

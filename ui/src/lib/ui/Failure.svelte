@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { encrypter } from '../stores/encrypter';
+	import { encrypter } from "../stores/encrypter";
 	const { store, reset } = encrypter;
 </script>
 

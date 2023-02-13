@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Empty from './Empty.svelte';
-	import { encrypter } from '../stores/encrypter';
-	import FileSize from './FileSize.svelte';
-	import Eye from './icons/Eye.svelte';
+	import Empty from "./Empty.svelte";
+	import { encrypter } from "../stores/encrypter";
+	import FileSize from "./FileSize.svelte";
+	import Eye from "./icons/Eye.svelte";
 
 	const { store, reset, handleEncrypt } = encrypter;
 	const accepted = $store.filesToEncrypt?.accepted || [];
@@ -11,8 +11,8 @@
 		return memo + current.size;
 	}, 0);
 	let showPassword = false;
-	let password = '';
-	let hint = '';
+	let password = "";
+	let hint = "";
 
 	const handleSubmit = (e: SubmitEvent) => {
 		e.preventDefault();
@@ -57,7 +57,7 @@
 			<input
 				name="secret"
 				placeholder="Password"
-				type={showPassword ? 'text' : 'password'}
+				type={showPassword ? "text" : "password"}
 				value={password}
 				autocomplete="off"
 				spellcheck="false"
@@ -67,7 +67,7 @@
 				type="button"
 				class="vertical-center"
 				on:click={() => (showPassword = !showPassword)}
-				title={showPassword ? 'Hide' : 'Show'}
+				title={showPassword ? "Hide" : "Show"}
 			>
 				<Eye strikethrough={!showPassword} />
 			</button>

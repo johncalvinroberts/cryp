@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
-	import { getRandomUnicodeString } from '../utils';
+	import { onDestroy } from "svelte";
+	import { getRandomUnicodeString } from "../utils";
 	const CHAR_AMT = 25;
 
 	let randomChars = getRandomUnicodeString(CHAR_AMT);
 	let bottom = 0;
 	const shiftString = () => {
-		const nextStringArr = randomChars.split('');
+		const nextStringArr = randomChars.split("");
 		for (let i = 0; i < 4; i++) {
 			const randomIndex = Math.floor(Math.random() * CHAR_AMT);
 			nextStringArr[randomIndex] = getRandomUnicodeString(1);
 		}
-		randomChars = nextStringArr.join('');
+		randomChars = nextStringArr.join("");
 		bottom = bottom + 1;
 	};
 	const interval = setInterval(shiftString, 100);

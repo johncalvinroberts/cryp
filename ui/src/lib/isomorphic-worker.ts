@@ -38,7 +38,7 @@ class StubWorker implements Worker {
 	}
 }
 
-const IsomorphicWorker = typeof window == 'undefined' ? StubWorker : Worker;
+const IsomorphicWorker = typeof window == "undefined" ? StubWorker : Worker;
 
 export default IsomorphicWorker;
 

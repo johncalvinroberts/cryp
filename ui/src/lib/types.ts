@@ -1,14 +1,14 @@
-import type { Files } from 'filedrop-svelte';
+import type { Files } from "filedrop-svelte";
 
 export type StateKey =
-	| 'INITIAL'
-	| 'SHOULD_ENCRYPT'
-	| 'SHOULD_DECRYPT'
-	| 'PROCESSING'
-	| 'DONE'
-	| 'FAILURE';
+	| "INITIAL"
+	| "SHOULD_ENCRYPT"
+	| "SHOULD_DECRYPT"
+	| "PROCESSING"
+	| "DONE"
+	| "FAILURE";
 
-export type MessageKey = 'ENCRYPT' | 'DECRYPT' | 'ENCRYPTED' | 'DECRYPTED' | 'FAILURE';
+export type MessageKey = "ENCRYPT" | "DECRYPT" | "ENCRYPTED" | "DECRYPTED" | "FAILURE";
 
 export type HexEncodedFile = {
 	hex: string;

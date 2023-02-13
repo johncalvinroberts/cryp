@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { encrypter } from '../stores/encrypter';
-	import Eye from './icons/Eye.svelte';
+	import { encrypter } from "../stores/encrypter";
+	import Eye from "./icons/Eye.svelte";
 
 	const { store, handleDecrypt, reset } = encrypter;
 	let showPassword = false;
-	let password = '';
+	let password = "";
 	const handleSubmit = (e: SubmitEvent) => {
 		e.preventDefault();
 		handleDecrypt(password);
@@ -29,7 +29,7 @@
 			<input
 				name="secret"
 				placeholder="Password"
-				type={showPassword ? 'text' : 'password'}
+				type={showPassword ? "text" : "password"}
 				value={password}
 				autocomplete="off"
 				spellcheck="false"
@@ -39,7 +39,7 @@
 				type="button"
 				class="vertical-center"
 				on:click={() => (showPassword = !showPassword)}
-				title={showPassword ? 'Hide' : 'Show'}
+				title={showPassword ? "Hide" : "Show"}
 			>
 				<Eye strikethrough={!showPassword} />
 			</button>

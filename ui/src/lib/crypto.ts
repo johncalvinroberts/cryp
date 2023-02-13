@@ -1,13 +1,13 @@
-import { ENCRYPT_ALGO, KEY_ALGO, CIPHERTEXT_DELIMITER } from './constants';
+import { ENCRYPT_ALGO, KEY_ALGO, CIPHERTEXT_DELIMITER } from "./constants";
 
 export const getRandomBytes = (size = 16): Uint8Array => {
 	return crypto.getRandomValues(new Uint8Array(size));
 };
 
 export const hexEncode = (buffer: ArrayBuffer) => {
-	let s = '';
+	let s = "";
 	for (const i of new Uint8Array(buffer)) {
-		s += i.toString(16).padStart(2, '0');
+		s += i.toString(16).padStart(2, "0");
 	}
 	return s;
 };
@@ -24,20 +24,20 @@ export const hexDecode = (raw: string) => {
 };
 
 const getInitialKey = (password: string): Promise<CryptoKey> => {
-	return crypto.subtle.importKey('raw', new TextEncoder().encode(password), KEY_ALGO, false, [
-		'deriveKey',
-		'deriveBits',
+	return crypto.subtle.importKey("raw", new TextEncoder().encode(password), KEY_ALGO, false, [
+		"deriveKey",
+		"deriveBits",
 	]);
 };
 
 const getDerivedKey = (baseKey: CryptoKey, salt: ArrayBuffer): Promise<CryptoKey> => {
 	const iterations = 100_000;
 	return crypto.subtle.deriveKey(
-		{ name: 'PBKDF2', iterations, salt, hash: 'SHA-512' },
+		{ name: "PBKDF2", iterations, salt, hash: "SHA-512" },
 		baseKey,
 		{ name: ENCRYPT_ALGO, length: 256 },
 		false,
-		['encrypt', 'decrypt'],
+		["encrypt", "decrypt"],
 	);
 };
 

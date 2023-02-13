@@ -1,7 +1,7 @@
 <script lang="ts">
-	import fileSize from 'pretty-bytes';
+	import fileSize from "pretty-bytes";
 	export let bytes: number | undefined = undefined;
-	let className = '';
+	let className = "";
 	export { className as class };
 </script>
 
