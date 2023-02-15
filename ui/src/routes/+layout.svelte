@@ -1,15 +1,21 @@
-<script>
+<script lang="ts">
 	import { onMount } from "svelte";
 	import { whoami } from "$lib/stores/whoami";
 	import { encrypter } from "$lib/stores/encrypter";
-	import Dropdown from "$lib/ui/Dropdown.svelte";
-	import Control from "$lib/ui/icons/Control.svelte";
-	import Money from "$lib/ui/icons/Money.svelte";
-	import Keycaps from "$lib/ui/icons/Keycaps.svelte";
-	import { theme } from "$lib/stores/theme";
+	import Dropdown from "$lib/components/Dropdown.svelte";
+	import Control from "$lib/components/icons/Control.svelte";
+	import Money from "$lib/components/icons/Money.svelte";
+	import Keycaps from "$lib/components/icons/Keycaps.svelte";
+	import { display } from "$lib/stores/display";
+	import WhoamiForm from "$lib/components/WhoamiForm.svelte";
+	import Modal from "$lib/components/modal/Modal.svelte";
+
+	let initialFocusElement: HTMLElement;
+	let returnFocusElement: HTMLElement;
 
 	const { store: encrypterStore } = encrypter;
 	const { store: whoamiStore } = whoami;
+	const { store: displayStore } = display;
 	let title = `furizu. | ${$encrypterStore.state}`;
 	const isAuthenticated = $whoamiStore.isAuthenticated;
 	const email = $whoamiStore.email;
@@ -26,7 +32,7 @@
 					{
 						Icon: Keycaps,
 						label: "Authenticate",
-						onClick: () => alert("TODO: implement me"),
+						onClick: () => display.toggleAuthModal(),
 					},
 			  ]),
 		{
@@ -36,7 +42,7 @@
 		},
 	];
 	// TODO: make this isomorphic + no FOUC
-	onMount(() => theme.init());
+	onMount(() => display.init());
 </script>
 
 <svelte:head>
@@ -47,7 +53,13 @@
 	<Dropdown label={isAuthenticated ? email : "Guest"} options={dropdownOptions} />
 </nav>
 
-<main>
+{#if $displayStore.isAuthModalOpen}
+	<Modal onDismiss={() => display.toggleAuthModal()} {returnFocusElement} {initialFocusElement}>
+		<WhoamiForm />
+	</Modal>
+{/if}
+
+<main bind:this={returnFocusElement}>
 	<slot />
 </main>
 
@@ -65,5 +77,10 @@
 	main {
 		padding: calc(var(--spacing) * 4);
 		position: relative;
+	}
+
+	:global(.whoami-modal-card) {
+		min-width: 400px;
+		padding: var(--spacing);
 	}
 </style>

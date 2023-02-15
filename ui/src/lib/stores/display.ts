@@ -1,22 +1,23 @@
-import { get, writable, type Writable } from "svelte/store";
+import { get } from "svelte/store";
 import { browser } from "$app/environment";
 import { THEME_STORAGE_KEY } from "../constants";
+import BaseStore from "./base";
 
 type Theme = "dark" | "light";
 
 type ThemeState = {
 	theme: Theme;
+	isAuthModalOpen: boolean;
 };
 
 const initialState: ThemeState = {
 	theme: "light",
+	isAuthModalOpen: false,
 };
 
-class ThemeStore {
-	constructor(public store: Writable<ThemeState> = writable(initialState)) {}
-
-	private dispatch(payload: Partial<ThemeState>) {
-		this.store.update((prevState) => ({ ...prevState, ...payload }));
+class DisplayStore extends BaseStore<ThemeState> {
+	constructor() {
+		super(initialState);
 	}
 
 	public init() {
@@ -36,11 +37,17 @@ class ThemeStore {
 			document.documentElement.classList.add(nextTheme);
 		}
 	}
+
 	public toggleTheme() {
 		const { theme } = get(this.store);
 		const nextTheme = theme === "dark" ? "light" : "dark";
 		this.setTheme(nextTheme);
 	}
+
+	public toggleAuthModal() {
+		const { isAuthModalOpen } = get(this.store);
+		this.dispatch({ isAuthModalOpen: !isAuthModalOpen });
+	}
 }
 
-export const theme = new ThemeStore();
+export const display = new DisplayStore();

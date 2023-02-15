@@ -2,7 +2,8 @@
 	import Empty from "./Empty.svelte";
 	import { encrypter } from "../stores/encrypter";
 	import FileSize from "./FileSize.svelte";
-	import Eye from "./icons/Eye.svelte";
+	import Form from "./form/Form.svelte";
+	import Input from "./form/Input.svelte";
 
 	const { store, reset, handleEncrypt } = encrypter;
 	const accepted = $store.filesToEncrypt?.accepted || [];
@@ -10,7 +11,6 @@
 	const totalFileBytes = accepted.reduce((memo, current) => {
 		return memo + current.size;
 	}, 0);
-	let showPassword = false;
 	let password = "";
 	let hint = "";
 
@@ -52,40 +52,14 @@
 			{/each}
 		</ul>
 	{/if}
-	<form on:submit={handleSubmit} on:reset={reset} autocomplete="off">
-		<div class="input-box">
-			<input
-				name="secret"
-				placeholder="Password"
-				type={showPassword ? "text" : "password"}
-				value={password}
-				autocomplete="off"
-				spellcheck="false"
-				on:input={(e) => (password = e.currentTarget.value)}
-			/>
-			<button
-				type="button"
-				class="vertical-center"
-				on:click={() => (showPassword = !showPassword)}
-				title={showPassword ? "Hide" : "Show"}
-			>
-				<Eye strikethrough={!showPassword} />
-			</button>
-		</div>
-		<div class="input-box">
-			<input
-				name="hint"
-				placeholder="Hint (optional)"
-				bind:value={hint}
-				autocomplete="off"
-				spellcheck="false"
-			/>
-		</div>
+	<Form on:submit={handleSubmit} on:reset={reset}>
+		<Input placeholder="Password" type="password" name="secret" bind:value={password} />
+		<Input name="hint" placeholder="Hint (optional)" bind:value={hint} />
 		<div class="bottom-box">
 			<button type="reset"> Cancel </button>
 			<button type="submit" disabled={!password}> Encrypt </button>
 		</div>
-	</form>
+	</Form>
 </div>
 
 <style>

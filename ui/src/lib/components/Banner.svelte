@@ -12,6 +12,7 @@
 	.outer h1 {
 		font-size: var(--font-size-huge);
 		margin: 0;
+		text-align: center;
 	}
 
 	.outer h2 {

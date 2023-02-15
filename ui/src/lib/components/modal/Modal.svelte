@@ -1,0 +1,20 @@
+<script lang="ts">
+	import Card from "$lib/components/Card.svelte";
+	import Overlay from "$lib/components/modal/Overlay.svelte";
+	export let onDismiss: () => void;
+	export let initialFocusElement: HTMLElement;
+	export let returnFocusElement: HTMLElement;
+</script>
+
+<Overlay {returnFocusElement} {initialFocusElement} {onDismiss} ariaModalLegacy={false}>
+	<Card class="modal-card">
+		<slot />
+	</Card>
+</Overlay>
+
+<style>
+	:global(.modal-card) {
+		min-width: 400px;
+		padding: var(--spacing);
+	}
+</style>

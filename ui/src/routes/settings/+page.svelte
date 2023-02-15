@@ -1,8 +1,5 @@
 <script lang="ts">
-	import ThemeSwitch from "$lib/ui/ThemeSwitch.svelte";
+	import Settings from "$lib/components/pages/Settings.svelte";
 </script>
 
-<ThemeSwitch />
-
-<style>
-</style>
+<Settings />

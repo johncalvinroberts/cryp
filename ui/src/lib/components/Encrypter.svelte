@@ -1,8 +1,8 @@
 <script>
 	import Dropzone from "./Dropzone.svelte";
-	import EncryptedPreview from "./EncryptedPreview.svelte";
+	import DecryptionForm from "./DecryptionForm.svelte";
 	import { encrypter } from "../stores/encrypter";
-	import FilesPreview from "./FilesPreview.svelte";
+	import EncryptionForm from "./EncryptionForm.svelte";
 	import Done from "./Done.svelte";
 	import Failure from "./Failure.svelte";
 	import Processing from "./Processing.svelte";
@@ -11,8 +11,8 @@
 	const { store } = encrypter;
 	const elements = {
 		[STATE.INITIAL]: Dropzone,
-		[STATE.SHOULD_DECRYPT]: EncryptedPreview,
-		[STATE.SHOULD_ENCRYPT]: FilesPreview,
+		[STATE.SHOULD_DECRYPT]: DecryptionForm,
+		[STATE.SHOULD_ENCRYPT]: EncryptionForm,
 		[STATE.PROCESSING]: Processing,
 		[STATE.FAILURE]: Failure,
 		[STATE.DONE]: Done,

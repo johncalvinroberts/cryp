@@ -1,16 +1,15 @@
-import type { Writable } from "svelte/store";
 import type { WhoamiState } from "../types";
-import { writable } from "svelte/store";
+import BaseStore from "./base";
 
 const initialState: WhoamiState = {
 	isAuthenticated: false,
 	email: undefined,
 };
 
-class WhoamiStore {
-	constructor(public store: Writable<WhoamiState> = writable(initialState)) {}
-
-	public reset = () => this.store.update(() => initialState);
+class WhoamiStore extends BaseStore<WhoamiState> {
+	constructor() {
+		super(initialState);
+	}
 }
 
 export const whoami = new WhoamiStore();
