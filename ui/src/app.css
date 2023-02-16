@@ -110,31 +110,6 @@ small {
 	flex-wrap: wrap;
 }
 
-
-.input-box {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 0.3rem;
-	position: relative;
-}
-.input-box button {
-	background-color: transparent;
-	border: none;
-	opacity: 0.5;
-	transition: opacity 0.5s ease;
-	position: absolute;
-	right: 0;
-}
-.input-box button:hover {
-	opacity: 1;
-}
-
-.input-box:not(:last-child) {
-	border-bottom: solid 1px var(--dark);
-}
-
-.input-box,
 .bottom-box {
 	max-width: 300px;
 }

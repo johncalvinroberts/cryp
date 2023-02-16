@@ -1,5 +1,3 @@
-import type { Files } from "filedrop-svelte";
-
 export type StateKey =
 	| "INITIAL"
 	| "SHOULD_ENCRYPT"
@@ -17,7 +15,7 @@ export type HexEncodedFile = {
 
 export type EncrypterState = {
 	isProcessing: boolean;
-	filesToEncrypt: Files | undefined;
+	filesToEncrypt: File[] | undefined;
 	ciphertext: string | undefined;
 	state: StateKey;
 	password: string | undefined;
@@ -25,6 +23,7 @@ export type EncrypterState = {
 	error: Error | undefined;
 	crypString: string | undefined;
 	decryptedFiles: File[] | undefined;
+	name: string | undefined;
 };
 
 export type WhoamiState = {

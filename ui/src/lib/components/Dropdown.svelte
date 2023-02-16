@@ -1,13 +1,14 @@
 <script lang="ts">
+	import type { SvelteComponent } from "svelte";
 	import Button from "./Button.svelte";
 
 	type DropdownItem = {
-		Icon: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+		// Icon: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+		Icon: typeof SvelteComponent;
 		label: string;
 		href?: string;
 		onClick?: () => void;
 	};
-
 	let isOpen = false;
 	export let label = "";
 	export let options: DropdownItem[] = [];

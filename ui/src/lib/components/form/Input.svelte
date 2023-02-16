@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Eye from "../icons/Eye.svelte";
+	import MacintoshHD from "../icons/MacintoshHD.svelte";
 	export let type:
 		| "color"
 		| "date"
@@ -37,21 +38,23 @@
 </script>
 
 <div class="input-box">
-	<input
-		id={name}
-		{name}
-		{placeholder}
-		on:change
-		on:input
-		bind:value
-		autocomplete="off"
-		spellcheck="false"
-		use:setType={actualType}
-		{...$$restProps}
-	/>
 	<label for={name}>
 		{label}
 	</label>
+	{#if type !== "file"}
+		<input
+			id={name}
+			{name}
+			{placeholder}
+			on:change
+			on:input
+			bind:value
+			autocomplete="off"
+			spellcheck="false"
+			use:setType={actualType}
+			{...$$restProps}
+		/>
+	{/if}
 	{#if type === "password"}
 		<button
 			type="button"
@@ -62,17 +65,30 @@
 			<Eye strikethrough={!showPassword} />
 		</button>
 	{/if}
+	{#if type === "file"}
+		<div class="file-input" role="button">
+			<input type="file" id={name} {name} {placeholder} on:change />
+			<div class="vertical-center">
+				<MacintoshHD />
+			</div>
+		</div>
+	{/if}
 	<slot />
 </div>
 
 <style>
 	input {
 		background-color: transparent;
-		border: none;
+		border: solid 1px var(--dark);
 		width: 100%;
 		font-size: 0.9rem;
-		text-align: center;
 		color: var(--dark);
+		height: 21px;
+		max-width: 200px;
+	}
+
+	label {
+		flex: 0 0 100%;
 	}
 
 	.input-box {
@@ -81,6 +97,8 @@
 		align-items: center;
 		padding: var(--spacing);
 		position: relative;
+		max-width: 300px;
+		flex-wrap: wrap;
 	}
 	.input-box button {
 		background-color: transparent;
@@ -94,7 +112,16 @@
 		opacity: 1;
 	}
 
-	.input-box:not(:last-child) {
-		border-bottom: solid 1px var(--dark);
+	.file-input {
+		cursor: pointer;
+		height: 21px;
+		border: solid 1px var(--dark);
+		display: flex;
+		max-width: 200px;
+		padding-right: 10px;
+	}
+	.file-input input {
+		opacity: 0;
+		cursor: pointer;
 	}
 </style>

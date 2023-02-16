@@ -1,5 +1,4 @@
 import { get } from "svelte/store";
-import type { Files } from "filedrop-svelte";
 import { parseCrypString } from "../utils";
 import { CRYP_FILE_EXTENSION, STATE, MESSAGE } from "../constants";
 import type { EncrypterState, MessageKey, MessagePayload } from "../types";
@@ -12,6 +11,7 @@ const initialState: EncrypterState = {
 	ciphertext: undefined,
 	password: undefined,
 	hint: undefined,
+	name: undefined,
 	state: STATE.INITIAL,
 	error: undefined,
 	crypString: undefined,
@@ -49,12 +49,15 @@ class EncrypterStore extends BaseStore<EncrypterState> {
 		}
 	};
 
-	public handleFiles = async (filesToEncrypt: Files) => {
-		const isCrypFile = filesToEncrypt?.accepted?.[0]?.name?.trim()?.endsWith(CRYP_FILE_EXTENSION);
+	public handleFiles = async (files: File[]) => {
+		const isCrypFile = files?.[0]?.name?.trim()?.endsWith(CRYP_FILE_EXTENSION);
 		if (!isCrypFile) {
+			const { filesToEncrypt: currentFiles = [] } = get(this.store);
+			const filesToEncrypt = [...currentFiles, ...files];
 			this.dispatch({ filesToEncrypt, state: STATE.SHOULD_ENCRYPT });
-		} else {
-			const arrayBuffer = await filesToEncrypt?.accepted?.[0].arrayBuffer();
+		}
+		if (isCrypFile) {
+			const arrayBuffer = await files?.[0].arrayBuffer();
 			const crypString = new TextDecoder().decode(arrayBuffer);
 			const { ciphertext, hint } = parseCrypString(crypString);
 			this.dispatch({
@@ -66,8 +69,9 @@ class EncrypterStore extends BaseStore<EncrypterState> {
 		}
 	};
 
-	public handleEncrypt = async (password: string, hint: string) => {
+	public handleEncrypt = async (name: string, password: string, hint: string) => {
 		this.dispatch({
+			name,
 			password,
 			hint,
 			state: STATE.PROCESSING,

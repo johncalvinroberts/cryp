@@ -5,27 +5,34 @@
 	import Form from "./form/Form.svelte";
 	import Input from "./form/Input.svelte";
 
-	const { store, reset, handleEncrypt } = encrypter;
-	const accepted = $store.filesToEncrypt?.accepted || [];
-	const rejected = $store.filesToEncrypt?.rejected || [];
-	const totalFileBytes = accepted.reduce((memo, current) => {
+	const { store, reset, handleEncrypt, handleFiles } = encrypter;
+	$: accepted = $store.filesToEncrypt ?? [];
+	$: totalFileBytes = accepted.reduce((memo, current) => {
 		return memo + current.size;
 	}, 0);
+	let name = "";
 	let password = "";
 	let hint = "";
 
+	const handleAddFile = (e: Event) => {
+		const files = (<HTMLInputElement>e.target).files;
+		if (files) {
+			handleFiles(Array.from(files));
+		}
+	};
+
 	const handleSubmit = (e: SubmitEvent) => {
 		e.preventDefault();
-		handleEncrypt(password, hint);
+		handleEncrypt(name, password, hint);
 	};
 </script>
 
 <div class="wrapper">
 	{#if accepted.length > 1}
 		<div class="title">
-			<h6>
+			<h2>
 				{accepted.length} Files -
-			</h6>
+			</h2>
 			<span class="vertical-center">
 				<FileSize bytes={totalFileBytes} />
 			</span>
@@ -44,17 +51,11 @@
 		<Empty />
 	{/if}
 
-	{#if rejected?.length}
-		<h6>Rejected Files</h6>
-		<ul>
-			{#each rejected as rejected}
-				<li>{rejected.file.name} - {rejected.error.message}</li>
-			{/each}
-		</ul>
-	{/if}
 	<Form on:submit={handleSubmit} on:reset={reset}>
-		<Input placeholder="Password" type="password" name="secret" bind:value={password} />
-		<Input name="hint" placeholder="Hint (optional)" bind:value={hint} />
+		<Input label="Select File" type="file" name="files" on:change={handleAddFile} />
+		<Input label="Name" type="text" name="name" bind:value={name} />
+		<Input label="Secret Key" type="text" name="secret" bind:value={password} />
+		<Input name="hint" label="Hint (optional)" bind:value={hint} />
 		<div class="bottom-box">
 			<button type="reset"> Cancel </button>
 			<button type="submit" disabled={!password}> Encrypt </button>
@@ -68,9 +69,10 @@
 		justify-content: center;
 		flex-wrap: wrap;
 	}
-	h6 {
-		text-align: center;
-		margin: 0;
+	ul {
+		padding: 0;
+		flex: 0 0 100%;
+		max-width: 300px;
 	}
 	li {
 		display: flex;
@@ -85,7 +87,9 @@
 	.title {
 		display: flex;
 		width: 100%;
-		justify-content: center;
-		margin-top: 3rem;
+		max-width: 300px;
+	}
+	.title h2 {
+		margin: 0;
 	}
 </style>

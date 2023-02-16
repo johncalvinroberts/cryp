@@ -4,11 +4,15 @@
 	import { encrypter } from "../stores/encrypter";
 	const { handleFiles } = encrypter;
 	let isDraggingOver = false;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const handleDrop = (e: any) => {
+		return handleFiles(e.detail.files.accepted);
+	};
 </script>
 
 <div>
 	<FileDrop
-		on:filedrop={(e) => handleFiles(e.detail.files)}
+		on:filedrop={handleDrop}
 		on:dragover={() => (isDraggingOver = true)}
 		on:dragleave={() => (isDraggingOver = false)}
 	>
