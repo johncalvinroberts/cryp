@@ -11,12 +11,10 @@ class CryptoWorker {
 	encrypt = async (encrypterState: EncrypterState) => {
 		try {
 			const { filesToEncrypt, password = "", hint = "" } = encrypterState;
-			const accepted = await Promise.all(
-				filesToEncrypt?.accepted.map((item) => item.arrayBuffer()) || [],
-			);
+			const accepted = await Promise.all(filesToEncrypt?.map((item) => item.arrayBuffer()) || []);
 			const hexEncodedFiles: HexEncodedFile[] = accepted.map((item, index) => ({
 				hex: hexEncode(item),
-				name: filesToEncrypt?.accepted?.[index].name || FALLBACK_FILE_NAME,
+				name: filesToEncrypt?.[index].name || FALLBACK_FILE_NAME,
 			}));
 			// the plaintext is a stringified JSON array of files
 			const plaintext = JSON.stringify(hexEncodedFiles);

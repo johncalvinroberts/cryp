@@ -1,11 +1,10 @@
-import type { Files } from "filedrop-svelte";
 import { CRYP_DELIMITER, CRYP_FILE_EXTENSION } from "./constants";
 
 const MAX_NAME_LENGTH = 100;
 
-export const getEncryptedFilename = (files: Files) => {
+export const getEncryptedFilename = (files: File[]) => {
 	let concatenatedNames = "";
-	const accepted = files?.accepted || [];
+	const accepted = files || [];
 	for (const file of accepted) {
 		const name = file.name?.substring(0, file?.name.lastIndexOf("."));
 		concatenatedNames = `${concatenatedNames}${concatenatedNames?.length ? "+" : ""}${name}`;
