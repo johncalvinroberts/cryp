@@ -53,8 +53,20 @@
 
 	<Form on:submit={handleSubmit} on:reset={reset}>
 		<Input label="Select File" type="file" name="files" on:change={handleAddFile} />
-		<Input label="Name" type="text" name="name" bind:value={name} />
-		<Input label="Secret Key" type="text" name="secret" bind:value={password} />
+		<Input
+			label="Name"
+			type="text"
+			name="name"
+			bind:value={name}
+			tip="Display-only identifier for the encrypted file(s)"
+		/>
+		<Input
+			label="Secret Key"
+			type="text"
+			name="secret"
+			bind:value={password}
+			tip="This is a special password for decrypting the encrypted file. Do not lose this."
+		/>
 		<Input name="hint" label="Hint (optional)" bind:value={hint} />
 		<div class="bottom-box">
 			<button type="reset"> Cancel </button>

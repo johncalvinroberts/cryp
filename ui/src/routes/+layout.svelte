@@ -9,6 +9,7 @@
 	import { display } from "$lib/stores/display";
 	import WhoamiForm from "$lib/components/WhoamiForm.svelte";
 	import Modal from "$lib/components/modal/Modal.svelte";
+	import Toy from "$lib/components/Toy.svelte";
 
 	let initialFocusElement: HTMLElement;
 	let returnFocusElement: HTMLElement;
@@ -50,6 +51,9 @@
 </svelte:head>
 
 <nav>
+	<a href="/" class="vertical-center">
+		<span>furizu</span>
+	</a>
 	<Dropdown label={isAuthenticated ? email : "Guest"} options={dropdownOptions} />
 </nav>
 
@@ -63,13 +67,15 @@
 	<slot />
 </main>
 
+<Toy />
+
 <style>
 	nav {
 		background-color: var(--gray);
 		height: var(--nav-height);
 		width: 100%;
 		display: flex;
-		justify-content: flex-end;
+		justify-content: space-between;
 		padding: 0 calc(var(--spacing) * 4);
 		border-bottom: solid 1px var(--dark);
 	}

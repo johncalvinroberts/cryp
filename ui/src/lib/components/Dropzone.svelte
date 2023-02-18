@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from "$app/environment";
 	import FileDrop from "filedrop-svelte";
 	import Plus from "./Plus.svelte";
 	import { encrypter } from "../stores/encrypter";
@@ -11,21 +12,28 @@
 </script>
 
 <div>
-	<FileDrop
-		on:filedrop={handleDrop}
-		on:dragover={() => (isDraggingOver = true)}
-		on:dragleave={() => (isDraggingOver = false)}
-	>
-		<div
-			class="dropzone"
-			class:is-dragging-over={isDraggingOver}
-			on:mouseover={() => (isDraggingOver = true)}
-			on:mouseleave={() => (isDraggingOver = false)}
-			on:focus={() => (isDraggingOver = true)}
+	{#if browser}
+		<FileDrop
+			on:filedrop={handleDrop}
+			on:dragover={() => (isDraggingOver = true)}
+			on:dragleave={() => (isDraggingOver = false)}
 		>
+			<div
+				class="dropzone"
+				class:is-dragging-over={isDraggingOver}
+				on:mouseover={() => (isDraggingOver = true)}
+				on:mouseleave={() => (isDraggingOver = false)}
+				on:focus={() => (isDraggingOver = true)}
+			>
+				<Plus {isDraggingOver} />
+			</div>
+		</FileDrop>
+	{:else}
+		<div class="dropzone">
 			<Plus {isDraggingOver} />
 		</div>
-	</FileDrop>
+	{/if}
+
 	<small> Drop Files or Folders to Get Started </small>
 </div>
 

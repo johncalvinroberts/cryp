@@ -34,6 +34,8 @@
 		"vite": "^4.0.4"
 	},
 	"dependencies": {
+		"@leveluptuts/svelte-side-menu": "^1.0.5",
+		"@leveluptuts/svelte-toy": "^2.0.3",
 		"@neodrag/svelte": "^2.0.3",
 		"file-saver": "^2.0.5",
 		"filedrop-svelte": "^0.1.2",

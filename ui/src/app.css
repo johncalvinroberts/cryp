@@ -45,7 +45,7 @@ nav,
 section {
 	display: block;
 }
-body {
+body, input {
 	margin: 0;
 	font-family: var(--font-family-chicago);
 	font-size: var(--font-size-normal);
@@ -93,6 +93,7 @@ h4 {
 
 small {
 	font-size: var(--font-size-small);
+	font-weight: normal;
 }
 
 /* UTIL CLASSES */

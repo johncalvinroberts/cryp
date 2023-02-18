@@ -1,0 +1,30 @@
+<svg width="25" height="18" viewBox="0 0 25 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<rect
+		x="1.5"
+		y="2.625"
+		width="22"
+		height="13.875"
+		fill="white"
+		stroke="black"
+		stroke-linecap="square"
+		stroke-linejoin="bevel"
+	/>
+	<rect x="3.875" width="4.75" height="0.708333" fill="black" />
+	<rect x="3.15625" y="0.708332" width="6" height="0.708333" fill="black" />
+	<rect x="2.4375" y="1.41667" width="7.5" height="0.708333" fill="black" />
+	<rect x="2" y="3" width="21" height="13" fill="black" />
+	<rect x="1" y="2.125" width="0.71875" height="0.708333" fill="white" />
+	<rect x="23.2812" y="2.125" width="0.71875" height="0.708333" fill="white" />
+	<!-- <path
+		d="M14.6673 1.95222L15.2669 1.35268L24.5936 10.6794L23.994 11.2789L14.6673 1.95222Z"
+		fill="white"
+	/>
+	<path
+		d="M0.499847 5.78473L1.09939 5.18518L12.9972 17.083L12.3977 17.6826L0.499847 5.78473Z"
+		fill="white"
+	/>
+	<path
+		d="M0.394539 10.6794L0.994085 10.0799L7.99723 17.083L7.39769 17.6826L0.394539 10.6794Z"
+		fill="white"
+	/> -->
+</svg>

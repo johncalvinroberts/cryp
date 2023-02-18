@@ -11,9 +11,8 @@
 
 <style>
 	span {
-		opacity: 0.5;
-		font-size: 0.8rem;
 		font-weight: normal;
 		margin-left: 0.2rem;
+		color: var(--gray);
 	}
 </style>

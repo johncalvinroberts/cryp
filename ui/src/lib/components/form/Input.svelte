@@ -24,6 +24,7 @@
 	export let label = "";
 	export let placeholder = "";
 	export let value: string | number = "";
+	export let tip = "";
 	let showPassword = false;
 	$: actualType = type === "password" && showPassword ? "text" : type;
 	// you need to this to avoid 2-way binding
@@ -74,6 +75,9 @@
 		</div>
 	{/if}
 	<slot />
+	{#if tip}
+		<small>{tip}</small>
+	{/if}
 </div>
 
 <style>
@@ -81,7 +85,6 @@
 		background-color: transparent;
 		border: solid 1px var(--dark);
 		width: 100%;
-		font-size: 0.9rem;
 		color: var(--dark);
 		height: 21px;
 		max-width: 200px;
@@ -123,5 +126,9 @@
 	.file-input input {
 		opacity: 0;
 		cursor: pointer;
+	}
+	small {
+		color: var(--gray);
+		display: block;
 	}
 </style>
