@@ -24,7 +24,8 @@
 	on:click={toggle}
 	on:mouseleave={handleMouseLeave}
 	ariaExpanded={isOpen}
-	ariaHaspopup="listbox"
+	aria-expanded={isOpen}
+	aria-haspopup="listbox"
 >
 	{label}
 

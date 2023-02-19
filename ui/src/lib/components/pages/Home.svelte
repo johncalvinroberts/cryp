@@ -16,7 +16,7 @@
 		<Encrypter />
 	</div>
 </Card>
-<div class="banner-wrapper">
+<div class="banner-box">
 	<Banner />
 </div>
 
@@ -31,11 +31,11 @@
 		width: 380px;
 		position: absolute;
 	}
-	.banner-wrapper {
-		min-height: calc(100vh - var(--nav-height));
+	.banner-box {
 		display: flex;
 		justify-content: flex-end;
 		align-items: center;
 		max-width: 1200px;
+		flex: 1;
 	}
 </style>

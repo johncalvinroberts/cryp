@@ -2,4 +2,9 @@
 	import ThemeSwitch from "$lib/components/ThemeSwitch.svelte";
 </script>
 
-<ThemeSwitch />
+<div>
+	<ThemeSwitch />
+</div>
+
+<style>
+</style>

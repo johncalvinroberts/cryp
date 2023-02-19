@@ -11,7 +11,7 @@
 	};
 </script>
 
-<div class="wrapper">
+<div class="box">
 	<div class="title">
 		<h6>Decrypt File</h6>
 		{#if $store.hint}
@@ -52,9 +52,9 @@
 </div>
 
 <style>
-	.wrapper {
+	.box {
 		display: flex;
-		justify-content: center;
+		justify-content: flex-start;
 		flex-wrap: wrap;
 	}
 	.title {

@@ -21,6 +21,7 @@
 		| "week"
 		| "search" = "text";
 	export let name: string;
+	export let variant: "standard" | "minimal" = "standard"; //currently only for file input
 	export let label = "";
 	export let placeholder = "";
 	export let value: string | number = "";
@@ -39,7 +40,7 @@
 </script>
 
 <div class="input-box">
-	<label for={name}>
+	<label for={name} class:minimal={variant === "minimal"}>
 		{label}
 	</label>
 	{#if type !== "file"}
@@ -67,11 +68,13 @@
 		</button>
 	{/if}
 	{#if type === "file"}
-		<div class="file-input" role="button">
+		<div class="file-input {variant}" role="button">
 			<input type="file" id={name} {name} {placeholder} on:change {...$$restProps} />
-			<div class="vertical-center">
-				<MacintoshHD />
-			</div>
+			{#if variant !== "minimal"}
+				<div class="vertical-center">
+					<MacintoshHD />
+				</div>
+			{/if}
 		</div>
 	{/if}
 	<slot />
@@ -98,7 +101,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: var(--spacing);
+		padding: var(--spacing) 0;
 		position: relative;
 		max-width: 300px;
 		flex-wrap: wrap;
@@ -127,6 +130,25 @@
 		opacity: 0;
 		cursor: pointer;
 	}
+
+	.file-input.minimal {
+		border: none;
+		cursor: pointer;
+		padding-left: 0;
+		font-size: var(--font-size-small);
+		color: var(--gray);
+		height: 0;
+	}
+
+	label.minimal {
+		color: var(--gray);
+		font-size: var(--font-size-small);
+		cursor: pointer;
+	}
+	label.minimal:hover {
+		text-decoration: underline;
+	}
+
 	small {
 		color: var(--gray);
 		display: block;

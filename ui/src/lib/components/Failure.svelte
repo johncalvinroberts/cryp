@@ -3,7 +3,7 @@
 	const { store, reset } = encrypter;
 </script>
 
-<div class="wrapper vertical-center">
+<div class="box vertical-center">
 	<h2>Error</h2>
 	<div>An error occured during the encryption or decryption process.</div>
 	<div>
@@ -18,13 +18,13 @@
 </div>
 
 <style>
-	.wrapper {
+	.box {
 		flex-wrap: wrap;
 		width: 100%;
 		justify-content: center;
 	}
-	.wrapper h2,
-	.wrapper div {
+	.box h2,
+	.box div {
 		width: 100%;
 		text-align: center;
 		margin-bottom: 0.5rem;

@@ -6,6 +6,7 @@
 
 :root {
 	--gray: #8792a2;
+	--opaque: #ffffff8f;
 	--error: #dc3545;
 	--light: #ffffff;
 	--dark: #000000;
@@ -45,7 +46,8 @@ nav,
 section {
 	display: block;
 }
-body, input {
+body,
+input {
 	margin: 0;
 	font-family: var(--font-family-chicago);
 	font-size: var(--font-size-normal);

@@ -39,7 +39,7 @@
 
 <style>
 	div {
-		background-color: #ffffff8f;
+		background-color: var(--opaque);
 		position: fixed;
 		top: 0;
 		right: 0;

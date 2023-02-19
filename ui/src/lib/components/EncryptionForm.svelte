@@ -27,38 +27,47 @@
 	};
 </script>
 
-<div class="wrapper">
-	<div class="title">
-		<h2>
-			{files.length} Files -
-		</h2>
-		<span class="vertical-center">
-			<FileSize bytes={totalFileBytes} />
-		</span>
+<div class="box">
+	<div class="file-preview">
+		<div class="title">
+			<h2>
+				{files.length} Files -
+			</h2>
+			<span class="vertical-center">
+				<FileSize bytes={totalFileBytes} />
+			</span>
+		</div>
+		<ul>
+			{#each files as file}
+				<li>
+					<span class="file-name truncate">{file.name}</span>
+					-
+					<FileSize bytes={file.size} class="file-size" />
+				</li>
+			{/each}
+		</ul>
+		{#if !files?.length}
+			<Empty />
+		{/if}
 	</div>
-	<ul>
-		{#each files as file}
-			<li>
-				<span class="file-name truncate">{file.name}</span>
-				-
-				<FileSize bytes={file.size} class="file-size" />
-			</li>
-		{/each}
-	</ul>
-	{#if !files?.length}
-		<Empty />
-	{/if}
-
+	<hr />
 	<Form on:submit={handleSubmit} on:reset={reset}>
-		<Input label="Select File" type="file" name="files" on:change={handleAddFile} multiple={true} />
 		<Input
 			label="Secret Key"
 			type="text"
 			name="secret"
 			bind:value={password}
-			tip="This is a special password for decrypting the encrypted file. Do not lose this."
+			tip="Special password for decrypting the encrypted file. Do not lose this."
 		/>
 		<Input name="hint" label="Hint" bind:value={hint} tip="Optional secret key hint" />
+		<Input
+			label="Add more files ->"
+			type="file"
+			name="files"
+			variant="minimal"
+			on:change={handleAddFile}
+			multiple={true}
+		/>
 		<div class="bottom-box">
 			<Button type="reset">Cancel</Button>
 			<Button type="submit" disabled={!password}>Encrypt</Button>
@@ -67,15 +76,15 @@
 </div>
 
 <style>
-	.wrapper {
+	.box {
 		display: flex;
 		justify-content: center;
 		flex-wrap: wrap;
+		max-width: 300px;
 	}
 	ul {
 		padding: 0;
 		flex: 0 0 100%;
-		max-width: 300px;
 	}
 	li {
 		display: flex;
@@ -90,9 +99,13 @@
 	.title {
 		display: flex;
 		width: 100%;
-		max-width: 300px;
 	}
 	.title h2 {
 		margin: 0;
+	}
+
+	.file-preview {
+		flex: 0 0 100%;
+		min-height: 130px;
 	}
 </style>

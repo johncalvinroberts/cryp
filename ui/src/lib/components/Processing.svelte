@@ -1,36 +1,57 @@
 <script lang="ts">
 	import { onDestroy } from "svelte";
 	import { getRandomUnicodeString } from "../utils";
+	import OverlayLoading from "./OverlayLoading.svelte";
 	const CHAR_AMT = 25;
 
-	let randomChars = getRandomUnicodeString(CHAR_AMT);
-	let bottom = 0;
+	let randomChars = [
+		getRandomUnicodeString(CHAR_AMT),
+		getRandomUnicodeString(CHAR_AMT),
+		getRandomUnicodeString(CHAR_AMT),
+		getRandomUnicodeString(CHAR_AMT),
+		getRandomUnicodeString(CHAR_AMT),
+		getRandomUnicodeString(CHAR_AMT),
+		getRandomUnicodeString(CHAR_AMT),
+		getRandomUnicodeString(CHAR_AMT),
+		getRandomUnicodeString(CHAR_AMT),
+		getRandomUnicodeString(CHAR_AMT),
+		getRandomUnicodeString(CHAR_AMT),
+	];
 	const shiftString = () => {
-		const nextStringArr = randomChars.split("");
-		for (let i = 0; i < 4; i++) {
-			const randomIndex = Math.floor(Math.random() * CHAR_AMT);
-			nextStringArr[randomIndex] = getRandomUnicodeString(1);
+		const nextRandomChars = [getRandomUnicodeString(CHAR_AMT)];
+		for (let i = 0; i < randomChars.length - 1; i++) {
+			const nextStringArr = randomChars[i].split("");
+			for (let j = 0; j < 4; j++) {
+				const randomIndex = Math.floor(Math.random() * CHAR_AMT);
+				nextStringArr[randomIndex] = getRandomUnicodeString(1);
+			}
+			nextRandomChars.push(nextStringArr.join(""));
 		}
-		randomChars = nextStringArr.join("");
-		bottom = bottom + 1;
+		randomChars = nextRandomChars;
 	};
 	const interval = setInterval(shiftString, 100);
 	onDestroy(() => clearInterval(interval));
 </script>
 
-<div class="container vertical-center">
-	<div class="bar truncate" style="bottom:{bottom}px;">
-		{randomChars}
+<div class="box vertical-center">
+	<OverlayLoading />
+	<div class="bar truncate">
+		{#each randomChars as row}
+			<div>
+				{row}
+			</div>
+		{/each}
 	</div>
 </div>
 
 <style>
-	.container {
+	.box {
 		min-height: 100px;
 		position: relative;
+		width: 100%;
 	}
 	.bar {
-		background-color: var(--yellow);
+		background-color: var(--light);
 		color: var(--dark);
 		width: 100%;
 		text-align: center;
@@ -38,5 +59,6 @@
 		position: absolute;
 		left: 0;
 		right: 0;
+		z-index: var(--z-index-popover);
 	}
 </style>

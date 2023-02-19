@@ -80,8 +80,10 @@
 	}
 
 	main {
-		padding: calc(var(--spacing) * 4);
 		position: relative;
+		padding: calc(var(--spacing) * 4);
+		min-height: calc(100vh - var(--nav-height));
+		display: flex;
 	}
 
 	:global(.whoami-modal-card) {

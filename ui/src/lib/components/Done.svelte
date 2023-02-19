@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Check from "./icons/Check.svelte";
+	import Button from "./Button.svelte";
 	import { encrypter } from "../stores/encrypter";
 	import { saveAs } from "file-saver";
 	import { getEncryptedFilename } from "../utils";
@@ -53,8 +54,8 @@
 		<div class="error">Failed to Download File.</div>
 	{/if}
 	<div class="bottom-box">
-		<button class="vertical-center success-button" on:click={handleDownload}> Download </button>
-		<button on:click={reset}> Start Over </button>
+		<Button on:click={handleDownload}>Download</Button>
+		<Button on:click={reset}>Start Over</Button>
 	</div>
 </div>
 
@@ -66,22 +67,6 @@
 		margin: 0 auto;
 	}
 
-	.bottom-box button {
-		max-width: 150px;
-		margin: 0 auto;
-	}
-
-	.success-button {
-		color: var(--light);
-		background: -webkit-linear-gradient(var(--purple), var(--info));
-		border: solid 1px var(--light);
-		animation: floating 20s ease-in-out infinite;
-		border-radius: 2px;
-		transition: all 0.3s ease;
-	}
-	.success-button:hover {
-		border: solid 2px var(--light);
-	}
 	.icon {
 		margin-right: 0.5rem;
 	}
