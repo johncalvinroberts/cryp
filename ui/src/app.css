@@ -16,7 +16,7 @@
 	--font-size-h3: 16px;
 	--font-size-huge: 138px;
 	--boxy-shadow: 2px 2px 0px #000000;
-	--nav-height: 20px;
+	--nav-height: 21px;
 	--spacing: 5px;
 	--font-family-chicago: "Chicago", sans-serif;
 	--z-index-popover: 99;
@@ -142,4 +142,10 @@ small {
 .bottom-box button:disabled:hover {
 	box-shadow: none;
 	cursor: not-allowed;
+}
+
+.bg-grid {
+	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAACxLAAAsSwGlPZapAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAwSURBVHgB7c5BEQAgCAAwsJBBzGsQE+HXCHi3JVieXRWPuTKjkRHNCQIAAAAAwK8uVd8ECI31euMAAAAASUVORK5CYII=");
+	background-size: 9px;
+	background-position: 71% 4px;
 }

@@ -23,7 +23,6 @@ export type EncrypterState = {
 	error: Error | undefined;
 	crypString: string | undefined;
 	decryptedFiles: File[] | undefined;
-	name: string | undefined;
 };
 
 export type WhoamiState = {

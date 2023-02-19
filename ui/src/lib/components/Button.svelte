@@ -1,8 +1,7 @@
 <script lang="ts">
 	type Variant = "dropdown" | "default";
-	export let disabled = false;
 	export let variant: Variant = "default";
-	export let ariaExpanded: boolean | null;
+	export let ariaExpanded: boolean | null | undefined = undefined;
 	export let ariaHaspopup:
 		| boolean
 		| "dialog"
@@ -13,13 +12,12 @@
 		| "listbox"
 		| "tree"
 		| null
-		| undefined;
+		| undefined = undefined;
 	const additionalClasses: Record<Variant, string> = {
 		default: "",
 		dropdown: "dropdown-button",
 	};
 	const additionalProps = {
-		...(disabled ? { disabled } : null),
 		...(ariaExpanded != null ? { "aria-expanded": ariaExpanded } : null),
 		...(ariaHaspopup ? { "aria-haspopup": ariaHaspopup } : null),
 	};
@@ -28,6 +26,7 @@
 <button
 	class={`button ${additionalClasses[variant] || ""}`}
 	{...additionalProps}
+	{...$$restProps}
 	on:click
 	on:mouseleave
 >
@@ -62,15 +61,7 @@
 
 	.button:disabled {
 		opacity: 0.5;
-	}
-
-	.button:disabled:active {
-		background-color: var(--light);
-		color: var(--dark);
-	}
-
-	.button:disabled:hover {
-		box-shadow: none;
+		pointer-events: none;
 	}
 
 	.dropdown-button {

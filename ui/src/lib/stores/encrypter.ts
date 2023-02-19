@@ -11,7 +11,6 @@ const initialState: EncrypterState = {
 	ciphertext: undefined,
 	password: undefined,
 	hint: undefined,
-	name: undefined,
 	state: STATE.INITIAL,
 	error: undefined,
 	crypString: undefined,
@@ -69,9 +68,8 @@ class EncrypterStore extends BaseStore<EncrypterState> {
 		}
 	};
 
-	public handleEncrypt = async (name: string, password: string, hint: string) => {
+	public handleEncrypt = async (password: string, hint: string) => {
 		this.dispatch({
-			name,
 			password,
 			hint,
 			state: STATE.PROCESSING,

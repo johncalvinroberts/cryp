@@ -9,7 +9,7 @@
 	import { display } from "$lib/stores/display";
 	import WhoamiForm from "$lib/components/WhoamiForm.svelte";
 	import Modal from "$lib/components/modal/Modal.svelte";
-	import Toy from "$lib/components/Toy.svelte";
+	// import Toy from "$lib/components/Toy.svelte";
 
 	let initialFocusElement: HTMLElement;
 	let returnFocusElement: HTMLElement;
@@ -63,12 +63,11 @@
 	</Modal>
 {/if}
 
-<main bind:this={returnFocusElement}>
+<main bind:this={returnFocusElement} class="bg-grid">
 	<slot />
 </main>
 
-<Toy />
-
+<!-- <Toy /> -->
 <style>
 	nav {
 		background-color: var(--gray);

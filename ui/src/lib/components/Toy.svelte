@@ -6,7 +6,3 @@
 </script>
 
 <Toy register={{ encrypter: encrypter.store, whoami: whoami.store, display: display.store }} />
-
-<style>
-	/* your styles go here */
-</style>

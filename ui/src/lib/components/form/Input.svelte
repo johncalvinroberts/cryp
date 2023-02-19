@@ -68,7 +68,7 @@
 	{/if}
 	{#if type === "file"}
 		<div class="file-input" role="button">
-			<input type="file" id={name} {name} {placeholder} on:change />
+			<input type="file" id={name} {name} {placeholder} on:change {...$$restProps} />
 			<div class="vertical-center">
 				<MacintoshHD />
 			</div>
@@ -130,5 +130,6 @@
 	small {
 		color: var(--gray);
 		display: block;
+		flex: 0 0 100%;
 	}
 </style>
