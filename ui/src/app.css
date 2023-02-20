@@ -151,3 +151,17 @@ small {
 	background-size: 9px;
 	background-position: 71% 4px;
 }
+
+.pointless-seperator {
+	width: 100%;
+	margin: var(--spacing) 0;
+}
+
+.pointless-seperator::before {
+	content: "";
+	position: relative;
+	background-color: var(--dark);
+	width: 46px;
+	display: block;
+	height: 1px;
+}

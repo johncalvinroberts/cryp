@@ -4,6 +4,7 @@ import { CRYP_FILE_EXTENSION, STATE, MESSAGE } from "../constants";
 import type { EncrypterState, MessageKey, MessagePayload } from "../types";
 import IsomorphicWorker from "../isomorphic-worker";
 import BaseStore from "./base";
+import { whoami } from "./whoami";
 
 const initialState: EncrypterState = {
 	isProcessing: false,
@@ -15,6 +16,7 @@ const initialState: EncrypterState = {
 	error: undefined,
 	crypString: undefined,
 	decryptedFiles: undefined,
+	totalFileBytes: undefined,
 };
 
 class EncrypterStore extends BaseStore<EncrypterState> {
@@ -53,7 +55,10 @@ class EncrypterStore extends BaseStore<EncrypterState> {
 		if (!isCrypFile) {
 			const { filesToEncrypt: currentFiles = [] } = get(this.store);
 			const filesToEncrypt = [...currentFiles, ...files];
-			this.dispatch({ filesToEncrypt, state: STATE.SHOULD_ENCRYPT });
+			const totalFileBytes = files.reduce((memo, current) => {
+				return memo + current.size;
+			}, 0);
+			this.dispatch({ filesToEncrypt, state: STATE.SHOULD_ENCRYPT, totalFileBytes });
 		}
 		if (isCrypFile) {
 			const arrayBuffer = await files?.[0].arrayBuffer();
@@ -69,20 +74,28 @@ class EncrypterStore extends BaseStore<EncrypterState> {
 	};
 
 	public handleEncrypt = async (password: string, hint: string) => {
+		const { isAuthenticated } = get(whoami.store);
+		const nextState = isAuthenticated ? STATE.PROCESSING : STATE.SHOULD_AUTHENTICATE;
 		this.dispatch({
 			password,
 			hint,
-			state: STATE.PROCESSING,
+			state: nextState,
 		});
-		this.postMessage(MESSAGE.ENCRYPT);
+		if (isAuthenticated) {
+			this.postMessage(MESSAGE.ENCRYPT);
+		}
 	};
 
 	public handleDecrypt = async (password: string) => {
+		const { isAuthenticated } = get(whoami.store);
+		const nextState = isAuthenticated ? STATE.PROCESSING : STATE.SHOULD_AUTHENTICATE;
 		this.dispatch({
 			password,
-			state: STATE.PROCESSING,
+			state: nextState,
 		});
-		this.postMessage(MESSAGE.DECRYPT);
+		if (isAuthenticated) {
+			this.postMessage(MESSAGE.DECRYPT);
+		}
 	};
 }
 

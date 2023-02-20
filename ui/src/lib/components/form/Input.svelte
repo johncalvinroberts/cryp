@@ -40,7 +40,12 @@
 </script>
 
 <div class="input-box">
-	<label for={name} class:minimal={variant === "minimal"}>
+	<label
+		for={name}
+		class:minimal={variant === "minimal"}
+		tabindex={variant === "minimal" ? 0 : -1}
+		role="button"
+	>
 		{label}
 	</label>
 	{#if type !== "file"}
@@ -69,7 +74,15 @@
 	{/if}
 	{#if type === "file"}
 		<div class="file-input {variant}" role="button">
-			<input type="file" id={name} {name} {placeholder} on:change {...$$restProps} />
+			<input
+				type="file"
+				id={name}
+				{name}
+				{placeholder}
+				on:change
+				{...$$restProps}
+				tabindex={variant === "minimal" ? -1 : 0}
+			/>
 			{#if variant !== "minimal"}
 				<div class="vertical-center">
 					<MacintoshHD />
@@ -145,8 +158,10 @@
 		font-size: var(--font-size-small);
 		cursor: pointer;
 	}
-	label.minimal:hover {
+	label.minimal:hover,
+	label.minimal:focus {
 		text-decoration: underline;
+		outline: none;
 	}
 
 	small {

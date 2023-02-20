@@ -8,9 +8,6 @@
 
 	const { store, reset, handleEncrypt, handleFiles } = encrypter;
 	$: files = $store.filesToEncrypt ?? [];
-	$: totalFileBytes = files.reduce((memo, current) => {
-		return memo + current.size;
-	}, 0);
 	let password = "";
 	let hint = "";
 
@@ -34,7 +31,7 @@
 				{files.length} Files -
 			</h2>
 			<span class="vertical-center">
-				<FileSize bytes={totalFileBytes} />
+				<FileSize bytes={$store.totalFileBytes} />
 			</span>
 		</div>
 		<ul>
@@ -50,16 +47,8 @@
 			<Empty />
 		{/if}
 	</div>
-	<hr />
+	<div class="pointless-seperator" />
 	<Form on:submit={handleSubmit} on:reset={reset}>
-		<Input
-			label="Secret Key"
-			type="text"
-			name="secret"
-			bind:value={password}
-			tip="Special password for decrypting the encrypted file. Do not lose this."
-		/>
-		<Input name="hint" label="Hint" bind:value={hint} tip="Optional secret key hint" />
 		<Input
 			label="Add more files ->"
 			type="file"
@@ -68,6 +57,15 @@
 			on:change={handleAddFile}
 			multiple={true}
 		/>
+		<div class="pointless-seperator" />
+		<Input
+			label="Secret Key"
+			type="text"
+			name="secret"
+			bind:value={password}
+			tip="Special password for decrypting the encrypted file. Do not lose this."
+		/>
+		<Input name="hint" label="Hint" bind:value={hint} tip="Optional secret key hint" />
 		<div class="bottom-box">
 			<Button type="reset">Cancel</Button>
 			<Button type="submit" disabled={!password}>Encrypt</Button>
@@ -106,6 +104,5 @@
 
 	.file-preview {
 		flex: 0 0 100%;
-		min-height: 130px;
 	}
 </style>

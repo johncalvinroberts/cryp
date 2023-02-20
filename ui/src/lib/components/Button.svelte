@@ -19,6 +19,7 @@
 <style>
 	.button {
 		padding: 0 var(--spacing);
+		height: var(--nav-height);
 		min-width: 111px;
 		background: var(--light);
 		color: var(--dark);
@@ -53,6 +54,7 @@
 		background-color: transparent;
 		position: relative;
 		padding: 0;
+		height: unset;
 	}
 	.dropdown-button:hover {
 		box-shadow: none;

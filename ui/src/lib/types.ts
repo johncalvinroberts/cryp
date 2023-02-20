@@ -1,5 +1,6 @@
 export type StateKey =
 	| "INITIAL"
+	| "SHOULD_AUTHENTICATE"
 	| "SHOULD_ENCRYPT"
 	| "SHOULD_DECRYPT"
 	| "PROCESSING"
@@ -23,6 +24,7 @@ export type EncrypterState = {
 	error: Error | undefined;
 	crypString: string | undefined;
 	decryptedFiles: File[] | undefined;
+	totalFileBytes: number | undefined;
 };
 
 export type WhoamiState = {
