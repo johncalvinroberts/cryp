@@ -1,23 +1,9 @@
 <div class="parent">
 	<div class="lines">
-		<div class="line-box">
-			<span class="line" />
-			<span class="line" />
-			<span class="line" />
-			<span class="line" />
-			<span class="line" />
-			<span class="line" />
-		</div>
-		<div class="text">
-			<slot />
-		</div>
-		<div class="line-box">
-			<span class="line" />
-			<span class="line" />
-			<span class="line" />
-			<span class="line" />
-			<span class="line" />
-			<span class="line" />
+		<div class="text vertical-center">
+			<span>
+				<slot />
+			</span>
 		</div>
 	</div>
 	<div class="bottom-bar" />
@@ -27,30 +13,27 @@
 	.parent {
 		cursor: grab;
 	}
+
 	.lines {
-		padding: 0 3px;
-		display: flex;
-		height: var(--spacing) * 2;
 		border-bottom: solid 1px var(--dark);
+		height: 17px;
+		align-items: center;
+		background: linear-gradient(#000 21%, transparent 0);
+		background-clip: content-box;
+		background-size: 6.6666666667% 15.333333%;
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		padding: 2px 5px;
 	}
 	.text {
 		flex: 0;
 		padding: 0 var(--spacing);
+		background-color: var(--light);
+		height: 13px;
+		line-height: 0;
 	}
-	.line-box {
-		flex: 1;
-		display: flex;
-		flex-wrap: wrap;
-		flex-direction: row;
-		justify-content: space-around;
-		padding: 3px 0;
-	}
-	.line {
-		width: 100%;
-		border-bottom: solid 1px var(--dark);
-		display: block;
-		flex: 0 0 100%;
-	}
+
 	.bottom-bar {
 		height: 4px;
 		border-bottom: 1px solid var(--dark);
