@@ -36,3 +36,18 @@ export type MessagePayload = {
 	type: MessageKey;
 	payload: EncrypterState;
 };
+
+export type ApiResponse<T> = {
+	success: boolean;
+	data: T;
+	error: string | null;
+};
+
+export type APIClientState = {
+	isRefreshingToken: boolean;
+	tokenExpiresAt: number | undefined;
+};
+
+export type HTTPMethod = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "PATCH";
+
+export type HTTPRequestBody = Record<string, unknown> | Blob | File;

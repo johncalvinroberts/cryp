@@ -19,8 +19,8 @@
 	<Button type="submit">Send Code</Button>
 </Form>
 <Form on:submit={tryWhoamiChallenge} disabled={step !== "TRY_WHOAMI"}>
-	<Input name="code" type="text" label="Code" />
-	<Button type="submit">Submit</Button>
+	<Input name="code" type="text" label="Code" disabled={step !== "TRY_WHOAMI"} />
+	<Button type="submit" disabled={step !== "TRY_WHOAMI"}>Submit</Button>
 </Form>
 
 <style>

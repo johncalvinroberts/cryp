@@ -37,9 +37,11 @@
 		"@leveluptuts/svelte-side-menu": "^1.0.5",
 		"@leveluptuts/svelte-toy": "^2.0.3",
 		"@neodrag/svelte": "^2.0.3",
+		"eslint-plugin-import": "^2.27.5",
 		"file-saver": "^2.0.5",
 		"filedrop-svelte": "^0.1.2",
 		"guu": "^0.3.1",
+		"jwt-decode": "^3.1.2",
 		"pretty-bytes": "^6.0.0",
 		"svelte": "^3.55.1"
 	}

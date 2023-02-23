@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { whoami } from "$lib/stores/whoami";
-	import { encrypter } from "$lib/stores/encrypter";
-	import Dropdown from "$lib/components/Dropdown.svelte";
-	import Control from "$lib/components/icons/Control.svelte";
-	import Money from "$lib/components/icons/Money.svelte";
-	import Keycaps from "$lib/components/icons/Keycaps.svelte";
-	import { display } from "$lib/stores/display";
-	import WhoamiForm from "$lib/components/WhoamiForm.svelte";
-	import Modal from "$lib/components/modal/Modal.svelte";
-	// import Toy from "$lib/components/Toy.svelte";
+	import { whoami } from "../lib/stores/whoami";
+	import { encrypter } from "../lib/stores/encrypter";
+	import Dropdown from "../lib/components/Dropdown.svelte";
+	import Control from "../lib/components/icons/Control.svelte";
+	import Money from "../lib/components/icons/Money.svelte";
+	import Keycaps from "../lib/components/icons/Keycaps.svelte";
+	import { display } from "../lib/stores/display";
+	import WhoamiForm from "../lib/components/WhoamiForm.svelte";
+	import Modal from "../lib/components/modal/Modal.svelte";
+	// import Toy from "../lib/components/Toy.svelte";
 
 	let initialFocusElement: HTMLElement;
 	let returnFocusElement: HTMLElement;

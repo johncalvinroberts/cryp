@@ -1,7 +1,7 @@
 <script lang="ts">
-	import AuthForm from "./AuthForm.svelte";
 	import { encrypter } from "../stores/encrypter";
-	import { STATE } from "$lib/constants";
+	import { STATE } from "../constants";
+	import AuthForm from "./AuthForm.svelte";
 	const backText = "<- Back";
 	const handleBack = () => {
 		encrypter.dispatch({ state: STATE.SHOULD_ENCRYPT });

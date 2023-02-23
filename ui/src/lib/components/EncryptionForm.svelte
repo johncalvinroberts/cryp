@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Empty from "./Empty.svelte";
 	import { encrypter } from "../stores/encrypter";
+	import Empty from "./Empty.svelte";
 	import FileSize from "./FileSize.svelte";
 	import Form from "./form/Form.svelte";
 	import Input from "./form/Input.svelte";

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Card from "$lib/components/Card.svelte";
-	import Overlay from "$lib/components/modal/Overlay.svelte";
+	import Card from "../Card.svelte";
+	import Overlay from "./Overlay.svelte";
 	export let onDismiss: () => void;
 	export let initialFocusElement: HTMLElement;
 	export let returnFocusElement: HTMLElement;

@@ -1,13 +1,13 @@
 <script>
+	import { encrypter } from "../stores/encrypter";
+	import { STATE } from "../constants";
 	import Dropzone from "./Dropzone.svelte";
 	import DecryptionForm from "./DecryptionForm.svelte";
-	import { encrypter } from "../stores/encrypter";
 	import EncryptionForm from "./EncryptionForm.svelte";
 	import Done from "./Done.svelte";
 	import AuthForm from "./AuthForm.svelte";
 	import Failure from "./Failure.svelte";
 	import Processing from "./Processing.svelte";
-	import { STATE } from "../constants";
 
 	const { store } = encrypter;
 	const elements = {

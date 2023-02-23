@@ -25,3 +25,15 @@ export const MESSAGE: Record<string, MessageKey> = {
 	DECRYPTED: "DECRYPTED",
 	FAILURE: "FAILURE",
 };
+
+export const JWT_AUTH_HEADER = "x-jwt";
+export const JWT_LOCAL_STORAGE_KEY = "furizu-jwt";
+export const API_BASE_URL = import.meta.env.API_BASE_URL;
+export const IS_PROD = import.meta.env.PROD;
+
+export const GET = "GET";
+export const HEAD = "HEAD";
+export const POST = "POST";
+export const PUT = "PUT";
+export const DELETE = "DELETE";
+export const PATCH = "PATCH";

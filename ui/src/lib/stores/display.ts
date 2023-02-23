@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
-import { browser } from "$app/environment";
 import { THEME_STORAGE_KEY } from "../constants";
 import BaseStore from "./base";
+import { browser } from "$app/environment";
 
 type Theme = "dark" | "light";
 

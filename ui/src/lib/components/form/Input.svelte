@@ -98,12 +98,23 @@
 
 <style>
 	input {
-		background-color: transparent;
+		background-color: var(--light);
+		color: var(--dark);
 		border: solid 1px var(--dark);
 		width: 100%;
-		color: var(--dark);
 		height: 21px;
 		max-width: 200px;
+	}
+
+	input:focus,
+	input:-webkit-autofill,
+	input:-webkit-autofill:hover,
+	input:-webkit-autofill:focus,
+	input:-webkit-autofill:active {
+		background-color: var(--dark) !important;
+		color: var(--light) !important;
+		-webkit-box-shadow: 0 0 0 30px var(--dark) inset !important;
+		-webkit-text-fill-color: var(--light) !important;
 	}
 
 	label {

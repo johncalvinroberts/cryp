@@ -1,4 +1,4 @@
-const IS_PROD = import.meta.env.PROD;
+import { IS_PROD } from "./constants";
 
 const mountCloudflareAnalytics = () => {
 	if (IS_PROD) return;

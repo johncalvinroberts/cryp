@@ -1,12 +1,22 @@
 module.exports = {
 	root: true,
 	parser: "@typescript-eslint/parser",
-	extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+	extends: [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"prettier",
+		"plugin:import/recommended",
+		"plugin:import/typescript",
+	],
 	plugins: ["svelte3", "@typescript-eslint"],
 	ignorePatterns: ["*.cjs"],
 	overrides: [{ files: ["*.svelte"], processor: "svelte3/svelte3" }],
 	settings: {
 		"svelte3/typescript": () => require("typescript"),
+		"import/core-modules": ["$app/environment", "@sveltejs/kit/vite"],
+		// "import/resolver": {
+		// 	typescript: true,
+		// },
 	},
 	parserOptions: {
 		sourceType: "module",
@@ -16,5 +26,8 @@ module.exports = {
 		browser: true,
 		es2017: true,
 		node: true,
+	},
+	rules: {
+		"import/order": "error",
 	},
 };

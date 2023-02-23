@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { browser } from "$app/environment";
 	import FileDrop from "filedrop-svelte";
-	import Plus from "./Plus.svelte";
 	import { encrypter } from "../stores/encrypter";
+	import Plus from "./Plus.svelte";
+	import { browser } from "$app/environment";
+
 	const { handleFiles } = encrypter;
 	let isDraggingOver = false;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
