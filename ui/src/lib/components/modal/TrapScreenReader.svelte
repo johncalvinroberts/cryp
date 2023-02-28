@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	type PartialAttribute = {
-		inert: string | null;
-		ariaHidden: string | null;
+		inert: string | undefined;
+		ariaHidden: string | undefined;
 	};
 	// Props
 	export let enabled: boolean;
@@ -10,8 +10,8 @@
 
 	const hideFromScreenReader = (node: HTMLElement) => {
 		originalAttributes.push({
-			ariaHidden: node.getAttribute("aria-hidden"),
-			inert: node.getAttribute("inert"),
+			ariaHidden: node.getAttribute("aria-hidden") ?? undefined,
+			inert: node.getAttribute("inert") ?? undefined,
 		});
 		node.setAttribute("aria-hidden", "true");
 		node.setAttribute("inert", "true");

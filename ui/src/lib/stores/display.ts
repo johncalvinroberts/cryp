@@ -1,18 +1,13 @@
 import { get } from "svelte/store";
-import { THEME_STORAGE_KEY } from "../constants";
+import { THEME_LOCAL_STORAGE_KEY } from "../constants";
+import type { MaybeError, ThemeState, Theme } from "../../types/types";
 import BaseStore from "./base";
 import { browser } from "$app/environment";
-
-type Theme = "dark" | "light";
-
-type ThemeState = {
-	theme: Theme;
-	isAuthModalOpen: boolean;
-};
 
 const initialState: ThemeState = {
 	theme: "light",
 	isAuthModalOpen: false,
+	errors: [],
 };
 
 class DisplayStore extends BaseStore<ThemeState> {
@@ -21,7 +16,7 @@ class DisplayStore extends BaseStore<ThemeState> {
 	}
 
 	public init() {
-		let initialTheme = localStorage.getItem(THEME_STORAGE_KEY);
+		let initialTheme = localStorage.getItem(THEME_LOCAL_STORAGE_KEY);
 		if (!initialTheme) {
 			initialTheme = "light";
 		}
@@ -29,7 +24,7 @@ class DisplayStore extends BaseStore<ThemeState> {
 	}
 
 	public setTheme(nextTheme: Theme) {
-		localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+		localStorage.setItem(THEME_LOCAL_STORAGE_KEY, nextTheme);
 		this.dispatch({ theme: nextTheme });
 		if (browser) {
 			const toRemove = nextTheme === "dark" ? "light" : "dark";
@@ -47,6 +42,18 @@ class DisplayStore extends BaseStore<ThemeState> {
 	public toggleAuthModal() {
 		const { isAuthModalOpen } = get(this.store);
 		this.dispatch({ isAuthModalOpen: !isAuthModalOpen });
+	}
+
+	public enqueueError(err: MaybeError) {
+		const { errors } = get(this.store);
+		this.dispatch({ errors: [...errors, err] });
+	}
+
+	public dequeueError(): MaybeError {
+		const { errors } = get(this.store);
+		const [err, ...rest] = errors;
+		this.dispatch({ errors: rest });
+		return err;
 	}
 }
 

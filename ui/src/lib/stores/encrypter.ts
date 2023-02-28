@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 import { parseCrypString } from "../utils";
 import { CRYP_FILE_EXTENSION, STATE, MESSAGE } from "../constants";
-import type { EncrypterState, MessageKey, MessagePayload } from "../types";
+import type { EncrypterState, MessageKey, MessagePayload } from "../../types/types";
 import IsomorphicWorker from "../isomorphic-worker";
 import BaseStore from "./base";
 import { whoami } from "./whoami";

@@ -52,7 +52,7 @@
 
 <nav>
 	<a href="/" class="vertical-center">
-		<span>furizu</span>
+		<span>❆</span>
 	</a>
 	<Dropdown label={isAuthenticated ? email : "Guest"} options={dropdownOptions} />
 </nav>

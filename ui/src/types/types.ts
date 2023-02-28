@@ -40,7 +40,7 @@ export type MessagePayload = {
 export type ApiResponse<T> = {
 	success: boolean;
 	data: T;
-	error: string | null;
+	error: string | undefined;
 };
 
 export type APIClientState = {
@@ -51,3 +51,13 @@ export type APIClientState = {
 export type HTTPMethod = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 export type HTTPRequestBody = Record<string, unknown> | Blob | File;
+
+export type Theme = "dark" | "light";
+
+export type ThemeState = {
+	theme: Theme;
+	isAuthModalOpen: boolean;
+	errors: MaybeError[];
+};
+
+export type MaybeError = Error | string | unknown;

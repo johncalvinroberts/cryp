@@ -1,4 +1,4 @@
-import type { WhoamiState } from "../types";
+import type { WhoamiState } from "../../types/types";
 import BaseStore from "./base";
 
 const initialState: WhoamiState = {
