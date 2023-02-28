@@ -1,13 +1,16 @@
 import type { ApiResponse, HTTPMethod, HTTPRequestBody } from "../types/types";
-import { JWT_AUTH_HEADER, GET, POST, PUT, DELETE, PATCH } from "./constants";
+import { GET, POST, PUT, DELETE, PATCH } from "./constants";
 
 class HTTPClient {
-	constructor(private token: string | undefined, private baseURL: string) {}
+	constructor(private baseURL: string) {}
 
-	public async fetch<T>(path: string, method: HTTPMethod, body?: HTTPRequestBody): Promise<T> {
-		const headers: Headers = new Headers({
-			...(this.token ? { [JWT_AUTH_HEADER]: this.token } : undefined),
-		});
+	public async fetch<T>(
+		path: string,
+		method: HTTPMethod,
+		body?: HTTPRequestBody,
+		givenHeaders?: Record<string, string>,
+	): Promise<T> {
+		const headers: Headers = new Headers(givenHeaders);
 		const res = await fetch(`${this.baseURL}/${path}`, {
 			headers,
 			method,
@@ -43,13 +46,6 @@ class HTTPClient {
 
 	public put<T>(path: string, body: HTTPRequestBody): Promise<T> {
 		return this.fetch(path, PUT, body);
-	}
-
-	public setToken(token: string) {
-		this.token = token;
-	}
-	public removeToken() {
-		this.token = undefined;
 	}
 }
 

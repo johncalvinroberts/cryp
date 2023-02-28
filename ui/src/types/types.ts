@@ -9,6 +9,11 @@ export type StateKey =
 
 export type MessageKey = "ENCRYPT" | "DECRYPT" | "ENCRYPTED" | "DECRYPTED" | "FAILURE";
 
+export type MessagePayload = {
+	type: MessageKey;
+	payload: EncrypterState;
+};
+
 export type HexEncodedFile = {
 	hex: string;
 	name: string;
@@ -30,11 +35,19 @@ export type EncrypterState = {
 export type WhoamiState = {
 	isAuthenticated: boolean;
 	email: string | undefined;
+	isChallengeSent: boolean;
 };
 
-export type MessagePayload = {
-	type: MessageKey;
-	payload: EncrypterState;
+export type APIClientState = {
+	isRefreshingToken: boolean;
+	tokenExpiresAt: number | undefined;
+	token: string | undefined;
+};
+
+export type ThemeState = {
+	theme: Theme;
+	isAuthModalOpen: boolean;
+	errors: MaybeError[];
 };
 
 export type ApiResponse<T> = {
@@ -43,21 +56,10 @@ export type ApiResponse<T> = {
 	error: string | undefined;
 };
 
-export type APIClientState = {
-	isRefreshingToken: boolean;
-	tokenExpiresAt: number | undefined;
-};
-
 export type HTTPMethod = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 export type HTTPRequestBody = Record<string, unknown> | Blob | File;
 
 export type Theme = "dark" | "light";
-
-export type ThemeState = {
-	theme: Theme;
-	isAuthModalOpen: boolean;
-	errors: MaybeError[];
-};
 
 export type MaybeError = Error | string | unknown;

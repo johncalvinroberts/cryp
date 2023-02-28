@@ -3,7 +3,16 @@ import { get } from "svelte/store";
 import type { APIClientState, HTTPMethod, HTTPRequestBody } from "../../types/types";
 import type { RefreshTokenDTO } from "../../types/dtos";
 import HTTPClient from "../http";
-import { JWT_LOCAL_STORAGE_KEY, API_BASE_URL, GET, POST, PUT, DELETE, PATCH } from "../constants";
+import {
+	JWT_LOCAL_STORAGE_KEY,
+	API_BASE_URL,
+	GET,
+	POST,
+	PUT,
+	DELETE,
+	PATCH,
+	JWT_AUTH_HEADER,
+} from "../constants";
 import { delay } from "../utils";
 import BaseStore from "./base";
 import { display } from "./display";
@@ -15,6 +24,7 @@ const TOKEN_REFRESH_BACKOFF_MS = 700;
 const initialState: APIClientState = {
 	isRefreshingToken: false,
 	tokenExpiresAt: undefined,
+	token: undefined,
 };
 
 /**
@@ -28,7 +38,7 @@ class APIClientStore extends BaseStore<APIClientState> {
 	constructor() {
 		super(initialState);
 		const initialToken = localStorage?.getItem(JWT_LOCAL_STORAGE_KEY) ?? undefined;
-		this.httpClient = new HTTPClient(initialToken, API_BASE_URL);
+		this.httpClient = new HTTPClient(API_BASE_URL);
 		if (initialToken != null) {
 			this.handleToken(initialToken);
 		}
@@ -39,12 +49,11 @@ class APIClientStore extends BaseStore<APIClientState> {
 			localStorage.setItem(JWT_LOCAL_STORAGE_KEY, token);
 			const decoded: JwtPayload = decodeJwt(token);
 			if (decoded.exp) {
-				this.dispatch({ tokenExpiresAt: decoded.exp });
+				this.dispatch({ tokenExpiresAt: decoded.exp, token });
 			}
-			this.httpClient.setToken(token);
 		} catch (error) {
 			localStorage.removeItem(JWT_LOCAL_STORAGE_KEY);
-			this.httpClient.removeToken();
+			this.dispatch({ token: undefined });
 		}
 	}
 
@@ -59,7 +68,7 @@ class APIClientStore extends BaseStore<APIClientState> {
 	}
 
 	private async fetch<T>(path: string, method: HTTPMethod, body?: HTTPRequestBody): Promise<T> {
-		const { isRefreshingToken, tokenExpiresAt } = get(this.store);
+		const { isRefreshingToken, tokenExpiresAt, token } = get(this.store);
 		if (isRefreshingToken) {
 			await delay(TOKEN_REFRESH_BACKOFF_MS);
 			return this.fetch<T>(path, method, body);
@@ -67,7 +76,11 @@ class APIClientStore extends BaseStore<APIClientState> {
 		if (tokenExpiresAt != null && tokenExpiresAt - Date.now() < MIN_TOKEN_REFRESH_MS) {
 			await this.refreshToken();
 		}
-		return this.httpClient.fetch<T>(path, method, body);
+		let headers: Record<string, string> = {};
+		if (token) {
+			headers = { [JWT_AUTH_HEADER]: token };
+		}
+		return this.httpClient.fetch<T>(path, method, body, headers);
 	}
 
 	public get<T>(path: string): Promise<T> {
