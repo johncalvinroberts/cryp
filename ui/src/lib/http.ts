@@ -1,6 +1,12 @@
 import type { ApiResponse, HTTPMethod, HTTPRequestBody } from "../types/types";
 import { GET, POST, PUT, DELETE, PATCH } from "./constants";
 
+/**
+ * Mostly generic wrapper around fetch + HTTP
+ * Some non-generic behavior: this wrapper will check for an `error` field on the response, and throw
+ * an error even if the response was a 2xx
+ */
+
 class HTTPClient {
 	constructor(private baseURL: string) {}
 
@@ -10,7 +16,10 @@ class HTTPClient {
 		body?: HTTPRequestBody,
 		givenHeaders?: Record<string, string>,
 	): Promise<T> {
-		const headers: Headers = new Headers(givenHeaders);
+		const headers: Headers = new Headers({
+			"content-type": "application/json",
+			...givenHeaders,
+		});
 		const res = await fetch(`${this.baseURL}/${path}`, {
 			headers,
 			method,

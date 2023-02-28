@@ -13,10 +13,7 @@ module.exports = {
 	overrides: [{ files: ["*.svelte"], processor: "svelte3/svelte3" }],
 	settings: {
 		"svelte3/typescript": () => require("typescript"),
-		"import/core-modules": ["$app/environment", "@sveltejs/kit/vite"],
-		// "import/resolver": {
-		// 	typescript: true,
-		// },
+		"import/core-modules": ["$app/environment", "@sveltejs/kit/vite", "$env/dynamic/public"],
 	},
 	parserOptions: {
 		sourceType: "module",

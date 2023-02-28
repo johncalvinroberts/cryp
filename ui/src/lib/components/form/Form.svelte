@@ -3,7 +3,14 @@
 	export let disabled = false;
 </script>
 
-<form class="form" class:disabled on:submit on:reset autocomplete="off">
+<form
+	class="form"
+	class:disabled
+	on:submit|preventDefault|once
+	on:reset|once
+	autocomplete="off"
+	{...$$props}
+>
 	{#if disabled}
 		<div class="disabled-overlay" />
 	{/if}

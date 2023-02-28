@@ -17,6 +17,7 @@ import { delay } from "../utils";
 import BaseStore from "./base";
 import { display } from "./display";
 import { whoami } from "./whoami";
+import { browser } from "$app/environment";
 
 const MIN_TOKEN_REFRESH_MS = 1000 * 60; // 1 min
 const TOKEN_REFRESH_BACKOFF_MS = 700;
@@ -34,26 +35,29 @@ const initialState: APIClientState = {
  */
 
 class APIClientStore extends BaseStore<APIClientState> {
-	private httpClient: HTTPClient;
-	constructor() {
+	constructor(private readonly httpClient: HTTPClient = new HTTPClient(API_BASE_URL)) {
 		super(initialState);
-		const initialToken = localStorage?.getItem(JWT_LOCAL_STORAGE_KEY) ?? undefined;
-		this.httpClient = new HTTPClient(API_BASE_URL);
+		let initialToken;
+		if (browser) {
+			initialToken = localStorage.getItem(JWT_LOCAL_STORAGE_KEY) ?? undefined;
+		}
 		if (initialToken != null) {
 			this.handleToken(initialToken);
 		}
 	}
 
 	public handleToken(token: string) {
-		try {
-			localStorage.setItem(JWT_LOCAL_STORAGE_KEY, token);
-			const decoded: JwtPayload = decodeJwt(token);
-			if (decoded.exp) {
-				this.dispatch({ tokenExpiresAt: decoded.exp, token });
+		if (browser) {
+			try {
+				localStorage.setItem(JWT_LOCAL_STORAGE_KEY, token);
+				const decoded: JwtPayload = decodeJwt(token);
+				if (decoded.exp) {
+					this.dispatch({ tokenExpiresAt: decoded.exp, token });
+				}
+			} catch (error) {
+				localStorage.removeItem(JWT_LOCAL_STORAGE_KEY);
+				this.dispatch({ token: undefined });
 			}
-		} catch (error) {
-			localStorage.removeItem(JWT_LOCAL_STORAGE_KEY);
-			this.dispatch({ token: undefined });
 		}
 	}
 

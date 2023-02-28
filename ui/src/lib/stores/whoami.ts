@@ -17,7 +17,7 @@ class WhoamiStore extends BaseStore<WhoamiState> {
 
 	public async startWhoamiChallenge(email: string) {
 		try {
-			await apiClient.post("/api/whoami/start", { email });
+			await apiClient.post("api/whoami/start", { email });
 		} catch (error) {
 			display.enqueueError(error);
 		}

@@ -5,14 +5,14 @@
 	import DecryptionForm from "./DecryptionForm.svelte";
 	import EncryptionForm from "./EncryptionForm.svelte";
 	import Done from "./Done.svelte";
-	import AuthForm from "./AuthForm.svelte";
 	import Failure from "./Failure.svelte";
 	import Processing from "./Processing.svelte";
+	import EncrypterWhoamiForm from "./EncrypterWhoamiForm.svelte";
 
 	const { store } = encrypter;
 	const elements = {
 		[STATE.INITIAL]: Dropzone,
-		[STATE.SHOULD_AUTHENTICATE]: AuthForm,
+		[STATE.SHOULD_AUTHENTICATE]: EncrypterWhoamiForm,
 		[STATE.SHOULD_DECRYPT]: DecryptionForm,
 		[STATE.SHOULD_ENCRYPT]: EncryptionForm,
 		[STATE.PROCESSING]: Processing,

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -21,6 +23,11 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(20)))
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:1234", "https://furizu.cc"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
 	storageSrv := storage.InitStorageService(config.AWSSession, config.Timeout)
 	emailSrv := email.InitEmailService(config)
 	whoamiSrv := whoami.InitWhoamiService(config.JWTSecret, config.Storage.WhoamiBucketName, config.JWTTokenTTL, storageSrv, emailSrv)

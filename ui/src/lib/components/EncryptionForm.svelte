@@ -47,7 +47,7 @@
 			<Empty />
 		{/if}
 	</div>
-	<div class="pointless-seperator" />
+	<!-- <div class="pointless-seperator" /> -->
 	<Form on:submit={handleSubmit} on:reset={reset}>
 		<Input
 			label="Add more files ->"
@@ -57,7 +57,7 @@
 			on:change={handleAddFile}
 			multiple={true}
 		/>
-		<div class="pointless-seperator" />
+		<!-- <div class="pointless-seperator" /> -->
 		<Input
 			label="Secret Key"
 			type="text"
@@ -104,5 +104,6 @@
 
 	.file-preview {
 		flex: 0 0 100%;
+		max-width: 300px;
 	}
 </style>

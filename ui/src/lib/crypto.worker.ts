@@ -1,7 +1,7 @@
+import type { MessagePayload, HexEncodedFile, EncrypterState } from "../types/types";
 import { encrypt, decrypt, hexEncode, hexDecode } from "./crypto";
 import { MESSAGE, STATE, FALLBACK_FILE_NAME } from "./constants";
 import { formatCrypString } from "./utils";
-import type { MessagePayload, HexEncodedFile, EncrypterState } from "../types/types";
 
 // alias self to ctx and give it our newly created type
 const ctx: Worker = self as unknown as Worker;
