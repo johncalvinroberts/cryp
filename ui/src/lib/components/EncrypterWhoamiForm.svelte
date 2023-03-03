@@ -9,7 +9,6 @@
 </script>
 
 <div class="box">
-	<h3>Authenticate who you are</h3>
 	<WhoamiForm />
 	<button class="back" on:click={handleBack}>{backText}</button>
 </div>

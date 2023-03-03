@@ -8,6 +8,7 @@ const initialState: WhoamiState = {
 	isAuthenticated: false,
 	email: undefined,
 	isChallengeSent: false,
+	isLoading: false,
 };
 
 class WhoamiStore extends BaseStore<WhoamiState> {
@@ -17,19 +18,28 @@ class WhoamiStore extends BaseStore<WhoamiState> {
 
 	public async startWhoamiChallenge(email: string) {
 		try {
+			this.dispatch({ isLoading: true });
 			await apiClient.post("api/whoami/start", { email });
+			this.dispatch({ isChallengeSent: true });
 		} catch (error) {
 			display.enqueueError(error);
+			throw error;
+		} finally {
+			this.dispatch({ isLoading: false });
 		}
 	}
 
-	public async tryWhoamiChallenge(email: string, otp: string): Promise<boolean> {
+	public async tryWhoamiChallenge(email: string, otp: string) {
 		try {
-			await apiClient.post<TryWhoamiChallengeDTO>("api/whoami/try", { email, otp });
-			return true;
+			this.dispatch({ isLoading: true });
+			const res = await apiClient.post<TryWhoamiChallengeDTO>("api/whoami/try", { email, otp });
+			this.dispatch({ email, isAuthenticated: true });
+			apiClient.handleToken(res.jwt);
 		} catch (error) {
 			display.enqueueError(error);
-			return false;
+			throw error;
+		} finally {
+			this.dispatch({ isLoading: false });
 		}
 	}
 }

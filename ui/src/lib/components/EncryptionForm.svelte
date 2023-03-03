@@ -5,6 +5,7 @@
 	import Form from "./form/Form.svelte";
 	import Input from "./form/Input.svelte";
 	import Button from "./Button.svelte";
+	import InfoTip from "./InfoTip.svelte";
 
 	const { store, reset, handleEncrypt, handleFiles } = encrypter;
 	$: files = $store.filesToEncrypt ?? [];
@@ -58,13 +59,9 @@
 			multiple={true}
 		/>
 		<!-- <div class="pointless-seperator" /> -->
-		<Input
-			label="Secret Key"
-			type="text"
-			name="secret"
-			bind:value={password}
-			tip="Special password for decrypting the encrypted file. Do not lose this."
-		/>
+		<Input label="Secret Key" type="text" name="secret" bind:value={password}>
+			<InfoTip title="Secrettttt thing don't lose it" />
+		</Input>
 		<Input name="hint" label="Hint" bind:value={hint} tip="Optional secret key hint" />
 		<div class="bottom-box">
 			<Button type="reset">Cancel</Button>

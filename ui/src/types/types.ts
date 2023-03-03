@@ -36,6 +36,7 @@ export type WhoamiState = {
 	isAuthenticated: boolean;
 	email: string | undefined;
 	isChallengeSent: boolean;
+	isLoading: boolean;
 };
 
 export type APIClientState = {

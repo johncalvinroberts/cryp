@@ -40,7 +40,7 @@ func (svc *WhoamiService) StartWhoamiChallenge(email string) error {
 	key := storage.ComposeKey(WHOAMI_CHALLENGE_PREFIX, email)
 	_, err := svc.storageSrv.Write(svc.whoamiBucketName, key, strings.NewReader(otp))
 	if err != nil {
-		return err
+		return errors.ErrDataCreationFailure
 	}
 	msg := fmt.Sprintf("Your one-time password for Cryp: <code>%s</code>", otp)
 	err = svc.emailSrv.SendANiceEmail(email, msg, "Cryp One-time password")

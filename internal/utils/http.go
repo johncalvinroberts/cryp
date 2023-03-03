@@ -10,23 +10,24 @@ import (
 type CrypAPIResponse struct {
 	Success bool `json:"success"`
 	Data    any  `json:"data"`
+	Error   any  `json:"error"`
 }
 
-func ComposeResponse(success bool, statusCode int, c echo.Context, data any) error {
-	return c.JSON(statusCode, &CrypAPIResponse{Success: success, Data: data})
+func ComposeResponse(success bool, statusCode int, c echo.Context, data any, err *string) error {
+	return c.JSON(statusCode, &CrypAPIResponse{Success: success, Data: data, Error: err})
 }
 
 func RespondOK(c echo.Context, data any) error {
-	return ComposeResponse(true, http.StatusOK, c, data)
+	return ComposeResponse(true, http.StatusOK, c, data, nil)
 }
 
 func RespondCreated(c echo.Context, data any) error {
-	return ComposeResponse(true, http.StatusCreated, c, data)
+	return ComposeResponse(true, http.StatusCreated, c, data, nil)
 }
 
 func RespondError(c echo.Context, statusCode int, err error) error {
 	data := err.Error()
-	return ComposeResponse(false, statusCode, c, data)
+	return ComposeResponse(false, statusCode, c, nil, &data)
 }
 
 func RespondInternalServerError(c echo.Context) error {

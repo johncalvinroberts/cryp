@@ -37,3 +37,5 @@ export const getRandomUnicodeString = (length: number): string => {
 export const clone = (obj: unknown) => JSON.parse(JSON.stringify(obj));
 
 export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const noop = () => undefined;

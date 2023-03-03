@@ -17,7 +17,11 @@ func (svc *WhoamiService) HandleStartWhoamiChallenge(c echo.Context) error {
 	}
 	err = svc.StartWhoamiChallenge(req.Email)
 	if err != nil {
-		return utils.RespondError(c, http.StatusBadRequest, err)
+		var statusCode int = http.StatusInternalServerError
+		if err == errors.ErrValidationFailure {
+			statusCode = http.StatusBadRequest
+		}
+		return utils.RespondError(c, statusCode, err)
 	}
 	return utils.RespondCreated(c, nil)
 }

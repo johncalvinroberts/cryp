@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/johncalvinroberts/cryp/internal/config"
+	"github.com/johncalvinroberts/cryp/internal/errors"
 )
 
 const (
@@ -22,7 +23,12 @@ type EmailService struct {
 
 func (svc *EmailService) SendANiceEmail(to string, msg string, subject string) error {
 	html := svc.BuildHtml(msg)
-	return svc.transport.SendANiceEmail(to, msg, subject, html)
+	err := svc.transport.SendANiceEmail(to, msg, subject, html)
+	if err != nil {
+		// TODO: log error
+		return errors.ErrUnableToSendEmail
+	}
+	return nil
 }
 
 func (svc *EmailService) BuildHtml(msg string) string {

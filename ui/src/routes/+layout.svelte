@@ -9,7 +9,8 @@
 	import { display } from "../lib/stores/display";
 	import WhoamiForm from "../lib/components/WhoamiForm.svelte";
 	import Modal from "../lib/components/modal/Modal.svelte";
-	// import Toy from "../lib/components/Toy.svelte";
+	import Toy from "../lib/components/Toy.svelte";
+	import OverlayLoading from "../lib/components/OverlayLoading.svelte";
 
 	let initialFocusElement: HTMLElement;
 	let returnFocusElement: HTMLElement;
@@ -18,9 +19,9 @@
 	const { store: whoamiStore } = whoami;
 	const { store: displayStore } = display;
 	let title = `furizu. | ${$encrypterStore.state}`;
-	const isAuthenticated = $whoamiStore.isAuthenticated;
-	const email = $whoamiStore.email;
-	const dropdownOptions = [
+	$: isAuthenticated = $whoamiStore.isAuthenticated;
+	$: email = $whoamiStore.email;
+	$: dropdownOptions = [
 		...(isAuthenticated
 			? [
 					{
@@ -42,6 +43,7 @@
 			href: "/settings",
 		},
 	];
+
 	// TODO: make this isomorphic + no FOUC
 	onMount(() => display.init());
 </script>
@@ -59,7 +61,12 @@
 
 {#if $displayStore.isAuthModalOpen}
 	<Modal onDismiss={() => display.toggleAuthModal()} {returnFocusElement} {initialFocusElement}>
-		<WhoamiForm />
+		{#if $whoamiStore.isLoading}
+			<OverlayLoading height={"312px"} />
+		{/if}
+		<div class="form-wrapper">
+			<WhoamiForm />
+		</div>
 	</Modal>
 {/if}
 
@@ -67,7 +74,8 @@
 	<slot />
 </main>
 
-<!-- <Toy /> -->
+<Toy />
+
 <style>
 	nav {
 		background-color: var(--gray);
@@ -88,6 +96,10 @@
 
 	:global(.whoami-modal-card) {
 		min-width: 400px;
+		padding: var(--spacing);
+	}
+
+	.form-wrapper {
 		padding: var(--spacing);
 	}
 </style>
